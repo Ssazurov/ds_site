@@ -4,6 +4,10 @@
 - Next.js 16 скелет (app/api/gar/chat, app/api/gar/scope-tree — серверный прокси к GAR /public/*)
 - lib/gar.ts: X-Public-Api-Key + GAR_URL, вариант B (localhost, без Cloudflare Zero Trust)
 - Прокси проверен вживую: scope-tree (27 документов, dataset sindrom-dauna) и chat (ответ с источниками) — оба 200 OK
+- Issue #35: UI передаёт `response_mode` (`full`/`summary`) и действия `action`
+  через тот же `/api/gar/chat`: раскрытие источников, дополнительный retrieval с
+  `exclude_ids`, веб-поиск и упрощение формулировки. Карточки источников скрыты
+  до явного действия пользователя.
 - Issue #32: главная страница теперь отправляет запросы к `/api/gar/chat` и показывает ответ GAR.
   Источники агрегируются в карточки с заголовком, ограниченной аннотацией и ссылкой;
   полный текст источника не выводится. Используются `document_name`, `metadata.title`,

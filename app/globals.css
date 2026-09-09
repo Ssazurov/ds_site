@@ -31,10 +31,17 @@ body {
 .query-row button { align-self: flex-end; min-width: 118px; border: 0; border-radius: 4px; background: var(--accent); color: #fff; padding: 13px 18px; font-weight: 700; cursor: pointer; }
 .query-row button:hover:not(:disabled) { background: var(--accent-dark); }
 .query-row button:disabled { cursor: not-allowed; opacity: .5; }
+.response-mode { display: flex; gap: 8px; align-items: center; margin: 18px 0 0; padding: 0; border: 0; }
+.response-mode legend { float: left; margin-right: 12px; font-size: 14px; font-weight: 700; }
+.response-mode button, .chat-actions button { border: 1px solid #bfc8c1; border-radius: 999px; background: #fff; color: var(--accent-dark); padding: 7px 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.response-mode button.selected { border-color: var(--accent); background: #dbeae4; }
+.response-mode button:disabled, .chat-actions button:disabled { cursor: not-allowed; opacity: .5; }
 .message { margin: 0 0 24px; padding: 12px 14px; border-radius: 4px; font-size: 14px; }
 .error { background: #f9e5e0; color: #8a2e24; }
 .answer-block, .sources-block { border-top: 1px solid var(--line); padding: 28px 0 34px; }
 .answer-text { max-width: 800px; margin-top: 13px; white-space: pre-wrap; font-size: 19px; line-height: 1.65; }
+.chat-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px; }
+.chat-actions button:hover:not(:disabled), .response-mode button:hover:not(:disabled) { border-color: var(--accent); background: #edf5f1; }
 .sources-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .sources-heading span { display: inline-flex; min-width: 24px; height: 24px; align-items: center; justify-content: center; border-radius: 50%; background: #dbeae4; color: var(--accent-dark); font-size: 12px; font-weight: 700; }
 .source-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
@@ -49,5 +56,7 @@ body {
   .chat-shell { width: min(100% - 28px, 1080px); padding-top: 36px; }
   .query-row { flex-direction: column; }
   .query-row button { align-self: stretch; }
+  .response-mode { align-items: flex-start; flex-wrap: wrap; }
+  .response-mode legend { width: 100%; }
   .source-grid { grid-template-columns: 1fr; }
 }
