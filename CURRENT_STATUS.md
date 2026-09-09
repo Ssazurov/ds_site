@@ -4,6 +4,11 @@
 - Next.js 16 скелет (app/api/gar/chat, app/api/gar/scope-tree — серверный прокси к GAR /public/*)
 - lib/gar.ts: X-Public-Api-Key + GAR_URL, вариант B (localhost, без Cloudflare Zero Trust)
 - Прокси проверен вживую: scope-tree (27 документов, dataset sindrom-dauna) и chat (ответ с источниками) — оба 200 OK
+- Issue #32: главная страница теперь отправляет запросы к `/api/gar/chat` и показывает ответ GAR.
+  Источники агрегируются в карточки с заголовком, ограниченной аннотацией и ссылкой;
+  полный текст источника не выводится. Используются `document_name`, `metadata.title`,
+  `original_url` и `canonical_md_url` из существующего `sources[]` контракта.
+- Issue #32 checks: `npm run lint`, `npm run build`, `git diff --check`.
 
 ## Инфраструктура
 - GAR_PUBLIC_API_KEY сгенерирован, добавлен в gar-core-api/.env и ds_site/.env.local
