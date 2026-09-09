@@ -17,6 +17,9 @@ type ChatResponse = {
   error?: string;
 };
 
+type ChatAction = "more_sources" | "web_search" | "simplify";
+type ResponseMode = "full" | "summary";
+
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function sourceTitle(source: Source) {
@@ -35,11 +38,12 @@ function sourceUrl(source: Source) {
 export default function Home() {
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState<ChatResponse | null>(null);
+  const [responseMode, setResponseMode] = useState<ResponseMode>("full");
+  const [sourcesVisible, setSourcesVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  async function requestAnswer(action?: ChatAction, mode = responseMode) {
     const trimmedQuery = query.trim();
     if (!trimmedQuery || !DATASET_ID) {
       setError(DATASET_ID ? "Введите вопрос." : "Не настроен идентификатор набора данных.");
@@ -52,17 +56,36 @@ export default function Home() {
       const result = await fetch("/api/gar/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dataset_id: DATASET_ID, query: trimmedQuery }),
+        body: JSON.stringify({
+          dataset_id: DATASET_ID,
+          query: trimmedQuery,
+          response_mode: mode,
+          ...(action ? { action } : {}),
+          ...(action === "more_sources" ? {
+            exclude_ids: response?.sources?.map((source) => source.document_key).filter(Boolean),
+          } : {}),
+        }),
       });
       const data = (await result.json()) as ChatResponse;
       if (!result.ok) throw new Error(data.error || "Не удалось получить ответ.");
       setResponse(data);
+      setSourcesVisible(false);
     } catch (requestError) {
       setResponse(null);
       setError(requestError instanceof Error ? requestError.message : "Не удалось получить ответ.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    void requestAnswer();
+  }
+
+  function changeResponseMode(mode: ResponseMode) {
+    setResponseMode(mode);
+    if (response) void requestAnswer(undefined, mode);
   }
 
   return (
@@ -89,6 +112,25 @@ export default function Home() {
               {loading ? "Ищу..." : "Спросить"}
             </button>
           </div>
+          <fieldset className="response-mode" disabled={loading}>
+            <legend>Формат ответа</legend>
+            <button
+              type="button"
+              className={responseMode === "full" ? "selected" : ""}
+              aria-pressed={responseMode === "full"}
+              onClick={() => changeResponseMode("full")}
+            >
+              Подробно
+            </button>
+            <button
+              type="button"
+              className={responseMode === "summary" ? "selected" : ""}
+              aria-pressed={responseMode === "summary"}
+              onClick={() => changeResponseMode("summary")}
+            >
+              Кратко
+            </button>
+          </fieldset>
         </form>
 
         {error && <p className="message error" role="alert">{error}</p>}
@@ -96,10 +138,26 @@ export default function Home() {
           <article className="answer-block">
             <p className="section-label">Ответ</p>
             <div className="answer-text">{response.answer}</div>
+            <div className="chat-actions" aria-label="Действия с ответом">
+              {response.sources && response.sources.length > 0 && (
+                <button type="button" onClick={() => setSourcesVisible((visible) => !visible)}>
+                  {sourcesVisible ? "Скрыть источники" : "Показать источники"}
+                </button>
+              )}
+              <button type="button" onClick={() => void requestAnswer("more_sources")} disabled={loading}>
+                Ещё источники
+              </button>
+              <button type="button" onClick={() => void requestAnswer("web_search")} disabled={loading}>
+                Искать в интернете
+              </button>
+              <button type="button" onClick={() => void requestAnswer("simplify")} disabled={loading}>
+                Объясни проще
+              </button>
+            </div>
           </article>
         )}
 
-        {response?.sources && response.sources.length > 0 && (
+        {sourcesVisible && response?.sources && response.sources.length > 0 && (
           <section className="sources-block" aria-label="Источники ответа">
             <div className="sources-heading">
               <p className="section-label">Источники</p>
@@ -125,6 +183,6 @@ export default function Home() {
           </section>
         )}
       </section>
-      </main>
+    </main>
   );
 }
