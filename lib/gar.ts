@@ -40,3 +40,9 @@ export async function garScopeTree(params: URLSearchParams) {
     headers: headers(),
   });
 }
+
+export async function garDocuments(params: URLSearchParams) {
+  return fetch(`${GAR_URL}/public/documents?${params.toString()}`, {
+    headers: headers(),
+  });
+}
