@@ -39,8 +39,24 @@ function articleTitle(doc: DocumentSummary) {
 }
 
 function articleUrl(doc: DocumentSummary) {
-  const url = doc.metadata?.original_url || doc.metadata?.canonical_md_url;
+  // ds_ingestion пишет ключ "source_url" (adapter/pipeline.py:_METADATA_KEYS);
+  // original_url/canonical_md_url — из чата (schemas/chat.py), в карточке
+  // документа их не бывает. Баг: карточки показывали "Ссылка недоступна",
+  // хотя source_url был в metadata. Порядок — на случай будущих источников.
+  const url = doc.metadata?.source_url || doc.metadata?.original_url || doc.metadata?.canonical_md_url;
   return typeof url === "string" ? url : null;
+}
+
+// value -> русская подпись для select-полей (issue TODO: заменить на публичный
+// словарь из gar-core-api metadata-fields, когда появится /public/metadata-fields).
+const DIRECTION_LABELS: Record<string, string> = {
+  "podderzhka-semi": "Поддержка семьи",
+  "soobschestva-i-vzaimopomosch": "Сообщества и взаимопомощь",
+};
+
+function ruLabel(value: unknown): string | null {
+  if (typeof value !== "string" || !value) return null;
+  return DIRECTION_LABELS[value] || value;
 }
 
 export default function ArticlesPage() {
@@ -108,7 +124,7 @@ export default function ArticlesPage() {
             >
               <option value="">{FILTER_LABELS[key]}: все</option>
               {(facets[key] || []).map((value) => (
-                <option key={value} value={value}>{value}</option>
+                <option key={value} value={value}>{ruLabel(value)}</option>
               ))}
             </select>
           ))}
@@ -130,7 +146,7 @@ export default function ArticlesPage() {
                 <article className="source-card" key={doc.document_id}>
                   <h2>{articleTitle(doc)}</h2>
                   <p>
-                    {[doc.metadata?.direction, doc.metadata?.category, doc.metadata?.doc_type]
+                    {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
                       .filter(Boolean)
                       .join(" · ")}
                   </p>
