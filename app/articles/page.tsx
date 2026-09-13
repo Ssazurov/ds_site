@@ -47,8 +47,8 @@ function articleUrl(doc: DocumentSummary) {
   return typeof url === "string" ? url : null;
 }
 
-// value -> русская подпись для select-полей (issue TODO: заменить на публичный
-// словарь из gar-core-api metadata-fields, когда появится /public/metadata-fields).
+// value -> русская подпись для select-полей. Временный хардкод (issue #12) —
+// заменить на публичный словарь /public/metadata-fields из gar-core-api.
 const DIRECTION_LABELS: Record<string, string> = {
   "podderzhka-semi": "Поддержка семьи",
   "soobschestva-i-vzaimopomosch": "Сообщества и взаимопомощь",
