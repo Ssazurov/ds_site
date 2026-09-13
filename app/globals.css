@@ -17,6 +17,11 @@ body {
 
 * { box-sizing: border-box; }
 
+.site-nav { border-bottom: 1px solid var(--line); background: #fff; }
+.site-nav nav { display: flex; gap: 20px; width: min(100% - 40px, 1080px); margin: 0 auto; padding: 16px 0; }
+.site-nav a { color: var(--accent-dark); font-size: 14px; font-weight: 700; text-decoration: none; }
+.site-nav a:hover { text-decoration: underline; }
+
 .chat-shell { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 64px 0 96px; }
 .chat-header { max-width: 680px; margin-bottom: 40px; }
 .eyebrow, .section-label, .source-index { margin: 0; color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
