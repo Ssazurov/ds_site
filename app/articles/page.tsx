@@ -8,27 +8,13 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 
 // Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
 // существующего scope-tree (issue #32/#35), см. ADR-0003 п.1 и filters.document_ids
 // / scope_source в gar-core-api/schemas/chat.py. Ключ sessionStorage читает
 // app/page.tsx при монтировании.
 const SCOPE_STORAGE_KEY = "ds-chat-scope";
-
-type DocumentSummary = {
-  document_id: string;
-  doc_name: string;
-  metadata?: Record<string, unknown>;
-};
-
-type DocumentsResponse = {
-  documents?: DocumentSummary[];
-  total?: number;
-  facets?: Record<string, string[]>;
-  error?: string;
-};
-
-type FilterKey = "direction" | "category" | "doc_type" | "age" | "target_audience";
 
 const FILTER_LABELS: Record<FilterKey, string> = {
   direction: "Направление",

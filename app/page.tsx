@@ -1,26 +1,11 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import type { ChatScope, ChatSource as Source, ChatResponse } from "@/lib/gar";
 
 // Issue #6: scope из группового выбора статей на /articles, см. filters.document_ids
 // и scope_source в gar-core-api/schemas/chat.py (ADR-042: manual vs dialog).
 const SCOPE_STORAGE_KEY = "ds-chat-scope";
-type ChatScope = { document_ids: string[]; titles: string[] };
-
-type Source = {
-  text?: string;
-  document_key?: string;
-  document_name?: string | null;
-  original_url?: string | null;
-  canonical_md_url?: string | null;
-  metadata?: Record<string, unknown>;
-};
-
-type ChatResponse = {
-  answer?: string;
-  sources?: Source[];
-  error?: string;
-};
 
 type ChatAction = "more_sources" | "web_search" | "simplify";
 type ResponseMode = "full" | "summary";

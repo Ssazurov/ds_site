@@ -6,21 +6,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-type DocumentSummary = {
-  document_id: string;
-  doc_name: string;
-  metadata?: Record<string, unknown>;
-};
-
-type DocumentsResponse = {
-  documents?: DocumentSummary[];
-  total?: number;
-  facets?: Record<string, string[]>;
-  error?: string;
-};
-
-type FilterKey = "direction" | "category" | "doc_type" | "age" | "target_audience";
+import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 
 const FILTER_LABELS: Record<FilterKey, string> = {
   direction: "Направление",

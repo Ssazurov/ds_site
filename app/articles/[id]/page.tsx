@@ -7,14 +7,7 @@
 
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
-
-type DocumentDetail = {
-  document_id: string;
-  doc_name: string;
-  metadata?: Record<string, unknown>;
-  assets?: { canonical_md?: { available?: boolean } };
-  error?: string;
-};
+import type { DocumentDetail } from "@/lib/gar";
 
 function articleTitle(doc: DocumentDetail) {
   return String(doc.metadata?.title || doc.doc_name);
