@@ -2,6 +2,11 @@
 
 import { FormEvent, useState } from "react";
 
+// Issue #6: scope из группового выбора статей на /articles, см. filters.document_ids
+// и scope_source в gar-core-api/schemas/chat.py (ADR-042: manual vs dialog).
+const SCOPE_STORAGE_KEY = "ds-chat-scope";
+type ChatScope = { document_ids: string[]; titles: string[] };
+
 type Source = {
   text?: string;
   document_key?: string;
@@ -42,6 +47,21 @@ export default function Home() {
   const [sourcesVisible, setSourcesVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [scope, setScope] = useState<ChatScope | null>(() => {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = sessionStorage.getItem(SCOPE_STORAGE_KEY);
+      return raw ? (JSON.parse(raw) as ChatScope) : null;
+    } catch {
+      // повреждённое значение в sessionStorage — игнорируем, scope просто не применится
+      return null;
+    }
+  });
+
+  function clearScope() {
+    sessionStorage.removeItem(SCOPE_STORAGE_KEY);
+    setScope(null);
+  }
 
   async function requestAnswer(action?: ChatAction, mode = responseMode) {
     const trimmedQuery = query.trim();
@@ -63,6 +83,10 @@ export default function Home() {
           ...(action ? { action } : {}),
           ...(action === "more_sources" ? {
             exclude_ids: response?.sources?.map((source) => source.document_key).filter(Boolean),
+          } : {}),
+          ...(scope?.document_ids.length ? {
+            filters: { document_ids: scope.document_ids },
+            scope_source: "manual",
           } : {}),
         }),
       });
@@ -132,6 +156,13 @@ export default function Home() {
             </button>
           </fieldset>
         </form>
+
+        {scope && scope.document_ids.length > 0 && (
+          <div className="scope-badge" role="status">
+            <span>Ограничено выбранными статьями ({scope.document_ids.length}): {scope.titles.join(", ")}</span>
+            <button type="button" onClick={clearScope}>Сбросить</button>
+          </div>
+        )}
 
         {error && <p className="message error" role="alert">{error}</p>}
         {response?.answer && (
