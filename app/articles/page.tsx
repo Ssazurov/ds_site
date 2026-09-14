@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 // Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
 // существующего scope-tree (issue #32/#35), см. ADR-0003 п.1 и filters.document_ids
@@ -188,7 +189,7 @@ export default function ArticlesPage() {
                     />
                     Выбрать для чата
                   </label>
-                  <h2>{articleTitle(doc)}</h2>
+                  <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                   <p>
                     {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
                       .filter(Boolean)

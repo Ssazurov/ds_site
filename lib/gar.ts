@@ -46,3 +46,11 @@ export async function garDocuments(params: URLSearchParams) {
     headers: headers(),
   });
 }
+
+export async function garDocumentDetail(id: string) {
+  return fetch(`${GAR_URL}/public/documents/${id}`, { headers: headers() });
+}
+
+export async function garDocumentContent(id: string) {
+  return fetch(`${GAR_URL}/public/documents/${id}/content`, { headers: headers() });
+}
