@@ -6,6 +6,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+
+// Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
+// существующего scope-tree (issue #32/#35), см. ADR-0003 п.1 и filters.document_ids
+// / scope_source в gar-core-api/schemas/chat.py. Ключ sessionStorage читает
+// app/page.tsx при монтировании.
+const SCOPE_STORAGE_KEY = "ds-chat-scope";
 
 type DocumentSummary = {
   document_id: string;
@@ -60,6 +67,7 @@ function ruLabel(value: unknown): string | null {
 }
 
 export default function ArticlesPage() {
+  const router = useRouter();
   const [filters, setFilters] = useState<Record<FilterKey, string>>({
     direction: "", category: "", doc_type: "", age: "", target_audience: "",
   });
@@ -67,6 +75,7 @@ export default function ArticlesPage() {
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
 
   useEffect(() => {
     if (!DATASET_ID) return;
@@ -103,6 +112,31 @@ export default function ArticlesPage() {
   function setFilter(key: FilterKey, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
+
+  function toggleSelected(doc: DocumentSummary) {
+    setSelected((prev) => {
+      const next = { ...prev };
+      if (next[doc.document_id]) delete next[doc.document_id];
+      else next[doc.document_id] = articleTitle(doc);
+      return next;
+    });
+  }
+
+  function clearSelected() {
+    setSelected({});
+  }
+
+  function askAboutSelected() {
+    const document_ids = Object.keys(selected);
+    if (!document_ids.length) return;
+    sessionStorage.setItem(
+      SCOPE_STORAGE_KEY,
+      JSON.stringify({ document_ids, titles: Object.values(selected) }),
+    );
+    router.push("/");
+  }
+
+  const selectedCount = Object.keys(selected).length;
 
   return (
     <main className="chat-shell">
@@ -142,8 +176,18 @@ export default function ArticlesPage() {
           <div className="source-grid">
             {documents.map((doc) => {
               const url = articleUrl(doc);
+              const isSelected = Boolean(selected[doc.document_id]);
               return (
-                <article className="source-card" key={doc.document_id}>
+                <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
+                  <label className="select-check">
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      onChange={() => toggleSelected(doc)}
+                      aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
+                    />
+                    Выбрать для чата
+                  </label>
                   <h2>{articleTitle(doc)}</h2>
                   <p>
                     {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
@@ -161,6 +205,16 @@ export default function ArticlesPage() {
           </div>
         )}
       </section>
+
+      {selectedCount > 0 && (
+        <div className="selection-bar" role="status" aria-live="polite">
+          <span>Выбрано статей: {selectedCount}</span>
+          <div className="selection-bar-actions">
+            <button type="button" onClick={askAboutSelected}>Спросить по выбранным</button>
+            <button type="button" onClick={clearSelected}>Очистить</button>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
