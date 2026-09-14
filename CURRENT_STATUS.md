@@ -1,6 +1,11 @@
 # ds_site — CURRENT_STATUS
 
 ## Готово
+- Issue ds_search#138 (ADR-0006, PR #21): роут `/articles/[id]` — полный текст
+  canonical_md + автор + ссылка на источник, если материал скачан по лицензии
+  (`assets.canonical_md.available`); иначе карточка метаданных + ссылка,
+  без текста. Прокси `app/api/gar/documents/[id]` и `.../content`.
+  Заголовки карточек в `/articles` теперь ссылки на `/articles/[id]`.
 - Next.js 16 скелет (app/api/gar/chat, app/api/gar/scope-tree — серверный прокси к GAR /public/*)
 - lib/gar.ts: X-Public-Api-Key + GAR_URL, вариант B (localhost, без Cloudflare Zero Trust)
 - Прокси проверен вживую: scope-tree (27 документов, dataset sindrom-dauna) и chat (ответ с источниками) — оба 200 OK
