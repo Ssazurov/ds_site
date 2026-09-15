@@ -1,3 +1,7 @@
+## 2026-09-15 -- release 0.1.21 closed; next 0.1.22
+
+- Project #1 release coordination completed; contextual article facets are on main. Release notes published; next target is 0.1.22.
+
 # ds_site — CURRENT_STATUS
 
 ## 2026-09-15 — Issue #12 GAR public metadata labels
