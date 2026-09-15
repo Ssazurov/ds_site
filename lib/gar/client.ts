@@ -16,6 +16,11 @@
 
 const GAR_URL = process.env.GAR_URL ?? "http://localhost:8000";
 const GAR_PUBLIC_API_KEY = process.env.GAR_PUBLIC_API_KEY;
+// admin-эндпоинт /datasets/{id}/metadata-fields не под /public/* (issue
+// ds_site#12): пока сайт ходит напрямую на localhost (см. решение выше),
+// используем тот же trust model, что и ds_search (gar_schema.py) — только
+// X-User-ID, без публичного ключа.
+const GAR_ADMIN_USER_ID = process.env.GAR_ADMIN_USER_ID ?? "admin-ui";
 
 function headers(): HeadersInit {
   if (!GAR_PUBLIC_API_KEY) {
@@ -53,4 +58,10 @@ export async function garDocumentDetail(id: string) {
 
 export async function garDocumentContent(id: string) {
   return fetch(`${GAR_URL}/public/documents/${id}/content`, { headers: headers() });
+}
+
+export async function garMetadataFields(datasetId: string) {
+  return fetch(`${GAR_URL}/datasets/${datasetId}/metadata-fields`, {
+    headers: { "X-User-ID": GAR_ADMIN_USER_ID },
+  });
 }

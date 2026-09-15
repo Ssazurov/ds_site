@@ -44,3 +44,8 @@ export type ChatResponse = {
 export type ChatScope = { document_ids: string[]; titles: string[] };
 
 export type FilterKey = "direction" | "category" | "doc_type" | "age" | "target_audience";
+
+// Словарь метаданных GAR (issue ds_site#12): value -> русская подпись,
+// по каждому полю (direction/category/...). Источник правды — GAR
+// (GET /datasets/{id}/metadata-fields), не локальные константы.
+export type MetadataLabels = Record<FilterKey, Record<string, string>>;
