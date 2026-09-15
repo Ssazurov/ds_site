@@ -60,7 +60,7 @@ function MetadataLinks({ metadata, getLabelFn }: { metadata?: DocumentSummary["m
     const label = getLabelFn("category", metadata.category);
     if (label) {
       parts.push(
-        <Link key="category" href={`/articles?category=${metadata.category}`}>
+        <Link key="category" href={`/articles?direction=${metadata.direction || ""}&category=${metadata.category}`}>
           {label}
         </Link>
       );
@@ -146,9 +146,11 @@ function ArticlesContent() {
   }, [urlFilters.direction, urlFilters.category, urlFilters.doc_type, urlFilters.age, urlFilters.target_audience, urlPerPage, urlPage]);
 
   function setFilter(key: FilterKey, value: string) {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    const nextFilters = { ...filters, [key]: value };
+    if (key === "direction" && value !== filters.direction) nextFilters.category = "";
+    setFilters(nextFilters);
     setPage(1); // Сбросить на первую страницу при смене фильтра
-    updateURL({ ...filters, [key]: value }, perPage, 1);
+    updateURL(nextFilters, perPage, 1);
   }
 
   function clearFilters() {

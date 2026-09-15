@@ -11,6 +11,11 @@
   `searchParams`, avoiding cascading state updates during effects.
 - Site checks pass: `npm run lint`, `npx tsc --noEmit`, and `npm run build`.
 
+## 2026-09-15 — Контекстные категории направления
+
+- `/articles` получает фасеты с учётом остальных фильтров: после выбора направления список категорий содержит только категории этого направления.
+- Смена направления сбрасывает несовместимую категорию; ссылка на категорию в карточке сохраняет направление.
+
 ## 2026-09-14 -- ADR-0009: ds_site вне scope
 
 - Root ADR: `ds/docs/adr/0009-real-source-recrawl-reload.md`.
