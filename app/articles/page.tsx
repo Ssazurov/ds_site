@@ -5,8 +5,8 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 
@@ -53,23 +53,38 @@ function ruLabel(value: unknown): string | null {
   return DIRECTION_LABELS[value] || value;
 }
 
-export default function ArticlesPage() {
+function ArticlesContent() {
   const router = useRouter();
-  const [filters, setFilters] = useState<Record<FilterKey, string>>({
-    direction: "", category: "", doc_type: "", age: "", target_audience: "",
+  const searchParams = useSearchParams();
+  const [filters, setFilters] = useState<Record<FilterKey, string>>(() => ({
+    direction: searchParams.get("direction") || "",
+    category: searchParams.get("category") || "",
+    doc_type: searchParams.get("doc_type") || "",
+    age: searchParams.get("age") || "",
+    target_audience: searchParams.get("target_audience") || "",
+  }));
+  const [perPage, setPerPage] = useState(() => {
+    const pp = parseInt(searchParams.get("per_page") || "10", 10);
+    return [10, 20, 50].includes(pp) ? pp : 10;
   });
+  const [page, setPage] = useState(() => Math.max(1, parseInt(searchParams.get("page") || "1", 10)));
   const [documents, setDocuments] = useState<DocumentSummary[]>([]);
+  const [total, setTotal] = useState(0);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
 
+  // Загрузка документов с учётом фильтров и пагинации
   useEffect(() => {
     if (!DATASET_ID) return;
     const params = new URLSearchParams({ dataset_id: DATASET_ID });
     for (const key of FILTER_ORDER) {
       if (filters[key]) params.set(key, filters[key]);
     }
+    params.set("per_page", String(perPage));
+    params.set("page", String(page));
+
     let cancelled = false;
     async function load() {
       await Promise.resolve();
@@ -82,6 +97,7 @@ export default function ArticlesPage() {
         if (cancelled) return;
         if (data.error) throw new Error(data.error);
         setDocuments(data.documents || []);
+        setTotal(data.total || 0);
         setFacets((prev) => (data.facets ? data.facets : prev));
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить статьи.");
@@ -94,10 +110,40 @@ export default function ArticlesPage() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.direction, filters.category, filters.doc_type, filters.age, filters.target_audience]);
+  }, [filters.direction, filters.category, filters.doc_type, filters.age, filters.target_audience, perPage, page]);
 
   function setFilter(key: FilterKey, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
+    setPage(1); // Сбросить на первую страницу при смене фильтра
+    updateURL({ ...filters, [key]: value }, perPage, 1);
+  }
+
+  function clearFilters() {
+    const emptyFilters = { direction: "", category: "", doc_type: "", age: "", target_audience: "" };
+    setFilters(emptyFilters);
+    setPage(1);
+    updateURL(emptyFilters, perPage, 1);
+  }
+
+  function changePerPage(value: number) {
+    setPerPage(value);
+    setPage(1);
+    updateURL(filters, value, 1);
+  }
+
+  function changePage(newPage: number) {
+    setPage(newPage);
+    updateURL(filters, perPage, newPage);
+  }
+
+  function updateURL(f: Record<FilterKey, string>, pp: number, p: number) {
+    const params = new URLSearchParams();
+    for (const key of FILTER_ORDER) {
+      if (f[key]) params.set(key, f[key]);
+    }
+    params.set("per_page", String(pp));
+    params.set("page", String(p));
+    router.replace(`/articles?${params.toString()}`, { scroll: false });
   }
 
   function toggleSelected(doc: DocumentSummary) {
@@ -124,6 +170,7 @@ export default function ArticlesPage() {
   }
 
   const selectedCount = Object.keys(selected).length;
+  const totalPages = Math.ceil(total / perPage);
 
   return (
     <main className="chat-shell">
@@ -134,22 +181,37 @@ export default function ArticlesPage() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        <fieldset className="response-mode" disabled={loading}>
-          <legend>Фильтры</legend>
-          {FILTER_ORDER.map((key) => (
-            <select
-              key={key}
-              value={filters[key]}
-              onChange={(event) => setFilter(key, event.target.value)}
-              aria-label={FILTER_LABELS[key]}
-            >
-              <option value="">{FILTER_LABELS[key]}: все</option>
-              {(facets[key] || []).map((value) => (
-                <option key={value} value={value}>{ruLabel(value)}</option>
-              ))}
+        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
+          <fieldset className="response-mode" disabled={loading} style={{ flex: 1 }}>
+            <legend>Фильтры</legend>
+            {FILTER_ORDER.map((key) => (
+              <select
+                key={key}
+                value={filters[key]}
+                onChange={(event) => setFilter(key, event.target.value)}
+                aria-label={FILTER_LABELS[key]}
+              >
+                <option value="">{FILTER_LABELS[key]}: все</option>
+                {(facets[key] || []).map((value) => (
+                  <option key={value} value={value}>{ruLabel(value)}</option>
+                ))}
+              </select>
+            ))}
+          </fieldset>
+          <button type="button" onClick={clearFilters} disabled={loading}>Сбросить фильтры</button>
+        </div>
+
+        <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "1rem" }}>
+          <label>
+            Показывать по:
+            <select value={perPage} onChange={(e) => changePerPage(Number(e.target.value))} disabled={loading}>
+              <option value="10">10</option>
+              <option value="20">20</option>
+              <option value="50">50</option>
             </select>
-          ))}
-        </fieldset>
+          </label>
+          {total > 0 && <span>Всего найдено: {total}</span>}
+        </div>
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -160,36 +222,58 @@ export default function ArticlesPage() {
         )}
 
         {!loading && documents.length > 0 && (
-          <div className="source-grid">
-            {documents.map((doc) => {
-              const url = articleUrl(doc);
-              const isSelected = Boolean(selected[doc.document_id]);
-              return (
-                <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
-                  <label className="select-check">
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() => toggleSelected(doc)}
-                      aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
-                    />
-                    Выбрать для чата
-                  </label>
-                  <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
-                  <p>
-                    {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </p>
-                  {url ? (
-                    <a href={url} target="_blank" rel="noreferrer">
-                      Открыть материал <span aria-hidden="true">↗</span>
-                    </a>
-                  ) : <span className="no-link">Ссылка недоступна</span>}
-                </article>
-              );
-            })}
-          </div>
+          <>
+            <div className="source-grid">
+              {documents.map((doc) => {
+                const url = articleUrl(doc);
+                const isSelected = Boolean(selected[doc.document_id]);
+                return (
+                  <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
+                    <label className="select-check">
+                      <input
+                        type="checkbox"
+                        checked={isSelected}
+                        onChange={() => toggleSelected(doc)}
+                        aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
+                      />
+                      Выбрать для чата
+                    </label>
+                    <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
+                    <p>
+                      {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
+                        .filter(Boolean)
+                        .join(" · ")}
+                    </p>
+                    {url ? (
+                      <a href={url} target="_blank" rel="noreferrer">
+                        Открыть материал <span aria-hidden="true">↗</span>
+                      </a>
+                    ) : <span className="no-link">Ссылка недоступна</span>}
+                  </article>
+                );
+              })}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="pagination" style={{ marginTop: "1rem", display: "flex", gap: "0.5rem", justifyContent: "center" }}>
+                <button onClick={() => changePage(1)} disabled={page === 1 || loading}>
+                  Первая
+                </button>
+                <button onClick={() => changePage(page - 1)} disabled={page === 1 || loading}>
+                  Предыдущая
+                </button>
+                <span style={{ padding: "0.5rem" }}>
+                  Страница {page} из {totalPages}
+                </span>
+                <button onClick={() => changePage(page + 1)} disabled={page >= totalPages || loading}>
+                  Следующая
+                </button>
+                <button onClick={() => changePage(totalPages)} disabled={page === totalPages || loading}>
+                  Последняя
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
 
@@ -203,5 +287,13 @@ export default function ArticlesPage() {
         </div>
       )}
     </main>
+  );
+}
+
+export default function ArticlesPage() {
+  return (
+    <Suspense fallback={<div className="chat-shell"><p className="message">Загружаю...</p></div>}>
+      <ArticlesContent />
+    </Suspense>
   );
 }
