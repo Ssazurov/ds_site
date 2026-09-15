@@ -1,7 +1,7 @@
 // app/api/gar/metadata-fields/route.ts
 // Отдаёт value -> label словарь по direction/category/doc_type/age/target_audience
-// из GAR (источник правды, issue ds_site#12). Кэш в памяти процесса (TTL),
-// т.к. эндпоинт GAR admin-only и не должен дёргаться на каждый рендер фильтра.
+// из GAR /public/metadata-fields (источник правды, issue ds_site#12, ADR-0012).
+// Кэш в памяти процесса (TTL), чтобы не дёргать GAR на каждый рендер фильтра.
 
 import { NextRequest, NextResponse } from "next/server";
 import { garMetadataFields } from "@/lib/gar";
