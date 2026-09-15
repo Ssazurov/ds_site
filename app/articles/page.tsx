@@ -9,6 +9,7 @@ import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import { useMetadataLabels } from "@/lib/gar/labels";
 
 // Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
 // существующего scope-tree (issue #32/#35), см. ADR-0003 п.1 и filters.document_ids
@@ -41,21 +42,45 @@ function articleUrl(doc: DocumentSummary) {
   return typeof url === "string" ? url : null;
 }
 
-// value -> русская подпись для select-полей. Временный хардкод (issue #12) —
-// заменить на публичный словарь /public/metadata-fields из gar-core-api.
-const DIRECTION_LABELS: Record<string, string> = {
-  "podderzhka-semi": "Поддержка семьи",
-  "soobschestva-i-vzaimopomosch": "Сообщества и взаимопомощь",
-};
+function MetadataLinks({ metadata, getLabelFn }: { metadata?: DocumentSummary["metadata"]; getLabelFn: (field: FilterKey, value: unknown) => string | null }) {
+  const parts: React.ReactNode[] = [];
 
-function ruLabel(value: unknown): string | null {
-  if (typeof value !== "string" || !value) return null;
-  return DIRECTION_LABELS[value] || value;
+  if (metadata?.direction) {
+    const label = getLabelFn("direction", metadata.direction);
+    if (label) {
+      parts.push(
+        <Link key="direction" href={`/articles?direction=${metadata.direction}`}>
+          {label}
+        </Link>
+      );
+    }
+  }
+
+  if (metadata?.category) {
+    const label = getLabelFn("category", metadata.category);
+    if (label) {
+      parts.push(
+        <Link key="category" href={`/articles?category=${metadata.category}`}>
+          {label}
+        </Link>
+      );
+    }
+  }
+
+  if (metadata?.doc_type) {
+    const label = getLabelFn("doc_type", metadata.doc_type);
+    if (label) {
+      parts.push(<span key="doc_type">{label}</span>);
+    }
+  }
+
+  return <>{parts.reduce<React.ReactNode[]>((acc, part, i) => i === 0 ? [part] : [...acc, " · ", part], [])}</>;
 }
 
 function ArticlesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { ruLabel } = useMetadataLabels(DATASET_ID);
   const [filters, setFilters] = useState<Record<FilterKey, string>>(() => ({
     direction: searchParams.get("direction") || "",
     category: searchParams.get("category") || "",
@@ -193,7 +218,7 @@ function ArticlesContent() {
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (
-                  <option key={value} value={value}>{ruLabel(value)}</option>
+                  <option key={value} value={value}>{ruLabel(key, value)}</option>
                 ))}
               </select>
             ))}
@@ -239,11 +264,7 @@ function ArticlesContent() {
                       Выбрать для чата
                     </label>
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
-                    <p>
-                      {[ruLabel(doc.metadata?.direction), ruLabel(doc.metadata?.category), ruLabel(doc.metadata?.doc_type)]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
+                    <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
                     {url ? (
                       <a href={url} target="_blank" rel="noreferrer">
                         Открыть материал <span aria-hidden="true">↗</span>
