@@ -7,3 +7,9 @@
 Стек: Next.js + Tailwind (паттерн gar-admin-ui, независимый репозиторий).
 
 См. `ds_search/docs/adr/ADR-004-produkt-1-sayt.md`.
+
+## Запуск (dev)
+```bash
+cd /home/vector/projects/ds/ds_site && npm run dev -- -p 3001
+```
+Сайт: http://localhost:3001/ (требует запущенный gar-core-api, обычно порт 8100).

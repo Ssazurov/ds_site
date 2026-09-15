@@ -1,6 +1,23 @@
 # ds_site — CURRENT_STATUS
 
+## 2026-09-14 -- ADR-0009: ds_site вне scope
+
+- Root ADR: `ds/docs/adr/0009-real-source-recrawl-reload.md`.
+- Requirements: `ds/docs/requirements/real-source-recrawl-reload.md`.
+- Сайт не меняется: стабильный GAR `document_id` сохраняет ссылки и public
+  contract. Следующий slice выполняют ds_search crawler owner, затем
+  ds_ingestion orchestration owner; ds_site изменений не принимает.
+
+## В работе
+(пусто)
+
 ## Готово
+- Issue #23 (root ADR-0007, ds_ingestion#7): кнопка "Полная перезагрузка
+  статьи из источника" в админке -> POST /reload в ds_ingestion. Закрыто
+  в релизе 0.9.
+- Issue #24: пагинация `/articles` (page/per_page, контролы "показывать по",
+  первая/пред/след/последняя), состояние синхронизировано с URL.
+  Backend: gar-core-api PR #318 (page/per_page в GET /public/documents).
 - Issue ds_search#138 (ADR-0006, PR #21): роут `/articles/[id]` — полный текст
   canonical_md + автор + ссылка на источник, если материал скачан по лицензии
   (`assets.canonical_md.available`); иначе карточка метаданных + ссылка,
