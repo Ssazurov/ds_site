@@ -100,6 +100,24 @@ function ArticlesContent() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
 
+  // Синхронизация состояния с URL при навигации по ссылкам направления/категории
+  // (MetadataLinks делает router-навигацию на тот же роут с новыми searchParams;
+  // useState-инициализатор filters/page/perPage запускается один раз, поэтому
+  // без этого эффекта список не обновлялся до ручного reload страницы)
+  useEffect(() => {
+    setFilters({
+      direction: searchParams.get("direction") || "",
+      category: searchParams.get("category") || "",
+      doc_type: searchParams.get("doc_type") || "",
+      age: searchParams.get("age") || "",
+      target_audience: searchParams.get("target_audience") || "",
+    });
+    const pp = parseInt(searchParams.get("per_page") || "10", 10);
+    setPerPage([10, 20, 50].includes(pp) ? pp : 10);
+    setPage(Math.max(1, parseInt(searchParams.get("page") || "1", 10)));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
+
   // Загрузка документов с учётом фильтров и пагинации
   useEffect(() => {
     if (!DATASET_ID) return;
@@ -266,8 +284,8 @@ function ArticlesContent() {
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                     <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
                     {url ? (
-                      <a href={url} target="_blank" rel="noreferrer">
-                        Открыть материал <span aria-hidden="true">↗</span>
+                      <a href={url} target="_blank" rel="noreferrer" className="source-link">
+                        Источник <span aria-hidden="true">↗</span>
                       </a>
                     ) : <span className="no-link">Ссылка недоступна</span>}
                   </article>

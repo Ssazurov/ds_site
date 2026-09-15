@@ -1,5 +1,16 @@
 # ds_site — CURRENT_STATUS
 
+## 2026-09-15 — Issue #12 GAR public metadata labels
+
+- Site already consumes `/api/gar/metadata-fields` and keeps technical slug
+  values in filter URLs; no local translation dictionary was added.
+- The GAR backend implementation is tracked in
+  `gar-core-api#320`: `GET /public/metadata-fields` returns active fields and
+  active `value -> label` options through the existing public API key and ACL.
+- Site verification is currently blocked by a pre-existing lint error in
+  `app/articles/page.tsx:108` (`react-hooks/set-state-in-effect`) in the
+  user's uncommitted changes. The site files were not modified.
+
 ## 2026-09-14 -- ADR-0009: ds_site вне scope
 
 - Root ADR: `ds/docs/adr/0009-real-source-recrawl-reload.md`.
@@ -129,4 +140,3 @@
 - Применено в `articles/page.tsx` (селекты фильтров + `MetadataLinks`) и
   `links/page.tsx` (селекты + карточки).
 - `tsc --noEmit` — чисто.
-
