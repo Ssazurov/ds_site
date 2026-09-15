@@ -100,15 +100,23 @@ function ArticlesContent() {
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
 
+  const urlFilters = Object.fromEntries(
+    FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
+  ) as Record<FilterKey, string>;
+  const urlPerPage = [10, 20, 50].includes(Number(searchParams.get("per_page")))
+    ? Number(searchParams.get("per_page"))
+    : perPage;
+  const urlPage = Math.max(1, parseInt(searchParams.get("page") || String(page), 10));
+
   // Загрузка документов с учётом фильтров и пагинации
   useEffect(() => {
     if (!DATASET_ID) return;
     const params = new URLSearchParams({ dataset_id: DATASET_ID });
     for (const key of FILTER_ORDER) {
-      if (filters[key]) params.set(key, filters[key]);
+      if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
-    params.set("per_page", String(perPage));
-    params.set("page", String(page));
+    params.set("per_page", String(urlPerPage));
+    params.set("page", String(urlPage));
 
     let cancelled = false;
     async function load() {
@@ -135,7 +143,7 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.direction, filters.category, filters.doc_type, filters.age, filters.target_audience, perPage, page]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.doc_type, urlFilters.age, urlFilters.target_audience, urlPerPage, urlPage]);
 
   function setFilter(key: FilterKey, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -212,7 +220,7 @@ function ArticlesContent() {
             {FILTER_ORDER.map((key) => (
               <select
                 key={key}
-                value={filters[key]}
+                value={urlFilters[key]}
                 onChange={(event) => setFilter(key, event.target.value)}
                 aria-label={FILTER_LABELS[key]}
               >
@@ -266,8 +274,8 @@ function ArticlesContent() {
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                     <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
                     {url ? (
-                      <a href={url} target="_blank" rel="noreferrer">
-                        Открыть материал <span aria-hidden="true">↗</span>
+                      <a href={url} target="_blank" rel="noreferrer" className="source-link">
+                        Источник <span aria-hidden="true">↗</span>
                       </a>
                     ) : <span className="no-link">Ссылка недоступна</span>}
                   </article>

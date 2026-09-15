@@ -63,6 +63,7 @@ body {
 .source-card h2 { margin: 9px 0 8px; font-size: 17px; line-height: 1.3; overflow-wrap: anywhere; }
 .source-card p:not(.source-index) { margin: 0 0 18px; color: var(--ink-muted); font-size: 14px; line-height: 1.5; }
 .source-card a, .no-link { color: var(--accent-dark); font-size: 14px; font-weight: 700; text-decoration: none; }
+.source-card a.source-link { font-size: 12px; }
 .source-card a:hover { text-decoration: underline; }
 .no-link { color: var(--ink-muted); }
 
