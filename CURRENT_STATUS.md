@@ -113,4 +113,20 @@
 
 ## Дальше
 - Верстать страницы (глоссарий/чат-виджет) поверх прокси
-- См. открытые issues: #12, #13, #14 (+#15/#16/#17), #7, #8
+- См. открытые issues: #13, #14 (+#15/#16/#17), #7, #8
+
+## Issue #12 (ADR-0012): RU-labels metadata из GAR, не хардкод
+- Закрыт хардкод `DIRECTION_LABELS` (2/11 значений direction, category не
+  покрыт вообще) в `articles/page.tsx`; `links/page.tsx` вообще не имел
+  словаря — показывал сырые slug'и.
+- `lib/gar/client.ts`: `garMetadataFields(datasetId)` — прямой GET
+  `{GAR_URL}/datasets/{id}/metadata-fields` (admin-роут, не `/public/*`;
+  публичного эндпоинта для этого в gar-core-api нет), `X-User-ID: admin-ui`
+  (env `GAR_ADMIN_USER_ID`).
+- `app/api/gar/metadata-fields/route.ts` — серверный прокси с TTL-кэшем 5 мин.
+- `lib/gar/labels.ts` — клиентский хук `useMetadataLabels(datasetId)`,
+  module-singleton fetch, `ruLabel(key, value)`, fallback на raw value.
+- Применено в `articles/page.tsx` (селекты фильтров + `MetadataLinks`) и
+  `links/page.tsx` (селекты + карточки).
+- `tsc --noEmit` — чисто.
+

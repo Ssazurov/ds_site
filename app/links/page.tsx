@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import { useMetadataLabels } from "@/lib/gar/labels";
 
 const FILTER_LABELS: Record<FilterKey, string> = {
   direction: "Направление",
@@ -39,6 +40,7 @@ async function fetchDocType(base: URLSearchParams, docType: string) {
 }
 
 export default function LinksPage() {
+  const { ruLabel } = useMetadataLabels(DATASET_ID);
   const [filters, setFilters] = useState<Record<Exclude<FilterKey, "doc_type">, string>>({
     direction: "", category: "", age: "", target_audience: "",
   });
@@ -113,7 +115,7 @@ export default function LinksPage() {
             >
               <option value="">{FILTER_LABELS[key]}: все</option>
               {(facets[key] || []).map((value) => (
-                <option key={value} value={value}>{value}</option>
+                <option key={value} value={value}>{ruLabel(key, value)}</option>
               ))}
             </select>
           ))}
@@ -135,7 +137,7 @@ export default function LinksPage() {
                 <article className="source-card" key={doc.document_id}>
                   <h2>{linkTitle(doc)}</h2>
                   <p>
-                    {[doc.metadata?.direction, doc.metadata?.category, doc.metadata?.doc_type]
+                    {[ruLabel("direction", doc.metadata?.direction), ruLabel("category", doc.metadata?.category), ruLabel("doc_type", doc.metadata?.doc_type)]
                       .filter(Boolean)
                       .join(" · ")}
                   </p>
