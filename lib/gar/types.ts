@@ -43,6 +43,29 @@ export type ChatResponse = {
 
 export type ChatScope = { document_ids: string[]; titles: string[] };
 
+// Контракт GAR /public/documents/scope-tree (schemas/scope.py, issue #17):
+// дерево product -> doc_type -> documents, для встроенного в /assistant
+// пикера статей поверх ручного выбора на /articles (issue #6).
+export type ScopeDocument = {
+  document_id: string;
+  title: string;
+  product: string;
+  doc_type: string;
+  summary?: string | null;
+};
+
+export type ScopeDocType = { name: string; documents: ScopeDocument[] };
+
+export type ScopeProduct = { name: string; doc_types: ScopeDocType[] };
+
+export type ScopeTreeResponse = {
+  products?: ScopeProduct[];
+  total?: number;
+  offset?: number;
+  limit?: number;
+  error?: string;
+};
+
 export type FilterKey = "direction" | "category" | "doc_type" | "age" | "target_audience";
 
 // Словарь метаданных GAR (issue ds_site#12): value -> русская подпись,

@@ -201,7 +201,7 @@ function ArticlesContent() {
       SCOPE_STORAGE_KEY,
       JSON.stringify({ document_ids, titles: Object.values(selected) }),
     );
-    router.push("/");
+    router.push("/assistant");
   }
 
   const selectedCount = Object.keys(selected).length;
