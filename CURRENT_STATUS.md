@@ -86,7 +86,27 @@
   `original_url` и `canonical_md_url` из существующего `sources[]` контракта.
 - Issue #32 checks: `npm run lint`, `npm run build`, `git diff --check`.
 
-## Инфраструктура
+## Инфраструктура: docker compose (актуально с 2026-09-16, эпик gar-core-api#323)
+- Весь стек поднимается `docker compose up` из `~/projects/deploy/docker-compose.yml`
+  (сеть `gar-net`): образы билдятся из `../gar-core-api`, `../gar-admin-ui`,
+  `../ds/ds_ingestion`, `../ds/ds_search`, `../ds/ds_site`.
+- Контейнеры/порты: `deploy-gar-core-api-1` **8000** (не 8100 — старый способ
+  запуска через `start-chat-site.sh` устарел), `deploy-gar-admin-ui-1` 3000,
+  `deploy-ds-ingestion-1` 8200, `deploy-ds-search-1` (streamlit) 8501,
+  `deploy-ds-site-1` 3001. Postgres — `docker-db_postgres-1:5432` (БД `gar_core`,
+  gar-core-api ходит туда через `host.docker.internal`), Qdrant —
+  `docker-qdrant-1:6333`.
+- X-Public-Api-Key не менялся, `NEXT_PUBLIC_GAR_DATASET_ID` задаётся build-арг в
+  compose (`81f35f18-8d32-458e-bf33-ddb68349e015`).
+- НАХОДКА (2026-09-16): в БД `gar_core` таблицы `glossary_terms` и
+  `resource_links` пустые (0 строк) — `/public/glossary-terms` и
+  `/public/resource-links` отдают `[]` даже с `dataset_id`. В `entities` нет
+  `entity_type='glossary_term'` вовсе (миграция 1647 entities → glossary_terms
+  из ADR-0004, п. Последствия, похоже не выполнена или данные не в этом
+  окружении). Блокирует #8 (pull-синк) содержательной проверкой — сам синк
+  можно закодировать, но синкать пока нечего.
+
+## Инфраструктура (устарело, см. docker compose выше)
 - GAR_PUBLIC_API_KEY сгенерирован, добавлен в gar-core-api/.env и ds_site/.env.local
 - ACL выдан: `python -m scripts.seed_public_acl 81f35f18-8d32-458e-bf33-ddb68349e015` → public-site-readonly, dataset sindrom-dauna
 
