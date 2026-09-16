@@ -1,3 +1,18 @@
+## 2026-09-16 — Issue #37: публичная страница /news
+
+- Новостной блок (ds_search Epic #44) публикует новости в GAR как
+  `doc_type=news`, но на сайте не было роута — раздел был недоступен
+  пользователям.
+- Добавлен `app/news/page.tsx`: лента новостей через `/api/gar/documents`
+  (тот же прокси, что у "Статьи", ADR-0003) с фикс. `doc_type=news`,
+  сортировка по `metadata.publish_date` на клиенте (backend `/public/documents`
+  сортировку по дате не поддерживает). Пункт "Новости" добавлен в
+  `components/Header.tsx`.
+- Дедуп новостей между источниками отложен — issue ds_search#155.
+- Не проверено CLI-сборкой (`npm run build`) из-за конфликта npm
+  (Windows interop) c UNC-путём WSL в этой сессии — рекомендуется
+  `npm run dev -- -p 3001` вручную перед мёржем.
+
 ## 2026-09-15 -- release 0.1.21 closed; next 0.1.22
 
 - Project #1 release coordination completed; contextual article facets are on main. Release notes published; next target is 0.1.22.

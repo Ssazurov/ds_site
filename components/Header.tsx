@@ -7,6 +7,7 @@ import Link from "next/link";
 const NAV_ITEMS = [
   { href: "/", label: "Главная" },
   { href: "/articles", label: "Статьи" },
+  { href: "/news", label: "Новости" },
   { href: "/links", label: "Ссылки" },
 ];
 
