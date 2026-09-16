@@ -179,3 +179,22 @@
 - Применено в `articles/page.tsx` (селекты фильтров + `MetadataLinks`) и
   `links/page.tsx` (селекты + карточки).
 - `tsc --noEmit` — чисто.
+
+
+## Issue #17 (PR #40): /assistant — RAG-чат с пикером статей по scope-tree
+- `components/ChatAssistant.tsx`: логика чата вынесена из `app/page.tsx`
+  (без изменений контракта `/api/gar/chat`), плюс встроенный `ScopePicker`
+  поверх уже существующего `/api/gar/scope-tree` (product -> doc_type ->
+  documents), сворачиваемый ("Ограничить чат конкретными статьями").
+- `app/page.tsx` и `app/assistant/page.tsx` — реэкспорт `ChatAssistant`;
+  оба URL показывают один и тот же чат.
+- `lib/gar/types.ts`: типы `ScopeTreeResponse/ScopeProduct/ScopeDocType/
+  ScopeDocument`.
+- Пикер и ручной выбор с /articles (issue #6) используют общий
+  sessionStorage-ключ `ds-chat-scope` — выбор статей на /articles тут же
+  виден в /assistant. Кнопка "Спросить" на /articles теперь ведёт на
+  /assistant (было `/`).
+- Header.tsx: пункт меню "Помощник".
+- `npm run lint`, `npm run build` — ok.
+- Epic #14 (Новости/Глоссарий/Помощник) закрыт — все три подзадачи (#15,
+  #16, #17) реализованы и смёржены.
