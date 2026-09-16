@@ -1,11 +1,12 @@
 // components/Header.tsx
-// Минимальная навигация сайта: Главная / Статьи / Ссылки (ds_site#5).
-// TODO: расширять по мере появления новых разделов (см. CURRENT_STATUS.md).
+// Навигация сайта (ds_site#5, #14): Главная / Помощник / Статьи / Новости /
+// Глоссарий / Ссылки.
 
 import Link from "next/link";
 
 const NAV_ITEMS = [
   { href: "/", label: "Главная" },
+  { href: "/assistant", label: "Помощник" },
   { href: "/articles", label: "Статьи" },
   { href: "/news", label: "Новости" },
   { href: "/glossary", label: "Глоссарий" },
