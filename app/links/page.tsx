@@ -1,13 +1,13 @@
 // app/links/page.tsx
-// Раздел "Библиотека" -> "Ссылки": список полезных ссылок/глоссария с теми же
-// фильтрами, что и "Статьи" (ds_site#5, ADR-0003). Разблокировано ds_search#131
-// (поэлементная загрузка glossary/links в GAR).
+// Раздел "Библиотека" -> "Ссылки": из pull-sync кэша (scripts/sync-glossary-links.mjs,
+// ADR-0004 п.3, issue #8) вместо live-запросов к gar-core-api.
 
 "use client";
 
-import { useEffect, useState } from "react";
-import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import { useEffect, useMemo, useState } from "react";
+import type { GlossaryLinksCache, ResourceLinkRecord } from "@/lib/gar/glossary-links-cache";
 import { useMetadataLabels } from "@/lib/gar/labels";
+import type { FilterKey } from "@/lib/gar";
 
 const FILTER_LABELS: Record<FilterKey, string> = {
   direction: "Направление",
@@ -18,25 +18,12 @@ const FILTER_LABELS: Record<FilterKey, string> = {
 };
 
 const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
+const OTHER_FILTERS = FILTER_ORDER.filter((k) => k !== "doc_type") as Exclude<FilterKey, "doc_type">[];
 
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
-// Раздел "Ссылки" показывает только эти doc_type (ds_search#131).
-const LINKS_DOC_TYPES = ["link", "glossary_term", "glossary_abb"];
 
-function linkTitle(doc: DocumentSummary) {
-  return String(doc.metadata?.title || doc.doc_name);
-}
-
-function linkUrl(doc: DocumentSummary) {
-  const url = doc.metadata?.original_url || doc.metadata?.canonical_md_url;
-  return typeof url === "string" ? url : null;
-}
-
-async function fetchDocType(base: URLSearchParams, docType: string) {
-  const params = new URLSearchParams(base);
-  params.set("doc_type", docType);
-  const res = await fetch(`/api/gar/documents?${params.toString()}`);
-  return (await res.json()) as DocumentsResponse;
+function linkFacetValue(link: ResourceLinkRecord, key: Exclude<FilterKey, "doc_type">) {
+  return key === "age" ? link.age_group : link[key];
 }
 
 export default function LinksPage() {
@@ -44,50 +31,49 @@ export default function LinksPage() {
   const [filters, setFilters] = useState<Record<Exclude<FilterKey, "doc_type">, string>>({
     direction: "", category: "", age: "", target_audience: "",
   });
-  const [docType, setDocType] = useState(""); // "" = все 3 фиксированных типа
-  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
-  const [facets, setFacets] = useState<Record<string, string[]>>({});
-  const [loading, setLoading] = useState(false);
+  const [docType, setDocType] = useState("");
+  const [cache, setCache] = useState<GlossaryLinksCache | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!DATASET_ID) return;
-    const base = new URLSearchParams({ dataset_id: DATASET_ID });
-    if (filters.direction) base.set("direction", filters.direction);
-    if (filters.category) base.set("category", filters.category);
-    if (filters.age) base.set("age", filters.age);
-    if (filters.target_audience) base.set("target_audience", filters.target_audience);
-
     let cancelled = false;
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const types = docType ? [docType] : LINKS_DOC_TYPES;
-        const results = await Promise.all(types.map((t) => fetchDocType(base, t)));
-        if (cancelled) return;
-        for (const r of results) if (r.error) throw new Error(r.error);
-        const merged = results.flatMap((r) => r.documents || []);
-        setDocuments(merged);
-        const mergedFacets = results.find((r) => r.facets)?.facets;
-        if (mergedFacets) setFacets(mergedFacets);
-      } catch (e) {
+    setLoading(true);
+    fetch("/api/glossary-links")
+      .then((res) => res.json())
+      .then((data: GlossaryLinksCache) => {
+        if (!cancelled) setCache(data);
+      })
+      .catch((e) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить ссылки.");
-      } finally {
+      })
+      .finally(() => {
         if (!cancelled) setLoading(false);
-      }
-    }
-    void load();
+      });
     return () => {
       cancelled = true;
     };
-  }, [filters.direction, filters.category, filters.age, filters.target_audience, docType]);
+  }, []);
+
+  const links = useMemo(() => cache?.links.filter((l) => l.status === "active") ?? [], [cache]);
+
+  const facets = useMemo(() => {
+    const result: Record<string, string[]> = {};
+    for (const key of OTHER_FILTERS) {
+      result[key] = [...new Set(links.map((l) => linkFacetValue(l, key)).filter((v): v is string => !!v))].sort();
+    }
+    return result;
+  }, [links]);
+
+  const filtered = useMemo(() => {
+    return links
+      .filter((l) => !docType || l.doc_type === docType)
+      .filter((l) => OTHER_FILTERS.every((key) => !filters[key] || linkFacetValue(l, key) === filters[key]));
+  }, [links, docType, filters]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
-
-  const otherFilters = FILTER_ORDER.filter((k) => k !== "doc_type") as Exclude<FilterKey, "doc_type">[];
 
   return (
     <main className="chat-shell">
@@ -106,7 +92,7 @@ export default function LinksPage() {
             <option value="glossary_term">Термин глоссария</option>
             <option value="glossary_abb">Сокращение</option>
           </select>
-          {otherFilters.map((key) => (
+          {OTHER_FILTERS.map((key) => (
             <select
               key={key}
               value={filters[key]}
@@ -121,34 +107,34 @@ export default function LinksPage() {
           ))}
         </fieldset>
 
-        {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}
 
-        {!loading && !error && documents.length === 0 && (
+        {!loading && !error && cache && !cache.syncedAt && (
+          <p className="message">Синк ещё не запускался — данных пока нет.</p>
+        )}
+
+        {!loading && !error && cache?.syncedAt && filtered.length === 0 && (
           <p className="message">Ничего не найдено по выбранным фильтрам.</p>
         )}
 
-        {!loading && documents.length > 0 && (
+        {!loading && filtered.length > 0 && (
           <div className="source-grid">
-            {documents.map((doc) => {
-              const url = linkUrl(doc);
-              return (
-                <article className="source-card" key={doc.document_id}>
-                  <h2>{linkTitle(doc)}</h2>
-                  <p>
-                    {[ruLabel("direction", doc.metadata?.direction), ruLabel("category", doc.metadata?.category), ruLabel("doc_type", doc.metadata?.doc_type)]
-                      .filter(Boolean)
-                      .join(" · ")}
-                  </p>
-                  {url ? (
-                    <a href={url} target="_blank" rel="noreferrer">
-                      Открыть материал <span aria-hidden="true">↗</span>
-                    </a>
-                  ) : <span className="no-link">Ссылка недоступна</span>}
-                </article>
-              );
-            })}
+            {filtered.map((link) => (
+              <article className="source-card" key={link.id}>
+                <h2>{link.name}</h2>
+                <p>
+                  {[ruLabel("direction", link.direction), ruLabel("category", link.category), ruLabel("doc_type", link.doc_type)]
+                    .filter(Boolean)
+                    .join(" · ")}
+                </p>
+                {link.url ? (
+                  <a href={link.url} target="_blank" rel="noreferrer">
+                    Открыть материал <span aria-hidden="true">↗</span>
+                  </a>
+                ) : <span className="no-link">Ссылка недоступна</span>}
+              </article>
+            ))}
           </div>
         )}
       </section>

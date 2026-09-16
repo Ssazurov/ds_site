@@ -1,15 +1,14 @@
 // app/glossary/page.tsx
-// Раздел "Глоссарий": термины и сокращения (doc_type=glossary_term/
-// glossary_abb, ds_search#131), с теми же фильтрами direction/category/
-// age/target_audience, что и "Ссылки" (ds_site#16, эпик #14).
-// Определение подгружается лениво по клику через
-// /api/gar/documents/{id}/content (canonical_md, ADR-0006).
+// Раздел "Глоссарий": термины и сокращения из pull-sync кэша
+// (scripts/sync-glossary-links.mjs, ADR-0004 п.3, issue #8) — сайт больше
+// не ходит в gar-core-api на каждый рендер за глоссарием.
 
 "use client";
 
-import { useEffect, useState } from "react";
-import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import { useEffect, useMemo, useState } from "react";
+import type { GlossaryLinksCache, GlossaryTermRecord } from "@/lib/gar/glossary-links-cache";
 import { useMetadataLabels } from "@/lib/gar/labels";
+import type { FilterKey } from "@/lib/gar";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -20,61 +19,25 @@ const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
 const FILTER_ORDER = Object.keys(FILTER_LABELS) as Exclude<FilterKey, "doc_type">[];
 
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
-const GLOSSARY_DOC_TYPES = ["glossary_term", "glossary_abb"];
 
-function termTitle(doc: DocumentSummary) {
-  return String(doc.metadata?.title || doc.doc_name);
+function termFacetValue(term: GlossaryTermRecord, key: Exclude<FilterKey, "doc_type">) {
+  return key === "age" ? term.age_group : term[key];
 }
 
-async function fetchDocType(base: URLSearchParams, docType: string) {
-  const params = new URLSearchParams(base);
-  params.set("doc_type", docType);
-  const res = await fetch(`/api/gar/documents?${params.toString()}`);
-  return (await res.json()) as DocumentsResponse;
-}
-
-function TermCard({ doc, ruLabel }: { doc: DocumentSummary; ruLabel: (k: FilterKey, v: unknown) => string | null }) {
+function TermCard({ term, ruLabel }: { term: GlossaryTermRecord; ruLabel: (k: FilterKey, v: unknown) => string | null }) {
   const [open, setOpen] = useState(false);
-  const [definition, setDefinition] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  async function toggle() {
-    if (open) {
-      setOpen(false);
-      return;
-    }
-    setOpen(true);
-    if (definition !== null) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/gar/documents/${doc.document_id}/content`);
-      if (!res.ok) {
-        setDefinition("Определение недоступно.");
-        return;
-      }
-      const text = await res.text();
-      // content_path — markdown "# Термин\n\nОпределение\n" (см.
-      // export_glossary_links_items.py) — убираем заголовок.
-      setDefinition(text.replace(/^#.*\n+/, "").trim() || "Определение недоступно.");
-    } catch {
-      setDefinition("Определение недоступно.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <article className="source-card">
-      <h2>{termTitle(doc)}</h2>
+      <h2>{term.term}</h2>
       <p>
-        {[ruLabel("direction", doc.metadata?.direction), ruLabel("category", doc.metadata?.category), ruLabel("doc_type", doc.metadata?.doc_type)]
+        {[ruLabel("direction", term.direction), ruLabel("category", term.category), ruLabel("doc_type", term.doc_type)]
           .filter(Boolean)
           .join(" · ")}
       </p>
-      <button type="button" onClick={toggle} className="source-link">
+      <button type="button" onClick={() => setOpen((v) => !v)} className="source-link">
         {open ? "Скрыть определение" : "Показать определение"}
       </button>
-      {open && <p>{loading ? "Загружаю..." : definition}</p>}
+      {open && <p>{term.definition || "Определение недоступно."}</p>}
     </article>
   );
 }
@@ -85,44 +48,45 @@ export default function GlossaryPage() {
     direction: "", category: "", age: "", target_audience: "",
   });
   const [docType, setDocType] = useState(""); // "" = термины + сокращения
-  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
-  const [facets, setFacets] = useState<Record<string, string[]>>({});
-  const [loading, setLoading] = useState(false);
+  const [cache, setCache] = useState<GlossaryLinksCache | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!DATASET_ID) return;
-    const base = new URLSearchParams({ dataset_id: DATASET_ID });
-    if (filters.direction) base.set("direction", filters.direction);
-    if (filters.category) base.set("category", filters.category);
-    if (filters.age) base.set("age", filters.age);
-    if (filters.target_audience) base.set("target_audience", filters.target_audience);
-
     let cancelled = false;
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const types = docType ? [docType] : GLOSSARY_DOC_TYPES;
-        const results = await Promise.all(types.map((t) => fetchDocType(base, t)));
-        if (cancelled) return;
-        for (const r of results) if (r.error) throw new Error(r.error);
-        const merged = results.flatMap((r) => r.documents || []);
-        merged.sort((a, b) => termTitle(a).localeCompare(termTitle(b), "ru"));
-        setDocuments(merged);
-        const mergedFacets = results.find((r) => r.facets)?.facets;
-        if (mergedFacets) setFacets(mergedFacets);
-      } catch (e) {
+    setLoading(true);
+    fetch("/api/glossary-links")
+      .then((res) => res.json())
+      .then((data: GlossaryLinksCache) => {
+        if (!cancelled) setCache(data);
+      })
+      .catch((e) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить глоссарий.");
-      } finally {
+      })
+      .finally(() => {
         if (!cancelled) setLoading(false);
-      }
-    }
-    void load();
+      });
     return () => {
       cancelled = true;
     };
-  }, [filters.direction, filters.category, filters.age, filters.target_audience, docType]);
+  }, []);
+
+  const terms = useMemo(() => cache?.terms.filter((t) => t.status === "active") ?? [], [cache]);
+
+  const facets = useMemo(() => {
+    const result: Record<string, string[]> = {};
+    for (const key of FILTER_ORDER) {
+      result[key] = [...new Set(terms.map((t) => termFacetValue(t, key)).filter((v): v is string => !!v))].sort();
+    }
+    return result;
+  }, [terms]);
+
+  const filtered = useMemo(() => {
+    return terms
+      .filter((t) => !docType || t.doc_type === docType)
+      .filter((t) => FILTER_ORDER.every((key) => !filters[key] || termFacetValue(t, key) === filters[key]))
+      .sort((a, b) => a.term.localeCompare(b.term, "ru"));
+  }, [terms, docType, filters]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -159,18 +123,21 @@ export default function GlossaryPage() {
           ))}
         </fieldset>
 
-        {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}
 
-        {!loading && !error && documents.length === 0 && (
+        {!loading && !error && cache && !cache.syncedAt && (
+          <p className="message">Синк ещё не запускался — данных пока нет.</p>
+        )}
+
+        {!loading && !error && cache?.syncedAt && filtered.length === 0 && (
           <p className="message">Ничего не найдено по выбранным фильтрам.</p>
         )}
 
-        {!loading && documents.length > 0 && (
+        {!loading && filtered.length > 0 && (
           <div className="source-grid">
-            {documents.map((doc) => (
-              <TermCard key={doc.document_id} doc={doc} ruLabel={ruLabel} />
+            {filtered.map((term) => (
+              <TermCard key={term.id} term={term} ruLabel={ruLabel} />
             ))}
           </div>
         )}
