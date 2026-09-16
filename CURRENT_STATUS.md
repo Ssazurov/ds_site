@@ -218,3 +218,14 @@
 - `npm run lint`, `npm run build` — ok.
 - Epic #14 (Новости/Глоссарий/Помощник) закрыт — все три подзадачи (#15,
   #16, #17) реализованы и смёржены.
+
+## 2026-09-16 -- issue #8: glossary/links на pull-sync кэше
+- `app/glossary/page.tsx`, `app/links/page.tsx` переведены с live-запросов
+  `/api/gar/documents` на `/api/glossary-links` (файловый кэш
+  `data/glossary-links-cache.json`, читает `lib/gar/glossary-links-cache.ts`,
+  пишет `scripts/sync-glossary-links.mjs`, ADR-0004 п.3).
+- Термин-карточки (`glossary`) больше не ходят в GAR за определением при
+  клике — текст берётся сразу из кэша (`term.definition`).
+- Если синк ещё не запускался — страницы показывают "Синк ещё не
+  запускался", а не ошибку (500/пусто).
+- `tsc --noEmit` чисто. PR #42 squash-merged, issue #8 закрыт (auto-close).
