@@ -265,3 +265,9 @@
 
 ## 2026-09-19 — Issue #75: /news/[id]
 - Карточка новости: заголовок-ссылка, превью (line-clamp 4), «Читать полностью». Новая страница app/news/[id]/page.tsx по образцу articles/[id] (canonical_md). PR #76. Проверка: сборка образа.
+
+## 2026-09-19 — Issue #77: /glossary и /links читают GAR напрямую
+- ADR-0016 (root `ds/docs/adr/`) заменяет ADR-0004 п.3: кэш `data/glossary-links-cache.json` был пуст (таблицы glossary_terms/resource_links в GAR пусты, термины лежат документами `glossary_term|glossary_abb|link`).
+- `lib/gar/documents-by-type.ts` (`fetchAllDocuments`, `metaStr`); страницы читают `/api/gar/documents?doc_type=...`; определение термина — лениво из `/content`; URL ссылки — `metadata.source_url`.
+- Удалены: `lib/gar/glossary-links-cache.ts`, `/api/glossary-links`, `scripts/sync-glossary-links.mjs`, npm-скрипт `sync:glossary-links`. Секции про кэш/синк выше устарели.
+- Проверка: в WSL нет node — тип-чек/сборка в образе.
