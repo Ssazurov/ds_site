@@ -259,7 +259,7 @@ function ArticlesContent() {
                         />
                       </label>
                     </div>
-                    <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
+                    <p className="card-meta"><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
                     <div className="card-links">
                       <Link href={`/articles/${doc.document_id}`} className="source-link">Читать →</Link>
                       {url ? (
