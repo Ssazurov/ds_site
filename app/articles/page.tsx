@@ -1,7 +1,9 @@
 // app/articles/page.tsx
 // Раздел "Библиотека" -> "Статьи": список материалов с фильтрами по
-// direction/category/doc_type/age/target_audience поверх схемы метаданных
-// ds_search (issue ds_site#4, ADR-0003).
+// direction/category/age/target_audience поверх схемы метаданных ds_search
+// (issue ds_site#4, ADR-0003). doc_type жёстко зафиксирован как "article"
+// (ds_site#51, по аналогии с news/page.tsx). Пагинация — накопительная
+// "Показать ещё" (ds_site#48).
 
 "use client";
 
@@ -25,8 +27,10 @@ const FILTER_LABELS: Record<FilterKey, string> = {
   target_audience: "Аудитория",
 };
 
-const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
+// doc_type исключён (ds_site#51) — фиксирован как "article" на запросе.
+const FILTER_ORDER: FilterKey[] = ["direction", "category", "age", "target_audience"];
 
+const PER_PAGE = 20;
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function articleTitle(doc: DocumentSummary) {
@@ -34,10 +38,6 @@ function articleTitle(doc: DocumentSummary) {
 }
 
 function articleUrl(doc: DocumentSummary) {
-  // ds_ingestion пишет ключ "source_url" (adapter/pipeline.py:_METADATA_KEYS);
-  // original_url/canonical_md_url — из чата (schemas/chat.py), в карточке
-  // документа их не бывает. Баг: карточки показывали "Ссылка недоступна",
-  // хотя source_url был в metadata. Порядок — на случай будущих источников.
   const url = doc.metadata?.source_url || doc.metadata?.original_url || doc.metadata?.canonical_md_url;
   return typeof url === "string" ? url : null;
 }
@@ -84,44 +84,35 @@ function ArticlesContent() {
   const [filters, setFilters] = useState<Record<FilterKey, string>>(() => ({
     direction: searchParams.get("direction") || "",
     category: searchParams.get("category") || "",
-    doc_type: searchParams.get("doc_type") || "",
+    doc_type: "",
     age: searchParams.get("age") || "",
     target_audience: searchParams.get("target_audience") || "",
   }));
-  const [perPage, setPerPage] = useState(() => {
-    const pp = parseInt(searchParams.get("per_page") || "10", 10);
-    return [10, 20, 50].includes(pp) ? pp : 10;
-  });
-  const [page, setPage] = useState(() => Math.max(1, parseInt(searchParams.get("page") || "1", 10)));
+  const [page, setPage] = useState(1);
   const [documents, setDocuments] = useState<DocumentSummary[]>([]);
   const [total, setTotal] = useState(0);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
 
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<FilterKey, string>;
-  const urlPerPage = [10, 20, 50].includes(Number(searchParams.get("per_page")))
-    ? Number(searchParams.get("per_page"))
-    : perPage;
-  const urlPage = Math.max(1, parseInt(searchParams.get("page") || String(page), 10));
 
-  // Загрузка документов с учётом фильтров и пагинации
+  // Первая загрузка / смена фильтров — сброс накопленного списка.
   useEffect(() => {
     if (!DATASET_ID) return;
-    const params = new URLSearchParams({ dataset_id: DATASET_ID });
+    const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "article" });
     for (const key of FILTER_ORDER) {
       if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
-    params.set("per_page", String(urlPerPage));
-    params.set("page", String(urlPage));
+    params.set("per_page", String(PER_PAGE));
+    params.set("page", "1");
 
     let cancelled = false;
     async function load() {
-      await Promise.resolve();
-      if (cancelled) return;
       setLoading(true);
       setError(null);
       try {
@@ -132,6 +123,7 @@ function ArticlesContent() {
         setDocuments(data.documents || []);
         setTotal(data.total || 0);
         setFacets((prev) => (data.facets ? data.facets : prev));
+        setPage(1);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить статьи.");
       } finally {
@@ -143,41 +135,52 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.doc_type, urlFilters.age, urlFilters.target_audience, urlPerPage, urlPage]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience]);
+
+  async function loadMore() {
+    if (!DATASET_ID || loadingMore) return;
+    const nextPage = page + 1;
+    const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "article" });
+    for (const key of FILTER_ORDER) {
+      if (urlFilters[key]) params.set(key, urlFilters[key]);
+    }
+    params.set("per_page", String(PER_PAGE));
+    params.set("page", String(nextPage));
+
+    setLoadingMore(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/gar/documents?${params.toString()}`);
+      const data = (await res.json()) as DocumentsResponse;
+      if (data.error) throw new Error(data.error);
+      setDocuments((prev) => [...prev, ...(data.documents || [])]);
+      setTotal(data.total || 0);
+      setPage(nextPage);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Не удалось загрузить статьи.");
+    } finally {
+      setLoadingMore(false);
+    }
+  }
 
   function setFilter(key: FilterKey, value: string) {
     const nextFilters = { ...filters, [key]: value };
     if (key === "direction" && value !== filters.direction) nextFilters.category = "";
     setFilters(nextFilters);
-    setPage(1); // Сбросить на первую страницу при смене фильтра
-    updateURL(nextFilters, perPage, 1);
+    updateURL(nextFilters);
   }
 
   function clearFilters() {
     const emptyFilters = { direction: "", category: "", doc_type: "", age: "", target_audience: "" };
     setFilters(emptyFilters);
-    setPage(1);
-    updateURL(emptyFilters, perPage, 1);
+    updateURL(emptyFilters);
   }
 
-  function changePerPage(value: number) {
-    setPerPage(value);
-    setPage(1);
-    updateURL(filters, value, 1);
-  }
-
-  function changePage(newPage: number) {
-    setPage(newPage);
-    updateURL(filters, perPage, newPage);
-  }
-
-  function updateURL(f: Record<FilterKey, string>, pp: number, p: number) {
+  function updateURL(f: Record<FilterKey, string>) {
     const params = new URLSearchParams();
     for (const key of FILTER_ORDER) {
       if (f[key]) params.set(key, f[key]);
     }
-    params.set("per_page", String(pp));
-    params.set("page", String(p));
     router.replace(`/articles?${params.toString()}`, { scroll: false });
   }
 
@@ -205,20 +208,17 @@ function ArticlesContent() {
   }
 
   const selectedCount = Object.keys(selected).length;
-  const totalPages = Math.ceil(total / perPage);
+  const hasMore = documents.length < total;
 
   return (
     <main className="chat-shell">
       <header className="chat-header">
-        <p className="eyebrow">Библиотека</p>
         <h1>Статьи</h1>
-        <p className="lede">Материалы базы знаний с фильтрами по направлению, категории, типу, возрасту и аудитории.</p>
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
         <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
-          <fieldset className="response-mode" disabled={loading} style={{ flex: 1 }}>
-            <legend>Фильтры</legend>
+          <fieldset className="response-mode" aria-label="Фильтры" disabled={loading} style={{ flex: 1 }}>
             {FILTER_ORDER.map((key) => (
               <select
                 key={key}
@@ -236,17 +236,7 @@ function ArticlesContent() {
           <button type="button" onClick={clearFilters} disabled={loading}>Сбросить фильтры</button>
         </div>
 
-        <div style={{ display: "flex", gap: "1rem", alignItems: "center", marginBottom: "1rem" }}>
-          <label>
-            Показывать по:
-            <select value={perPage} onChange={(e) => changePerPage(Number(e.target.value))} disabled={loading}>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="50">50</option>
-            </select>
-          </label>
-          {total > 0 && <span>Всего найдено: {total}</span>}
-        </div>
+        {total > 0 && <p className="message">Всего найдено: {total}</p>}
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -285,22 +275,10 @@ function ArticlesContent() {
               })}
             </div>
 
-            {totalPages > 1 && (
-              <div className="pagination" style={{ marginTop: "1rem", display: "flex", gap: "0.5rem", justifyContent: "center" }}>
-                <button onClick={() => changePage(1)} disabled={page === 1 || loading}>
-                  Первая
-                </button>
-                <button onClick={() => changePage(page - 1)} disabled={page === 1 || loading}>
-                  Предыдущая
-                </button>
-                <span style={{ padding: "0.5rem" }}>
-                  Страница {page} из {totalPages}
-                </span>
-                <button onClick={() => changePage(page + 1)} disabled={page >= totalPages || loading}>
-                  Следующая
-                </button>
-                <button onClick={() => changePage(totalPages)} disabled={page === totalPages || loading}>
-                  Последняя
+            {hasMore && (
+              <div style={{ marginTop: "1rem", display: "flex", justifyContent: "center" }}>
+                <button type="button" onClick={loadMore} disabled={loadingMore}>
+                  {loadingMore ? "Загружаю..." : "Показать ещё"}
                 </button>
               </div>
             )}
