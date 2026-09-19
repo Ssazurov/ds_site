@@ -106,7 +106,7 @@ export default function LinksPage() {
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (
-                  <option key={value} value={value} title={ruLabel(key, value)}>{clip(ruLabel(key, value))}</option>
+                  <option key={value} value={value} title={ruLabel(key, value) ?? value}>{clip(ruLabel(key, value) ?? value)}</option>
                 ))}
               </select>
             ))}
