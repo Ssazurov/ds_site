@@ -41,4 +41,3 @@ yarn-error.log*
 next-env.d.ts
 
 # pull-sync кэш глоссария/ссылок (ADR-0004, ds_site#8) — runtime-артефакт
-/data/glossary-links-cache.json
