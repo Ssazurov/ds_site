@@ -1,6 +1,8 @@
 // app/links/page.tsx
 // Раздел "Библиотека" -> "Ссылки": из pull-sync кэша (scripts/sync-glossary-links.mjs,
 // ADR-0004 п.3, issue #8) вместо live-запросов к gar-core-api.
+// Только внешние ресурсы (doc_type=link) — термины/сокращения глоссария
+// живут отдельно на /glossary (ds_site#46).
 
 "use client";
 
@@ -9,16 +11,14 @@ import type { GlossaryLinksCache, ResourceLinkRecord } from "@/lib/gar/glossary-
 import { useMetadataLabels } from "@/lib/gar/labels";
 import type { FilterKey } from "@/lib/gar";
 
-const FILTER_LABELS: Record<FilterKey, string> = {
+const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
   category: "Категория",
-  doc_type: "Тип материала",
   age: "Возраст",
   target_audience: "Аудитория",
 };
 
-const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
-const OTHER_FILTERS = FILTER_ORDER.filter((k) => k !== "doc_type") as Exclude<FilterKey, "doc_type">[];
+const OTHER_FILTERS = Object.keys(FILTER_LABELS) as Exclude<FilterKey, "doc_type">[];
 
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
@@ -31,7 +31,6 @@ export default function LinksPage() {
   const [filters, setFilters] = useState<Record<Exclude<FilterKey, "doc_type">, string>>({
     direction: "", category: "", age: "", target_audience: "",
   });
-  const [docType, setDocType] = useState("");
   const [cache, setCache] = useState<GlossaryLinksCache | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -55,7 +54,10 @@ export default function LinksPage() {
     };
   }, []);
 
-  const links = useMemo(() => cache?.links.filter((l) => l.status === "active") ?? [], [cache]);
+  const links = useMemo(
+    () => cache?.links.filter((l) => l.status === "active" && l.doc_type === "link") ?? [],
+    [cache],
+  );
 
   const facets = useMemo(() => {
     const result: Record<string, string[]> = {};
@@ -66,10 +68,8 @@ export default function LinksPage() {
   }, [links]);
 
   const filtered = useMemo(() => {
-    return links
-      .filter((l) => !docType || l.doc_type === docType)
-      .filter((l) => OTHER_FILTERS.every((key) => !filters[key] || linkFacetValue(l, key) === filters[key]));
-  }, [links, docType, filters]);
+    return links.filter((l) => OTHER_FILTERS.every((key) => !filters[key] || linkFacetValue(l, key) === filters[key]));
+  }, [links, filters]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -80,18 +80,12 @@ export default function LinksPage() {
       <header className="chat-header">
         <p className="eyebrow">Библиотека</p>
         <h1>Ссылки</h1>
-        <p className="lede">Полезные ссылки и глоссарий с фильтрами по направлению, категории, типу, возрасту и аудитории.</p>
+        <p className="lede">Внешние ресурсы и сообщества с фильтрами по направлению, категории, возрасту и аудитории.</p>
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список ссылок">
         <fieldset className="response-mode" disabled={loading}>
           <legend>Фильтры</legend>
-          <select value={docType} onChange={(e) => setDocType(e.target.value)} aria-label={FILTER_LABELS.doc_type}>
-            <option value="">{FILTER_LABELS.doc_type}: все</option>
-            <option value="link">Ссылка</option>
-            <option value="glossary_term">Термин глоссария</option>
-            <option value="glossary_abb">Сокращение</option>
-          </select>
           {OTHER_FILTERS.map((key) => (
             <select
               key={key}
