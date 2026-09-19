@@ -159,13 +159,13 @@ function NewsContent() {
               const summary = newsSummary(doc);
               return (
                 <article className="source-card" key={doc.document_id}>
-                  <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
+                  <h2>{newsTitle(doc)}</h2>
                   {date && <p className="eyebrow">{date}</p>}
                   {summary && (
                     <p style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{summary}</p>
                   )}
                   <div className="card-links">
-                  <Link href={`/news/${doc.document_id}`} className="source-link">Читать полностью →</Link>
+                  <Link href={`/news/${doc.document_id}`} className="source-link">Читать →</Link>
                   {url ? (
                     <a href={url} target="_blank" rel="noreferrer" className="source-link">
                       Источник <span aria-hidden="true">↗</span>

@@ -271,3 +271,5 @@
 - `lib/gar/documents-by-type.ts` (`fetchAllDocuments`, `metaStr`); страницы читают `/api/gar/documents?doc_type=...`; определение термина — лениво из `/content`; URL ссылки — `metadata.source_url`.
 - Удалены: `lib/gar/glossary-links-cache.ts`, `/api/glossary-links`, `scripts/sync-glossary-links.mjs`, npm-скрипт `sync:glossary-links`. Секции про кэш/синк выше устарели.
 - Проверка: в WSL нет node — тип-чек/сборка в образе.
+
+- 2026-09-19: карточки /articles и /news — чекбокс в строке заголовка, заголовок 21px без ссылки, «Читать →», убран «· Статья» (#81). Пересобран ds-site, build ok.
