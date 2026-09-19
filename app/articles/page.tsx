@@ -231,9 +231,6 @@ function ArticlesContent() {
         </div>
 
         {total > 0 && <p className="message">Всего найдено: {total}</p>}
-        {!loading && documents.length > 0 && (
-          <p className="message hint">Отметьте галочкой статьи, чтобы спросить по ним в чате</p>
-        )}
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
