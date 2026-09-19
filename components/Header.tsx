@@ -85,6 +85,9 @@ export default function Header() {
             </div>
           )}
         </div>
+        <Link href="/about" aria-current={isActiveHref(pathname, "/about") ? "page" : undefined}>
+          О нас
+        </Link>
       </nav>
     </header>
   );
