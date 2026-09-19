@@ -98,3 +98,8 @@ body {
 
 .scope-toggle { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 1rem; border: 1px solid var(--accent); border-radius: 999px; background: #edf5f1; color: var(--accent-dark); padding: 8px 14px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 .scope-toggle:hover { background: #dbeae4; }
+
+
+/* Курсор-указатель для всех интерактивных элементов */
+a[href], button, summary, select, label[for], input[type="checkbox"], input[type="radio"], input[type="submit"], input[type="button"], [role="button"], [role="tab"], [role="menuitem"], [role="option"], [onclick] { cursor: pointer; }
+button:disabled, [aria-disabled="true"], select:disabled { cursor: not-allowed; }
