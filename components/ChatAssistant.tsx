@@ -221,20 +221,19 @@ export default function ChatAssistant() {
   return (
     <main className="chat-shell">
       <header className="chat-header">
-        <p className="eyebrow">GAR / public knowledge base</p>
-        <h1>Помощник по базе знаний</h1>
-        <p className="lede">Ответы собраны по проверенным материалам и сопровождаются ссылками на источники.</p>
+        <h1>«Солнечный» мир</h1>
+        <p className="lede">Знания о солнечных людях с синдромом Дауна</p>
       </header>
 
       <section className="chat-panel" aria-label="Чат с базой знаний">
         <form className="query-form" onSubmit={submit}>
-          <label htmlFor="query">Ваш вопрос</label>
           <div className="query-row">
             <textarea
               id="query"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="Например: какие признаки требуют консультации специалиста?"
+              placeholder="Ваш вопрос, например: какие признаки требуют консультации специалиста?"
+              aria-label="Ваш вопрос"
               rows={3}
               disabled={loading}
             />
@@ -242,8 +241,7 @@ export default function ChatAssistant() {
               {loading ? "Ищу..." : "Спросить"}
             </button>
           </div>
-          <fieldset className="response-mode" disabled={loading}>
-            <legend>Формат ответа</legend>
+          <fieldset className="response-mode" aria-label="Формат ответа" disabled={loading}>
             <button
               type="button"
               className={responseMode === "full" ? "selected" : ""}
