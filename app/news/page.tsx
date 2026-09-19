@@ -164,12 +164,14 @@ function NewsContent() {
                   {summary && (
                     <p style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{summary}</p>
                   )}
+                  <div className="card-links">
                   <Link href={`/news/${doc.document_id}`} className="source-link">Читать полностью →</Link>
                   {url ? (
                     <a href={url} target="_blank" rel="noreferrer" className="source-link">
                       Источник <span aria-hidden="true">↗</span>
                     </a>
                   ) : <span className="no-link">Ссылка недоступна</span>}
+                  </div>
                 </article>
               );
             })}
