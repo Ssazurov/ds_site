@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GAR — база знаний",
-  description: "Поиск по проверенным материалам GAR",
+  title: "Солнечный мир",
+  description: "Солнечный мир",
 };
 
 export default function RootLayout({
