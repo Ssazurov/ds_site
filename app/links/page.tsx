@@ -3,6 +3,10 @@
 // ADR-0004 п.3, issue #8) вместо live-запросов к gar-core-api.
 // Только внешние ресурсы (doc_type=link) — термины/сокращения глоссария
 // живут отдельно на /glossary (ds_site#46).
+// Карточка ресурса + структура страницы (без eyebrow/lede, фильтры + сброс) —
+// по образцу /articles (ds_site#53). Поле "теги" в карточке не показывается:
+// в ResourceLinkRecord (lib/gar/glossary-links-cache.ts) такого поля нет —
+// нужна отдельная задача с ADR на расширение контракта (см. также ds_site#52).
 
 "use client";
 
@@ -75,31 +79,37 @@ export default function LinksPage() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   }
 
+  function clearFilters() {
+    setFilters({ direction: "", category: "", age: "", target_audience: "" });
+  }
+
+  const hasActiveFilters = OTHER_FILTERS.some((key) => filters[key]);
+
   return (
     <main className="chat-shell">
       <header className="chat-header">
-        <p className="eyebrow">Библиотека</p>
         <h1>Ссылки</h1>
-        <p className="lede">Внешние ресурсы и сообщества с фильтрами по направлению, категории, возрасту и аудитории.</p>
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список ссылок">
-        <fieldset className="response-mode" disabled={loading}>
-          <legend>Фильтры</legend>
-          {OTHER_FILTERS.map((key) => (
-            <select
-              key={key}
-              value={filters[key]}
-              onChange={(event) => setFilter(key, event.target.value)}
-              aria-label={FILTER_LABELS[key]}
-            >
-              <option value="">{FILTER_LABELS[key]}: все</option>
-              {(facets[key] || []).map((value) => (
-                <option key={value} value={value}>{ruLabel(key, value)}</option>
-              ))}
-            </select>
-          ))}
-        </fieldset>
+        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
+          <fieldset className="response-mode" aria-label="Фильтры" disabled={loading} style={{ flex: 1 }}>
+            {OTHER_FILTERS.map((key) => (
+              <select
+                key={key}
+                value={filters[key]}
+                onChange={(event) => setFilter(key, event.target.value)}
+                aria-label={FILTER_LABELS[key]}
+              >
+                <option value="">{FILTER_LABELS[key]}: все</option>
+                {(facets[key] || []).map((value) => (
+                  <option key={value} value={value}>{ruLabel(key, value)}</option>
+                ))}
+              </select>
+            ))}
+          </fieldset>
+          <button type="button" onClick={clearFilters} disabled={loading || !hasActiveFilters}>Сбросить фильтры</button>
+        </div>
 
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}
@@ -118,13 +128,14 @@ export default function LinksPage() {
               <article className="source-card" key={link.id}>
                 <h2>{link.name}</h2>
                 <p>
-                  {[ruLabel("direction", link.direction), ruLabel("category", link.category), ruLabel("doc_type", link.doc_type)]
+                  {[ruLabel("direction", link.direction), ruLabel("category", link.category), ruLabel("target_audience", link.target_audience)]
                     .filter(Boolean)
                     .join(" · ")}
                 </p>
+                {link.description && <p>{link.description}</p>}
                 {link.url ? (
-                  <a href={link.url} target="_blank" rel="noreferrer">
-                    Открыть материал <span aria-hidden="true">↗</span>
+                  <a href={link.url} target="_blank" rel="noreferrer" className="source-link">
+                    Перейти к ресурсу <span aria-hidden="true">↗</span>
                   </a>
                 ) : <span className="no-link">Ссылка недоступна</span>}
               </article>
