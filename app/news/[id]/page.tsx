@@ -1,0 +1,95 @@
+// app/news/[id]/page.tsx
+// Просмотр новости (по образцу articles/[id]) (issue ds_search#138, ADR-0006):
+// - assets.canonical_md.available=true -> полный текст + автор + ссылка на источник
+// - иначе -> карточка метаданных + ссылка на источник, без текста
+
+"use client";
+
+import { useEffect, useState, use } from "react";
+import Link from "next/link";
+import type { DocumentDetail } from "@/lib/gar";
+
+function newsTitle(doc: DocumentDetail) {
+  return String(doc.metadata?.title || doc.doc_name);
+}
+
+function sourceUrl(doc: DocumentDetail) {
+  const url = doc.metadata?.source_url || doc.metadata?.original_url || doc.metadata?.canonical_md_url;
+  return typeof url === "string" ? url : null;
+}
+
+function author(doc: DocumentDetail) {
+  const a = doc.metadata?.author;
+  return typeof a === "string" && a ? a : null;
+}
+
+export default function NewsItemPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
+  const [doc, setDoc] = useState<DocumentDetail | null>(null);
+  const [content, setContent] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    async function load() {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(`/api/gar/documents/${id}`);
+        const data = (await res.json()) as DocumentDetail;
+        if (cancelled) return;
+        if (!res.ok || data.error) throw new Error(data.error || "Материал не найден.");
+        setDoc(data);
+        if (data.assets?.canonical_md?.available) {
+          const contentRes = await fetch(`/api/gar/documents/${id}/content`);
+          if (!cancelled && contentRes.ok) setContent(await contentRes.text());
+        }
+      } catch (e) {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить новость.");
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+    void load();
+    return () => { cancelled = true; };
+  }, [id]);
+
+  return (
+    <main className="chat-shell">
+      <header className="chat-header">
+        <p className="eyebrow"><Link href="/news">← Новости</Link></p>
+        {doc && <h1>{newsTitle(doc)}</h1>}
+      </header>
+
+      <section className="chat-panel" aria-label="Материал">
+        {loading && <p className="message">Загружаю...</p>}
+        {error && <p className="message error" role="alert">{error}</p>}
+
+        {doc && !loading && !error && (
+          <>
+            {(author(doc) || sourceUrl(doc)) && (
+              <p className="lede">
+                {author(doc) && <>Автор: {author(doc)}. </>}
+                {sourceUrl(doc) && (
+                  <a href={sourceUrl(doc)!} target="_blank" rel="noreferrer">
+                    Источник <span aria-hidden="true">↗</span>
+                  </a>
+                )}
+              </p>
+            )}
+
+            {content ? (
+              <div style={{ whiteSpace: "pre-wrap" }}>{content}</div>
+            ) : (
+              <p className="message">
+                Полный текст материала недоступен на сайте (ограничение лицензии источника).
+                Перейдите по ссылке на источник, чтобы прочитать его полностью.
+              </p>
+            )}
+          </>
+        )}
+      </section>
+    </main>
+  );
+}
