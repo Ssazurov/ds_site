@@ -262,3 +262,6 @@
 - `tsc --noEmit` чисто. PR #42 squash-merged, issue #8 закрыт (auto-close).
 
 - 2026-09-19: ADR-0015 (root `ds/docs/adr/0015-document-tags-field.md`): поле `tags` в метаданных; issue ds_site#61 (родитель), дочерние в gar-core-api и ds_ingestion.
+
+## 2026-09-19 — Issue #75: /news/[id]
+- Карточка новости: заголовок-ссылка, превью (line-clamp 4), «Читать полностью». Новая страница app/news/[id]/page.tsx по образцу articles/[id] (canonical_md). PR #76. Проверка: сборка образа.
