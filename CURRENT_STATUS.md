@@ -260,3 +260,5 @@
 - Если синк ещё не запускался — страницы показывают "Синк ещё не
   запускался", а не ошибку (500/пусто).
 - `tsc --noEmit` чисто. PR #42 squash-merged, issue #8 закрыт (auto-close).
+
+- 2026-09-19: ADR-0015 (root `ds/docs/adr/0015-document-tags-field.md`): поле `tags` в метаданных; issue ds_site#61 (родитель), дочерние в gar-core-api и ds_ingestion.

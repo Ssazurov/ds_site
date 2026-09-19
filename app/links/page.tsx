@@ -30,6 +30,8 @@ function linkFacetValue(link: ResourceLinkRecord, key: Exclude<FilterKey, "doc_t
   return key === "age" ? link.age_group : link[key];
 }
 
+const clip = (t: string, n = 32) => (t.length > n ? t.slice(0, n - 1) + "…" : t);
+
 export default function LinksPage() {
   const { ruLabel } = useMetadataLabels(DATASET_ID);
   const [filters, setFilters] = useState<Record<Exclude<FilterKey, "doc_type">, string>>({
@@ -104,7 +106,7 @@ export default function LinksPage() {
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (
-                  <option key={value} value={value}>{ruLabel(key, value)}</option>
+                  <option key={value} value={value} title={ruLabel(key, value)}>{clip(ruLabel(key, value))}</option>
                 ))}
               </select>
             ))}
