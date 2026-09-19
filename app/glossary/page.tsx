@@ -95,9 +95,7 @@ export default function GlossaryPage() {
   return (
     <main className="chat-shell">
       <header className="chat-header">
-        <p className="eyebrow">Библиотека</p>
         <h1>Глоссарий</h1>
-        <p className="lede">Термины и сокращения по теме синдрома Дауна с фильтрами.</p>
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список терминов">
@@ -114,6 +112,7 @@ export default function GlossaryPage() {
               value={filters[key]}
               onChange={(event) => setFilter(key, event.target.value)}
               aria-label={FILTER_LABELS[key]}
+              title={filters[key] ? ruLabel(key, filters[key]) || undefined : undefined}
             >
               <option value="">{FILTER_LABELS[key]}: все</option>
               {(facets[key] || []).map((value) => (

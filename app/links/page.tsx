@@ -100,6 +100,7 @@ export default function LinksPage() {
                 value={filters[key]}
                 onChange={(event) => setFilter(key, event.target.value)}
                 aria-label={FILTER_LABELS[key]}
+                title={filters[key] ? ruLabel(key, filters[key]) || undefined : undefined}
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (

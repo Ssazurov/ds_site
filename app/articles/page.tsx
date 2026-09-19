@@ -225,6 +225,7 @@ function ArticlesContent() {
                 value={urlFilters[key]}
                 onChange={(event) => setFilter(key, event.target.value)}
                 aria-label={FILTER_LABELS[key]}
+                title={urlFilters[key] ? ruLabel(key, urlFilters[key]) || undefined : undefined}
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (
@@ -237,6 +238,9 @@ function ArticlesContent() {
         </div>
 
         {total > 0 && <p className="message">Всего найдено: {total}</p>}
+        {!loading && documents.length > 0 && (
+          <p className="message hint">Отметьте галочкой статьи, чтобы спросить по ним в чате</p>
+        )}
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -254,14 +258,14 @@ function ArticlesContent() {
                 const isSelected = Boolean(selected[doc.document_id]);
                 return (
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
-                    <label className="select-check">
+                    <label className="select-check select-check-icon" title="Выбрать для чата">
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => toggleSelected(doc)}
                         aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
                       />
-                      Выбрать для чата
+                      <span aria-hidden="true">💬</span>
                     </label>
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                     <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
