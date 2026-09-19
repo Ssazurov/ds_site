@@ -136,6 +136,7 @@ function ScopePicker({
 }
 
 export default function ChatAssistant() {
+  const [pickerOpen, setPickerOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [response, setResponse] = useState<ChatResponse | null>(null);
   const [responseMode, setResponseMode] = useState<ResponseMode>("full");
@@ -259,6 +260,12 @@ export default function ChatAssistant() {
             </button>
           </fieldset>
         </form>
+
+        <button type="button" className="scope-toggle" aria-expanded={pickerOpen} onClick={() => setPickerOpen((v) => !v)}>
+          <span aria-hidden="true">{pickerOpen ? "▾" : "▸"}</span>{" "}
+          {pickerOpen ? "Скрыть выбор статей" : "Ограничить чат конкретными статьями"}
+        </button>
+        {pickerOpen && <ScopePicker selected={Object.fromEntries((scope?.document_ids || []).map((id) => [id, "1"]))} onToggle={toggleScopeDoc} />}
 
         {scope && scope.document_ids.length > 0 && (
           <div className="scope-badge" role="status">
