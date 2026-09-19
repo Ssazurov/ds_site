@@ -76,6 +76,15 @@ body {
 .source-card a:hover { text-decoration: underline; }
 .no-link { color: var(--ink-muted); }
 
+.site-footer { border-top: 1px solid var(--line); background: #fff; }
+.site-footer nav { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 16px 0; }
+.site-footer a { color: var(--accent-dark); font-size: 13px; font-weight: 700; text-decoration: none; }
+.site-footer a:hover { text-decoration: underline; }
+.about-text h2 { margin: 28px 0 10px; font-size: 20px; }
+.about-text p, .about-text li { color: var(--ink-muted); font-size: 16px; line-height: 1.55; }
+.about-text ul { margin: 0 0 18px; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.about-text strong { color: var(--foreground); }
+
 @media (max-width: 640px) {
   .chat-shell { width: min(100% - 28px, 1080px); padding-top: 36px; }
   .query-row { flex-direction: column; }
