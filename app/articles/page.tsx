@@ -67,13 +67,6 @@ function MetadataLinks({ metadata, getLabelFn }: { metadata?: DocumentSummary["m
     }
   }
 
-  if (metadata?.doc_type) {
-    const label = getLabelFn("doc_type", metadata.doc_type);
-    if (label) {
-      parts.push(<span key="doc_type">{label}</span>);
-    }
-  }
-
   return <>{parts.reduce<React.ReactNode[]>((acc, part, i) => i === 0 ? [part] : [...acc, " · ", part], [])}</>;
 }
 
@@ -258,22 +251,26 @@ function ArticlesContent() {
                 const isSelected = Boolean(selected[doc.document_id]);
                 return (
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
-                    <label className="select-check select-check-icon" title="Выбрать для чата">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => toggleSelected(doc)}
-                        aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
-                      />
-                      <span aria-hidden="true">💬</span>
-                    </label>
-                    <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
+                    <div className="card-head">
+                      <h2>{articleTitle(doc)}</h2>
+                      <label className="select-check" title="Выбрать для чата">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => toggleSelected(doc)}
+                          aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
+                        />
+                      </label>
+                    </div>
                     <p><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
-                    {url ? (
-                      <a href={url} target="_blank" rel="noreferrer" className="source-link">
-                        Источник <span aria-hidden="true">↗</span>
-                      </a>
-                    ) : <span className="no-link">Ссылка недоступна</span>}
+                    <div className="card-links">
+                      <Link href={`/articles/${doc.document_id}`} className="source-link">Читать →</Link>
+                      {url ? (
+                        <a href={url} target="_blank" rel="noreferrer" className="source-link">
+                          Источник <span aria-hidden="true">↗</span>
+                        </a>
+                      ) : <span className="no-link">Ссылка недоступна</span>}
+                    </div>
                   </article>
                 );
               })}
