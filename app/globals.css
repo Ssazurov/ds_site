@@ -43,6 +43,7 @@ body {
 .query-row button:disabled { cursor: not-allowed; opacity: .5; }
 .response-mode { display: flex; gap: 8px; align-items: center; margin: 18px 0 0; padding: 0; border: 0; }
 .response-mode legend { float: left; margin-right: 12px; font-size: 14px; font-weight: 700; }
+.response-mode select { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .response-mode button, .chat-actions button { border: 1px solid #bfc8c1; border-radius: 999px; background: #fff; color: var(--accent-dark); padding: 7px 12px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
 .response-mode button.selected { border-color: var(--accent); background: #dbeae4; }
 .response-mode button:disabled, .chat-actions button:disabled { cursor: not-allowed; opacity: .5; }
@@ -55,10 +56,13 @@ body {
 .sources-heading { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
 .sources-heading span { display: inline-flex; min-width: 24px; height: 24px; align-items: center; justify-content: center; border-radius: 50%; background: #dbeae4; color: var(--accent-dark); font-size: 12px; font-weight: 700; }
 .source-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.source-card { min-width: 0; border: 1px solid var(--line); border-radius: 4px; background: #fff; padding: 18px; }
+.source-card { display: flex; flex-direction: column; height: 100%; min-width: 0; border: 1px solid var(--line); border-radius: 4px; background: #fff; padding: 18px; }
 .source-card.selected { border-color: var(--accent); background: #edf5f1; }
+.source-card > *:last-child { margin-top: auto; }
 .select-check { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--accent-dark); cursor: pointer; }
 .select-check input { cursor: pointer; }
+.select-check-icon { align-self: flex-start; font-size: 16px; }
+.message.hint { padding: 0 0 12px; background: none; color: var(--ink-muted); font-size: 13px; }
 .selection-bar { position: sticky; bottom: 0; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 14px 18px; border: 1px solid var(--accent); border-radius: 4px; background: #dbeae4; font-weight: 700; }
 .selection-bar-actions { display: flex; gap: 8px; }
 .selection-bar-actions button { border: 1px solid #bfc8c1; border-radius: 999px; background: #fff; color: var(--accent-dark); padding: 7px 14px; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }

@@ -130,6 +130,7 @@ function NewsContent() {
                 value={urlFilters[key]}
                 onChange={(event) => setFilter(key, event.target.value)}
                 aria-label={FILTER_LABELS[key]}
+                title={urlFilters[key] ? ruLabel(key, urlFilters[key]) || undefined : undefined}
               >
                 <option value="">{FILTER_LABELS[key]}: все</option>
                 {(facets[key] || []).map((value) => (
