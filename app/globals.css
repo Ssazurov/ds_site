@@ -21,6 +21,11 @@ body {
 .site-nav nav { display: flex; gap: 20px; width: min(100% - 40px, 1080px); margin: 0 auto; padding: 16px 0; }
 .site-nav a { color: var(--accent-dark); font-size: 14px; font-weight: 700; text-decoration: none; }
 .site-nav a:hover { text-decoration: underline; }
+.nav-library { position: relative; }
+.nav-library-trigger { background: none; border: none; padding: 0; color: var(--accent-dark); font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; }
+.nav-library-trigger:hover { text-decoration: underline; }
+.nav-library-menu { position: absolute; top: 100%; left: 0; margin-top: 8px; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 8px; display: flex; flex-direction: column; gap: 6px; min-width: 140px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); z-index: 10; }
+.nav-library-menu a { white-space: nowrap; }
 
 .chat-shell { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 64px 0 96px; }
 .chat-header { max-width: 680px; margin-bottom: 40px; }
