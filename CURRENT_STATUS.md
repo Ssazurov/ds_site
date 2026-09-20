@@ -280,3 +280,6 @@
 - `lib/format.ts`: `formatDate` (год только для прошлых лет), `readingMinutes` (~200 слов/мин), `metaReadingMinutes` (из metadata.reading_time_min/word_count).
 - Время чтения: в карточках /articles показывается, если есть в metadata; на странице статьи считается автоматически по тексту. Для новостей не выводится. Запись reading_time_min при индексации — отдельная задача (ds_ingestion).
 - Проверка: git diff --check, docker build ds-site (type-check) без ошибок, контейнер пересобран.
+
+## 20.09.2026 — ds_site#87: разработчик
+- `components/Footer.tsx`: «Разработчик: Сазуров С.В.» → `/about#developer`; `app/about/page.tsx`: первым подраздел «О разработчике» (текст, ФИО, почта, VK, TG), placeholder контакта убран. Проверка: git diff --check.
