@@ -10,6 +10,10 @@ export default function Footer() {
     <footer className="site-footer">
       <nav aria-label="Дополнительная навигация">
         <Link href="/about">О нас</Link>
+        <span>
+          Разработчик:{" "}
+          <Link href="/about#developer">Сазуров Сергей Владимирович</Link>
+        </span>
       </nav>
     </footer>
   );
