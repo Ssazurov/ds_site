@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "export:content": "node scripts/export-content.mjs",
+    "test:export": "node --test scripts/export-lib.test.mjs"
   },
   "dependencies": {
     "next": "16.2.12",
