@@ -221,8 +221,7 @@ export default function ChatAssistant() {
   return (
     <main className="chat-shell">
       <header className="chat-header">
-        <h1>«Солнечный» мир</h1>
-        <p className="lede">Знания о солнечных людях с синдромом Дауна</p>
+        <h1>Помощник</h1>
       </header>
 
       <section className="chat-panel" aria-label="Чат с базой знаний">
