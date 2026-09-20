@@ -5,7 +5,7 @@
 export default function AboutPage() {
   return (
     <main className="chat-shell">
-      <header className="chat-header">
+      <header className="chat-header about-header">
         <h1>О проекте «Солнечный» мир</h1>
       </header>
 
@@ -15,16 +15,19 @@ export default function AboutPage() {
           <p>
             Я — будущий отец «солнечного» ребёнка. Более 20 лет я работаю в
             IT и создаю программы, которые помогают людям с ограниченными
-            возможностями. Этот сайт — моя попытка сделать так, чтобы семьям
-            было проще находить достоверную информацию. Вопросы и предложения
+            возможностями. Этот сайт — моя посильная помощь «солнечным»
+            семьям в поиске достоверной информации. Вопросы и предложения
             присылайте любым удобным способом — контакты ниже.
           </p>
-          <p><strong>Сазуров Сергей Владимирович</strong></p>
-          <ul>
-            <li>Почта: <a href="mailto:sazurov@mail.ru">sazurov@mail.ru</a></li>
-            <li>ВКонтакте: <a href="https://vk.ru/sazurovsv" target="_blank" rel="noopener noreferrer">vk.ru/sazurovsv</a></li>
-            <li>Telegram: <a href="https://t.me/Sazurov" target="_blank" rel="noopener noreferrer">@Sazurov</a></li>
-          </ul>
+          <section id="contacts" aria-label="Контакты">
+            <h3>Контакты</h3>
+            <p><strong>Сазуров Сергей Владимирович</strong></p>
+            <ul className="contact-list">
+              <li>Почта: <a href="mailto:sazurov@mail.ru">sazurov@mail.ru</a></li>
+              <li>ВКонтакте: <a href="https://vk.ru/sazurovsv" target="_blank" rel="noopener noreferrer">vk.ru/sazurovsv</a></li>
+              <li>Telegram: <a href="https://t.me/Sazurov" target="_blank" rel="noopener noreferrer">@Sazurov</a></li>
+            </ul>
+          </section>
         </section>
 
         <p>
@@ -33,7 +36,7 @@ export default function AboutPage() {
           искать её по десяткам форумов и групп.
         </p>
 
-        <h2>Зачем это нужно</h2>
+        <h2>Цель проекта</h2>
         <p>
           Когда в семье появляется солнечный ребёнок, вопросов гораздо больше,
           чем ответов. Мы делаем так, чтобы на частые вопросы — от первых дней
@@ -43,11 +46,11 @@ export default function AboutPage() {
 
         <h2>Карта сайта</h2>
         <ul>
+          <li><strong>Новости</strong> — то, что происходит в солнечном сообществе прямо сейчас</li>
           <li><strong>Помощник</strong> — задайте подробный вопрос своими словами, ответ собирается из проверенных материалов со ссылками на источники</li>
           <li><strong>Статьи</strong> — материалы по направлениям; сайт полезен для всех возрастов и не только для родителей</li>
           <li><strong>Глоссарий</strong> — термины и сокращения по теме «синдром Дауна»</li>
           <li><strong>Ссылки</strong> — фонды и специалисты, законы, а также сообщества, где можно найти помощь и неформальную поддержку</li>
-          <li><strong>Новости</strong> — то, что происходит в солнечном сообществе прямо сейчас</li>
         </ul>
 
         <h2>Как мы отбираем материалы</h2>
@@ -57,7 +60,7 @@ export default function AboutPage() {
         </p>
 
         <h2>Нашли неточность или знаете хороший материал?</h2>
-        <p>Напишите нам — контакты указаны в разделе «О разработчике» выше.</p>
+        <p>Напишите нам — контакты указаны в подразделе «Контакты» выше.</p>
       </section>
     </main>
   );

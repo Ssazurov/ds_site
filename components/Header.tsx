@@ -1,8 +1,6 @@
 // components/Header.tsx
-// Навигация сайта (ds_site#5, #14, #44, #45): Главная / Новости / Библиотека
-// (dropdown: Статьи/Глоссарий/Ссылки). "Помощник" убран из верхнего меню
-// (остаётся как внутренний route, используется из "Спросить по выбранным"
-// в /articles).
+// Навигация сайта (ds_site#5, #14, #44, #45): Новости / Помощник (= "/",
+// бывш. "Главная") / Библиотека (dropdown: Статьи/Глоссарий/Ссылки) / О нас.
 
 "use client";
 
@@ -11,8 +9,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const NAV_ITEMS = [
-  { href: "/", label: "Главная" },
   { href: "/news", label: "Новости" },
+  { href: "/", label: "Помощник" },
 ];
 
 const LIBRARY_ITEMS = [

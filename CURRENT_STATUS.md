@@ -283,3 +283,15 @@
 
 ## 20.09.2026 — ds_site#87: разработчик
 - `components/Footer.tsx`: «Разработчик: Сазуров С.В.» → `/about#developer`; `app/about/page.tsx`: первым подраздел «О разработчике» (текст, ФИО, почта, VK, TG), placeholder контакта убран. Проверка: git diff --check.
+
+## 20.09.2026 — правки навигации и /about
+- `app/layout.tsx`: над меню строка «Проект «Солнечный мир»» на всех страницах (`.project-line`, globals.css).
+- `components/Header.tsx`: меню теперь Новости / Помощник (`/`, бывш. «Главная») / Библиотека / О нас; `ChatAssistant.tsx`: убраны заголовок «Солнечный» мир и lede, остался sr-only h1 «Помощник».
+- `app/about/page.tsx`: h1 в одну строку (`.about-header`), ФИО и контакты в подразделе «Контакты» (h3, `#contacts`), карта сайта в порядке меню; в globals.css добавлены отступы `p` и стиль `h3` для `.about-text` (Tailwind preflight обнулял margin).
+- Проверка: контейнер `deploy-ds-site-1` пересобран (`docker compose up -d --build ds-site`), на :3001 строка проекта и «Контакты» на месте. Замечание: tsc/eslint видят ранее существовавшие ошибки (`.next/types` glossary-links, `set-state-in-effect` в links/page.tsx) — не из этой задачи.
+
+- /about: «Зачем это нужно» → «Цель проекта»; контакты — ссылки-плашки (`.contact-list a`, стиль как `.tag`), ссылки в `.about-text` — accent-dark/bold; контейнер пересобран.
+
+- Помощник (`ChatAssistant.tsx`): видимый заголовок «Помощник» (`chat-header` + h1) вместо sr-only, как на других страницах.
+
+- globals.css: отступы вокруг заголовка страницы уменьшены вдвое (`.chat-shell` padding-top 64→32, mobile 36→18; `.chat-header` margin-bottom 40→20; h1 margin 12/14→6/7). Контейнер пересобран.
