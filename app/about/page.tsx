@@ -10,6 +10,23 @@ export default function AboutPage() {
       </header>
 
       <section className="chat-panel about-text" aria-label="О проекте">
+        <section id="developer" aria-label="О разработчике">
+          <h2>О разработчике</h2>
+          <p>
+            Я — будущий отец «солнечного» ребёнка. Более 20 лет я работаю в
+            IT и создаю программы, которые помогают людям с ограниченными
+            возможностями. Этот сайт — моя попытка сделать так, чтобы семьям
+            было проще находить достоверную информацию. Вопросы и предложения
+            присылайте любым удобным способом — контакты ниже.
+          </p>
+          <p><strong>Сазуров Сергей Владимирович</strong></p>
+          <ul>
+            <li>Почта: <a href="mailto:sazurov@mail.ru">sazurov@mail.ru</a></li>
+            <li>ВКонтакте: <a href="https://vk.ru/sazurovsv" target="_blank" rel="noopener noreferrer">vk.ru/sazurovsv</a></li>
+            <li>Telegram: <a href="https://t.me/Sazurov" target="_blank" rel="noopener noreferrer">@Sazurov</a></li>
+          </ul>
+        </section>
+
         <p>
           Мы собираем проверенную информацию о синдроме Дауна в одном месте —
           чтобы родителям «солнечных» детей и всем причастным не пришлось
@@ -40,8 +57,7 @@ export default function AboutPage() {
         </p>
 
         <h2>Нашли неточность или знаете хороший материал?</h2>
-        {/* TODO(#55): контакт для обратной связи не утверждён - уточнить перед публикацией */}
-        <p>Напишите нам — [контакт уточняется].</p>
+        <p>Напишите нам — контакты указаны в разделе «О разработчике» выше.</p>
       </section>
     </main>
   );

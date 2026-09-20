@@ -82,7 +82,8 @@ body {
 .no-link { color: var(--ink-muted); }
 
 .site-footer { border-top: 1px solid var(--line); background: var(--card); }
-.site-footer nav { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 16px 0; }
+.site-footer nav { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 16px 0; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; }
+.site-footer span { color: var(--ink-muted); font-size: 13px; }
 .site-footer a { color: var(--accent-dark); font-size: 13px; font-weight: 700; text-decoration: none; }
 .site-footer a:hover { text-decoration: underline; }
 .about-text h2 { margin: 28px 0 10px; font-size: 20px; }
