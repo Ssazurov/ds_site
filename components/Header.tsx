@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useAssistantEnabled } from "@/lib/assistant-flag";
 
 const NAV_ITEMS = [
   { href: "/news", label: "Новости" },
@@ -25,6 +26,7 @@ function isActiveHref(pathname: string | null, href: string) {
 
 export default function Header() {
   const pathname = usePathname();
+  const assistantEnabled = useAssistantEnabled() === true;
   const [libraryOpen, setLibraryOpen] = useState(false);
   const libraryRef = useRef<HTMLDivElement>(null);
   const libraryActive = LIBRARY_ITEMS.some((item) => isActiveHref(pathname, item.href));
@@ -42,7 +44,7 @@ export default function Header() {
   return (
     <header className="site-nav">
       <nav aria-label="Основная навигация">
-        {NAV_ITEMS.map((item) => (
+        {NAV_ITEMS.filter((item) => item.href !== "/" || assistantEnabled).map((item) => (
           <Link
             key={item.href}
             href={item.href}

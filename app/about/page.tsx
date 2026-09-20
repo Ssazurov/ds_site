@@ -2,6 +2,8 @@
 // Страница "О проекте" (ds_site#55). Текст утверждён по issue, кроме
 // контакта для обратной связи — там placeholder до уточнения (см. issue).
 
+import AssistantAboutItem from "@/components/AssistantAboutItem";
+
 export default function AboutPage() {
   return (
     <main className="chat-shell">
@@ -47,7 +49,7 @@ export default function AboutPage() {
         <h2>Карта сайта</h2>
         <ul>
           <li><strong>Новости</strong> — то, что происходит в солнечном сообществе прямо сейчас</li>
-          <li><strong>Помощник</strong> — задайте подробный вопрос своими словами, ответ собирается из проверенных материалов со ссылками на источники</li>
+          <AssistantAboutItem />
           <li><strong>Статьи</strong> — материалы по направлениям; сайт полезен для всех возрастов и не только для родителей</li>
           <li><strong>Глоссарий</strong> — термины и сокращения по теме «синдром Дауна»</li>
           <li><strong>Ссылки</strong> — фонды и специалисты, законы, а также сообщества, где можно найти помощь и неформальную поддержку</li>
