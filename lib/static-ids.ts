@@ -14,5 +14,8 @@ export async function staticIds(name: "articles" | "news"): Promise<{ id: string
     throw new Error(`нет выгрузки ${file}: сначала npm run export:content`);
   }
   const items = (JSON.parse(raw).items ?? []) as { document_id: string }[];
+  // Пустая выгрузка (нет разрешённых материалов): Next требует непустой список для output: export —
+  // отдаём заглушку, страница покажет «Материал не найден».
+  if (!items.length) return [{ id: "_empty" }];
   return items.map((i) => ({ id: i.document_id }));
 }
