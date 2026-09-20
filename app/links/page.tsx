@@ -14,6 +14,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchAllDocuments, metaStr } from "@/lib/gar/documents-by-type";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
+import FilterBar from "@/components/FilterBar";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -30,7 +31,6 @@ function linkFacetValue(link: DocumentSummary, key: Exclude<FilterKey, "doc_type
   return metaStr(link, key);
 }
 
-const clip = (t: string, n = 32) => (t.length > n ? t.slice(0, n - 1) + "…" : t);
 
 export default function LinksPage() {
   const { ruLabel } = useMetadataLabels(DATASET_ID);
@@ -72,14 +72,12 @@ export default function LinksPage() {
   }, [links, filters]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value, ...(key === "direction" && value !== prev.direction ? { category: "" } : {}) }));
   }
 
   function clearFilters() {
     setFilters({ direction: "", category: "", age: "", target_audience: "" });
   }
-
-  const hasActiveFilters = OTHER_FILTERS.some((key) => filters[key]);
 
   return (
     <main className="chat-shell">
@@ -88,25 +86,8 @@ export default function LinksPage() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список ссылок">
-        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
-          <fieldset className="response-mode" aria-label="Фильтры" disabled={loading} style={{ flex: 1 }}>
-            {OTHER_FILTERS.map((key) => (
-              <select
-                key={key}
-                value={filters[key]}
-                onChange={(event) => setFilter(key, event.target.value)}
-                aria-label={FILTER_LABELS[key]}
-                title={filters[key] ? ruLabel(key, filters[key]) || undefined : undefined}
-              >
-                <option value="">{FILTER_LABELS[key]}: все</option>
-                {(facets[key] || []).map((value) => (
-                  <option key={value} value={value} title={ruLabel(key, value) ?? value}>{clip(ruLabel(key, value) ?? value)}</option>
-                ))}
-              </select>
-            ))}
-          </fieldset>
-          <button type="button" onClick={clearFilters} disabled={loading || !hasActiveFilters}>Сбросить фильтры</button>
-        </div>
+        <FilterBar values={filters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+
 
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}
@@ -117,21 +98,23 @@ export default function LinksPage() {
 
         {!loading && filtered.length > 0 && (
           <div className="source-grid">
-            {filtered.map((link) => (
-              <article className="source-card" key={link.document_id}>
-                <h2>{link.doc_name}</h2>
-                <p>
-                  {[ruLabel("direction", metaStr(link, "direction")), ruLabel("category", metaStr(link, "category")), ruLabel("target_audience", metaStr(link, "target_audience"))]
-                    .filter(Boolean)
-                    .join(" · ")}
-                </p>
-                {metaStr(link, "source_url") ? (
-                  <a href={metaStr(link, "source_url") ?? undefined} target="_blank" rel="noreferrer" className="source-link">
-                    Перейти к ресурсу <span aria-hidden="true">↗</span>
-                  </a>
-                ) : <span className="no-link">Ссылка недоступна</span>}
-              </article>
-            ))}
+            {filtered.map((link) => {
+              const src = metaStr(link, "source_url");
+              const dir = ruLabel("direction", metaStr(link, "direction"));
+              const cat = ruLabel("category", metaStr(link, "category"));
+              const aud = ruLabel("target_audience", metaStr(link, "target_audience"));
+              return (
+                <article className="source-card" key={link.document_id}>
+                  {dir && <span className="tag">{dir}</span>}
+                  {cat && <p className="card-cat">{cat}</p>}
+                  <h2>{src ? <a href={src} target="_blank" rel="noreferrer">{link.doc_name}</a> : link.doc_name}</h2>
+                  <div className="card-foot">
+                    <span>{aud}</span>
+                    {src ? <span aria-hidden="true">↗</span> : <span className="no-link">Ссылка недоступна</span>}
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
