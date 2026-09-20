@@ -295,3 +295,9 @@
 - Помощник (`ChatAssistant.tsx`): видимый заголовок «Помощник» (`chat-header` + h1) вместо sr-only, как на других страницах.
 
 - globals.css: отступы вокруг заголовка страницы уменьшены вдвое (`.chat-shell` padding-top 64→32, mobile 36→18; `.chat-header` margin-bottom 40→20; h1 margin 12/14→6/7). Контейнер пересобран.
+
+## 2026-09-20 — issue #92: выгрузка контента из GAR в JSON с фильтром по разрешению (ADR-0018)
+- `scripts/export-content.mjs` (локально, `npm run export:content`, опц. `--out`): статьи/новости/глоссарий/ссылки из GAR `/public/*` -> `data/export/{articles,news,glossary,links}.json` + `manifest.json` (счётчики отброшенных без названий). `/data/export/` в .gitignore.
+- Логика в `scripts/export-lib.mjs`: публикуются только `publish_permission` in (not_required, granted); not_set/denied/неизвестное/пустое — отброшено (fail closed). Краткое содержание = description (иначе первые ~400 симв. текста); `full_text` только для granted; ссылка на источник — только внешний source_url/original_url (canonical_md_url GAR не выгружается); метаданные по белому списку; `assertNoSecrets` прерывает выгрузку, если ключ/адрес GAR попал в вывод.
+- Тесты: `npm run test:export` (node --test, 7 pass). Пробный прогон по живому GAR: 0 выгружено, все документы not_set (поле publish_permission ещё не заполнено — ждёт ds_ingestion#35/реестр источников).
+
