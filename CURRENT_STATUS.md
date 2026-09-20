@@ -301,3 +301,9 @@
 - Логика в `scripts/export-lib.mjs`: публикуются только `publish_permission` in (not_required, granted); not_set/denied/неизвестное/пустое — отброшено (fail closed). Краткое содержание = description (иначе первые ~400 симв. текста); `full_text` только для granted; ссылка на источник — только внешний source_url/original_url (canonical_md_url GAR не выгружается); метаданные по белому списку; `assertNoSecrets` прерывает выгрузку, если ключ/адрес GAR попал в вывод.
 - Тесты: `npm run test:export` (node --test, 7 pass). Пробный прогон по живому GAR: 0 выгружено, все документы not_set (поле publish_permission ещё не заполнено — ждёт ds_ingestion#35/реестр источников).
 
+
+## 2026-09-20 — issue #94: флаг «Помощник» и настройки внешнего GAR (ADR-0018)
+- `lib/assistant-flag.ts`: хук `useAssistantEnabled()` (null до гидратации). Приоритет: `NEXT_PUBLIC_ASSISTANT_ENABLED` (1/true/0/false, внешняя сборка) главнее localStorage `ds-assistant-enabled` (страница `/settings`); по умолчанию выключен. URL внешнего GAR — localStorage `ds-external-gar-url` (`useExternalGarUrl`/`getExternalGarUrl`; в запросы чата пока не подключён — нужен статической сборке #95+).
+- `/settings` (`app/settings/page.tsx`, в меню нет): чекбокс флага (заблокирован, если задан env) и поле URL GAR.
+- Флаг выключен: Header скрывает «Помощник»; `/` и `/assistant` через `components/AssistantGate.tsx` редиректят на `/news`; на `/articles` скрыты флажки выбора и панель «Спросить по выбранным»; пункт «Помощник» в «О нас» скрыт (`AssistantAboutItem`).
+- Проверки: `tsc --noEmit` чисто; `npm run lint` — 2 ошибки в glossary/links (`set-state-in-effect`), были до этой задачи, в новом коде нет.

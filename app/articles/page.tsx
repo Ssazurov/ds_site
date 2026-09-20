@@ -13,6 +13,7 @@ import Link from "next/link";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import { useAssistantEnabled } from "@/lib/assistant-flag";
 import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 
 // Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
@@ -55,6 +56,7 @@ function ArticlesContent() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
+  const assistantEnabled = useAssistantEnabled() === true; // ds_site#94: выбор для Помощника только при включённом флаге
 
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
@@ -205,14 +207,14 @@ function ArticlesContent() {
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
                     <div className="card-head">
                       {dir ? <Link className="tag" href={`/articles?direction=${dirValue}`}>{dir}</Link> : <span />}
-                      <label className="select-check" title="Выбрать для чата">
+                      {assistantEnabled && <label className="select-check" title="Выбрать для чата">
                         <input
                           type="checkbox"
                           checked={isSelected}
                           onChange={() => toggleSelected(doc)}
                           aria-label={`Выбрать «${articleTitle(doc)}» для чата`}
                         />
-                      </label>
+                      </label>}
                     </div>
                     {cat && <p className="card-cat">{cat}</p>}
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
@@ -241,7 +243,7 @@ function ArticlesContent() {
         )}
       </section>
 
-      {selectedCount > 0 && (
+      {assistantEnabled && selectedCount > 0 && (
         <div className="selection-bar" role="status" aria-live="polite">
           <span>Выбрано статей: {selectedCount}</span>
           <div className="selection-bar-actions">
