@@ -7,6 +7,7 @@
 
 import { useEffect, useState } from "react";
 import type { FilterKey, MetadataLabels } from "./types";
+import { getLabels } from "./data";
 
 const EMPTY: MetadataLabels = {
   direction: {},
@@ -20,9 +21,7 @@ let inflight: Promise<MetadataLabels> | null = null;
 
 function fetchLabels(datasetId: string): Promise<MetadataLabels> {
   if (!inflight) {
-    inflight = fetch(`/api/gar/metadata-fields?dataset_id=${datasetId}`)
-      .then((res) => (res.ok ? res.json() : EMPTY))
-      .catch(() => EMPTY);
+    inflight = getLabels(datasetId).then((d) => d ?? EMPTY).catch(() => EMPTY);
   }
   return inflight;
 }

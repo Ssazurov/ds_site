@@ -10,9 +10,11 @@
 import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import { getDocuments, IS_STATIC } from "@/lib/gar/data";
+import { UrlSearchBox } from "@/components/SearchBox";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
 import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 
@@ -61,6 +63,7 @@ function ArticlesContent() {
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<FilterKey, string>;
+  const q = searchParams.get("q") || "";
 
   // Первая загрузка / смена фильтров — сброс накопленного списка.
   useEffect(() => {
@@ -71,14 +74,14 @@ function ArticlesContent() {
     }
     params.set("per_page", String(PER_PAGE));
     params.set("page", "1");
+    if (q) params.set("q", q);
 
     let cancelled = false;
     async function load() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/gar/documents?${params.toString()}`);
-        const data = (await res.json()) as DocumentsResponse;
+        const data = await getDocuments(params);
         if (cancelled) return;
         if (data.error) throw new Error(data.error);
         setDocuments(data.documents || []);
@@ -96,7 +99,7 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q]);
 
   async function loadMore() {
     if (!DATASET_ID || loadingMore) return;
@@ -107,12 +110,12 @@ function ArticlesContent() {
     }
     params.set("per_page", String(PER_PAGE));
     params.set("page", String(nextPage));
+    if (q) params.set("q", q);
 
     setLoadingMore(true);
     setError(null);
     try {
-      const res = await fetch(`/api/gar/documents?${params.toString()}`);
-      const data = (await res.json()) as DocumentsResponse;
+      const data = await getDocuments(params);
       if (data.error) throw new Error(data.error);
       setDocuments((prev) => [...prev, ...(data.documents || [])]);
       setTotal(data.total || 0);
@@ -142,6 +145,7 @@ function ArticlesContent() {
     for (const key of FILTER_ORDER) {
       if (f[key]) params.set(key, f[key]);
     }
+    if (q) params.set("q", q);
     router.replace(`/articles?${params.toString()}`, { scroll: false });
   }
 
@@ -178,6 +182,7 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
+        {IS_STATIC && <UrlSearchBox />}
         <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
 
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}

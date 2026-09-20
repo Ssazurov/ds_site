@@ -1,7 +1,8 @@
 // Клиентский хелпер: все документы одного doc_type из GAR через
 // /api/gar/documents (ADR-0016). Для небольших наборов (глоссарий, ссылки);
 // per_page у GAR максимум 100 — листаем страницами.
-import type { DocumentSummary, DocumentsResponse } from "./types";
+import type { DocumentSummary } from "./types";
+import { getDocuments } from "./data";
 
 export async function fetchAllDocuments(datasetId: string, docType: string): Promise<DocumentSummary[]> {
   const out: DocumentSummary[] = [];
@@ -9,8 +10,7 @@ export async function fetchAllDocuments(datasetId: string, docType: string): Pro
     const params = new URLSearchParams({
       dataset_id: datasetId, doc_type: docType, per_page: "100", page: String(page),
     });
-    const res = await fetch(`/api/gar/documents?${params.toString()}`);
-    const data = (await res.json()) as DocumentsResponse;
+    const data = await getDocuments(params);
     if (data.error) throw new Error(data.error);
     const docs = data.documents ?? [];
     out.push(...docs);
