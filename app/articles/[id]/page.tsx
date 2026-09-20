@@ -8,6 +8,7 @@
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import type { DocumentDetail } from "@/lib/gar";
+import { formatDate, readingMinutes, metaReadingMinutes, readingLabel } from "@/lib/format";
 
 function articleTitle(doc: DocumentDetail) {
   return String(doc.metadata?.title || doc.doc_name);
@@ -68,6 +69,9 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
 
         {doc && !loading && !error && (
           <>
+            <p className="fb-total">
+              {[formatDate(doc.metadata?.publish_date), (content ? readingMinutes(content) : metaReadingMinutes(doc.metadata)) ? readingLabel((content ? readingMinutes(content) : metaReadingMinutes(doc.metadata))!) : null].filter(Boolean).join(" · ")}
+            </p>
             {(author(doc) || sourceUrl(doc)) && (
               <p className="lede">
                 {author(doc) && <>Автор: {author(doc)}. </>}
@@ -80,7 +84,7 @@ export default function ArticlePage({ params }: { params: Promise<{ id: string }
             )}
 
             {content ? (
-              <div style={{ whiteSpace: "pre-wrap" }}>{content}</div>
+              <div className="reading">{content}</div>
             ) : (
               <p className="message">
                 Полный текст материала недоступен на сайте (ограничение лицензии источника).

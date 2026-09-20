@@ -15,6 +15,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
+import FilterBar from "@/components/FilterBar";
+import { formatDate } from "@/lib/format";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -28,14 +30,6 @@ const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function newsTitle(doc: DocumentSummary) {
   return String(doc.metadata?.title || doc.doc_name);
-}
-
-function newsDate(doc: DocumentSummary): string | null {
-  const raw = doc.metadata?.publish_date;
-  if (typeof raw !== "string") return null;
-  const d = new Date(raw);
-  if (Number.isNaN(d.getTime())) return raw;
-  return d.toLocaleDateString("ru-RU", { day: "2-digit", month: "long", year: "numeric" });
 }
 
 function newsSummary(doc: DocumentSummary): string | null {
@@ -99,6 +93,7 @@ function NewsContent() {
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     const next = { ...urlFilters, [key]: value };
+    if (key === "direction" && value !== urlFilters.direction) next.category = "";
     updateURL(next);
   }
 
@@ -114,7 +109,6 @@ function NewsContent() {
     router.replace(`/news?${params.toString()}`, { scroll: false });
   }
 
-  const hasActiveFilters = FILTER_ORDER.some((key) => urlFilters[key]);
 
   return (
     <main className="chat-shell">
@@ -123,25 +117,8 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
-          <fieldset className="response-mode" aria-label="Фильтры" disabled={loading} style={{ flex: 1 }}>
-            {FILTER_ORDER.map((key) => (
-              <select
-                key={key}
-                value={urlFilters[key]}
-                onChange={(event) => setFilter(key, event.target.value)}
-                aria-label={FILTER_LABELS[key]}
-                title={urlFilters[key] ? ruLabel(key, urlFilters[key]) || undefined : undefined}
-              >
-                <option value="">{FILTER_LABELS[key]}: все</option>
-                {(facets[key] || []).map((value) => (
-                  <option key={value} value={value}>{ruLabel(key, value)}</option>
-                ))}
-              </select>
-            ))}
-          </fieldset>
-          <button type="button" onClick={clearFilters} disabled={loading || !hasActiveFilters}>Сбросить фильтры</button>
-        </div>
+        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -155,22 +132,24 @@ function NewsContent() {
           <div className="source-grid">
             {documents.map((doc) => {
               const url = newsUrl(doc);
-              const date = newsDate(doc);
+              const date = formatDate(doc.metadata?.publish_date);
               const summary = newsSummary(doc);
+              const dirValue = doc.metadata?.direction;
+              const dir = dirValue ? ruLabel("direction", dirValue) : null;
+              const cat = doc.metadata?.category ? ruLabel("category", doc.metadata.category) : null;
               return (
                 <article className="source-card" key={doc.document_id}>
-                  <h2>{newsTitle(doc)}</h2>
-                  {date && <p className="eyebrow">{date}</p>}
-                  {summary && (
-                    <p style={{ display: "-webkit-box", WebkitLineClamp: 4, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{summary}</p>
-                  )}
-                  <div className="card-links">
-                  <Link href={`/news/${doc.document_id}`} className="source-link">Читать →</Link>
-                  {url ? (
-                    <a href={url} target="_blank" rel="noreferrer" className="source-link">
-                      Источник <span aria-hidden="true">↗</span>
-                    </a>
-                  ) : <span className="no-link">Ссылка недоступна</span>}
+                  {dir && <Link className="tag" href={`/news?direction=${dirValue}`}>{dir}</Link>}
+                  {cat && <p className="card-cat">{cat}</p>}
+                  <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
+                  {summary && <p className="card-desc">{summary}</p>}
+                  <div className="card-foot">
+                    <span>{date}</span>
+                    {url && (
+                      <a href={url} target="_blank" rel="noreferrer">
+                        Источник <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
                   </div>
                 </article>
               );

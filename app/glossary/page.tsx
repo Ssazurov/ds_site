@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchAllDocuments, metaStr } from "@/lib/gar/documents-by-type";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
+import FilterBar from "@/components/FilterBar";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -38,18 +39,21 @@ function TermCard({ term, ruLabel }: { term: DocumentSummary; ruLabel: (k: Filte
       }
     }
   }
+  const dir = ruLabel("direction", metaStr(term, "direction"));
+  const cat = ruLabel("category", metaStr(term, "category"));
+  const kind = ruLabel("doc_type", metaStr(term, "doc_type"));
   return (
     <article className="source-card">
+      {dir && <span className="tag">{dir}</span>}
+      {cat && <p className="card-cat">{cat}</p>}
       <h2>{term.doc_name}</h2>
-      <p>
-        {[ruLabel("direction", metaStr(term, "direction")), ruLabel("category", metaStr(term, "category")), ruLabel("doc_type", metaStr(term, "doc_type"))]
-          .filter(Boolean)
-          .join(" · ")}
-      </p>
-      <button type="button" onClick={toggle} className="source-link">
-        {open ? "Скрыть определение" : "Показать определение"}
-      </button>
       {open && <p style={{ whiteSpace: "pre-line" }}>{definition === null ? "Загружаю..." : definition || "Определение недоступно."}</p>}
+      <div className="card-foot">
+        <span>{kind}</span>
+        <button type="button" onClick={toggle} className="fb-link" aria-expanded={open}>
+          {open ? "Скрыть определение" : "Показать определение"}
+        </button>
+      </div>
     </article>
   );
 }
@@ -101,7 +105,12 @@ export default function GlossaryPage() {
   }, [terms, docType, filters]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+    setFilters((prev) => ({ ...prev, [key]: value, ...(key === "direction" && value !== prev.direction ? { category: "" } : {}) }));
+  }
+
+  function clearFilters() {
+    setFilters({ direction: "", category: "", age: "", target_audience: "" });
+    setDocType("");
   }
 
   return (
@@ -111,28 +120,12 @@ export default function GlossaryPage() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список терминов">
-        <fieldset className="response-mode" disabled={loading}>
-          <legend>Фильтры</legend>
-          <select value={docType} onChange={(e) => setDocType(e.target.value)} aria-label="Тип">
-            <option value="">Тип: все</option>
-            <option value="glossary_term">Термин</option>
-            <option value="glossary_abb">Сокращение</option>
-          </select>
-          {FILTER_ORDER.map((key) => (
-            <select
-              key={key}
-              value={filters[key]}
-              onChange={(event) => setFilter(key, event.target.value)}
-              aria-label={FILTER_LABELS[key]}
-              title={filters[key] ? ruLabel(key, filters[key]) || undefined : undefined}
-            >
-              <option value="">{FILTER_LABELS[key]}: все</option>
-              {(facets[key] || []).map((value) => (
-                <option key={value} value={value}>{ruLabel(key, value)}</option>
-              ))}
-            </select>
+        <div className="fb-chips" role="group" aria-label="Тип">
+          {([["glossary_term", "Термины"], ["glossary_abb", "Сокращения"]] as const).map(([v, l]) => (
+            <button key={v} type="button" className={`fb-chip${docType === v ? " on" : ""}`} aria-pressed={docType === v} disabled={loading} onClick={() => setDocType(docType === v ? "" : v)}>{l}</button>
           ))}
-        </fieldset>
+        </div>
+        <FilterBar values={filters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
 
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}

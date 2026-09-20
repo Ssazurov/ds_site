@@ -12,20 +12,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
+import FilterBar from "@/components/FilterBar";
+import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 
 // Issue #6: групповой выбор статей галочками -> scope для GAR-чата поверх
 // существующего scope-tree (issue #32/#35), см. ADR-0003 п.1 и filters.document_ids
 // / scope_source в gar-core-api/schemas/chat.py. Ключ sessionStorage читает
 // app/page.tsx при монтировании.
 const SCOPE_STORAGE_KEY = "ds-chat-scope";
-
-const FILTER_LABELS: Record<FilterKey, string> = {
-  direction: "Направление",
-  category: "Категория",
-  doc_type: "Тип материала",
-  age: "Возраст",
-  target_audience: "Аудитория",
-};
 
 // doc_type исключён (ds_site#51) — фиксирован как "article" на запросе.
 const FILTER_ORDER: FilterKey[] = ["direction", "category", "age", "target_audience"];
@@ -40,34 +34,6 @@ function articleTitle(doc: DocumentSummary) {
 function articleUrl(doc: DocumentSummary) {
   const url = doc.metadata?.source_url || doc.metadata?.original_url || doc.metadata?.canonical_md_url;
   return typeof url === "string" ? url : null;
-}
-
-function MetadataLinks({ metadata, getLabelFn }: { metadata?: DocumentSummary["metadata"]; getLabelFn: (field: FilterKey, value: unknown) => string | null }) {
-  const parts: React.ReactNode[] = [];
-
-  if (metadata?.direction) {
-    const label = getLabelFn("direction", metadata.direction);
-    if (label) {
-      parts.push(
-        <Link key="direction" href={`/articles?direction=${metadata.direction}`}>
-          {label}
-        </Link>
-      );
-    }
-  }
-
-  if (metadata?.category) {
-    const label = getLabelFn("category", metadata.category);
-    if (label) {
-      parts.push(
-        <Link key="category" href={`/articles?direction=${metadata.direction || ""}&category=${metadata.category}`}>
-          {label}
-        </Link>
-      );
-    }
-  }
-
-  return <>{parts.reduce<React.ReactNode[]>((acc, part, i) => i === 0 ? [part] : [...acc, " · ", part], [])}</>;
 }
 
 function ArticlesContent() {
@@ -210,27 +176,10 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        <div style={{ display: "flex", gap: "1rem", alignItems: "flex-end", marginBottom: "1rem" }}>
-          <fieldset className="response-mode" aria-label="Фильтры" disabled={loading} style={{ flex: 1 }}>
-            {FILTER_ORDER.map((key) => (
-              <select
-                key={key}
-                value={urlFilters[key]}
-                onChange={(event) => setFilter(key, event.target.value)}
-                aria-label={FILTER_LABELS[key]}
-                title={urlFilters[key] ? ruLabel(key, urlFilters[key]) || undefined : undefined}
-              >
-                <option value="">{FILTER_LABELS[key]}: все</option>
-                {(facets[key] || []).map((value) => (
-                  <option key={value} value={value} title={ruLabel(key, value) ?? value}>{clip(ruLabel(key, value) ?? value)}</option>
-                ))}
-              </select>
-            ))}
-          </fieldset>
-          <button type="button" onClick={clearFilters} disabled={loading}>Сбросить фильтры</button>
-        </div>
+        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
 
-        {total > 0 && <p className="message">Всего найдено: {total}</p>}
+        {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
+
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -246,10 +195,16 @@ function ArticlesContent() {
               {documents.map((doc) => {
                 const url = articleUrl(doc);
                 const isSelected = Boolean(selected[doc.document_id]);
+                const dirValue = doc.metadata?.direction;
+                const dir = dirValue ? ruLabel("direction", dirValue) : null;
+                const cat = doc.metadata?.category ? ruLabel("category", doc.metadata.category) : null;
+                const desc = typeof doc.metadata?.description === "string" ? doc.metadata.description : "";
+                const mins = metaReadingMinutes(doc.metadata);
+                const when = [formatDate(doc.metadata?.publish_date), mins ? readingLabel(mins) : null].filter(Boolean).join(" · ");
                 return (
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
                     <div className="card-head">
-                      <h2>{articleTitle(doc)}</h2>
+                      {dir ? <Link className="tag" href={`/articles?direction=${dirValue}`}>{dir}</Link> : <span />}
                       <label className="select-check" title="Выбрать для чата">
                         <input
                           type="checkbox"
@@ -259,14 +214,16 @@ function ArticlesContent() {
                         />
                       </label>
                     </div>
-                    <p className="card-meta"><MetadataLinks metadata={doc.metadata} getLabelFn={ruLabel} /></p>
-                    <div className="card-links">
-                      <Link href={`/articles/${doc.document_id}`} className="source-link">Читать →</Link>
-                      {url ? (
-                        <a href={url} target="_blank" rel="noreferrer" className="source-link">
+                    {cat && <p className="card-cat">{cat}</p>}
+                    <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
+                    {desc && <p className="card-desc">{desc}</p>}
+                    <div className="card-foot">
+                      <span>{when}</span>
+                      {url && (
+                        <a href={url} target="_blank" rel="noreferrer">
                           Источник <span aria-hidden="true">↗</span>
                         </a>
-                      ) : <span className="no-link">Ссылка недоступна</span>}
+                      )}
                     </div>
                   </article>
                 );
@@ -297,7 +254,6 @@ function ArticlesContent() {
   );
 }
 
-const clip = (t: string, n = 32) => (t.length > n ? t.slice(0, n - 1) + "…" : t);
 
 export default function ArticlesPage() {
   return (
