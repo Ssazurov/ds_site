@@ -13,9 +13,11 @@
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import type { DocumentSummary, DocumentsResponse, FilterKey } from "@/lib/gar";
+import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import { getDocuments, IS_STATIC } from "@/lib/gar/data";
+import { UrlSearchBox } from "@/components/SearchBox";
 import { formatDate } from "@/lib/format";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
@@ -54,10 +56,12 @@ function NewsContent() {
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
+  const q = searchParams.get("q") || "";
 
   useEffect(() => {
     if (!DATASET_ID) return;
     const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "news", per_page: "50" });
+    if (q) params.set("q", q);
     for (const key of FILTER_ORDER) {
       if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
@@ -67,8 +71,7 @@ function NewsContent() {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`/api/gar/documents?${params.toString()}`);
-        const data = (await res.json()) as DocumentsResponse;
+        const data = await getDocuments(params);
         if (cancelled) return;
         if (data.error) throw new Error(data.error);
         const docs = [...(data.documents || [])].sort((a, b) => {
@@ -89,7 +92,7 @@ function NewsContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     const next = { ...urlFilters, [key]: value };
@@ -106,6 +109,7 @@ function NewsContent() {
     for (const key of FILTER_ORDER) {
       if (f[key]) params.set(key, f[key]);
     }
+    if (q) params.set("q", q);
     router.replace(`/news?${params.toString()}`, { scroll: false });
   }
 
@@ -117,6 +121,7 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
+        {IS_STATIC && <UrlSearchBox />}
         <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
 
 

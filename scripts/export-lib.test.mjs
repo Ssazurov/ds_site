@@ -2,7 +2,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  assertNoSecrets, buildCollection, buildRecord, isPublishable, needsContent, permissionOf, summarize,
+  assertNoSecrets, buildCollection, buildLabels, buildRecord, isPublishable, needsContent, permissionOf, splitCollection, summarize,
 } from "./export-lib.mjs";
 
 const doc = (id, perm, extra = {}) => ({
@@ -63,4 +63,23 @@ test("assertNoSecrets throws when key or GAR address leaks", () => {
   assert.throws(() => assertNoSecrets('{"a":"key-123456"}', ["key-123456"]));
   assert.throws(() => assertNoSecrets('{"a":"http://localhost:8000/p"}', ["http://localhost:8000"]));
   assert.doesNotThrow(() => assertNoSecrets('{"a":"ok"}', ["key-123456", "http://localhost:8000"]));
+});
+
+test("buildLabels: value -> label только по известным полям", () => {
+  const l = buildLabels({ fields: [
+    { key: "direction", options: [{ value: "law", label: "Право" }] },
+    { key: "secret", options: [{ value: "x", label: "y" }] },
+  ] });
+  assert.deepEqual(l.direction, { law: "Право" });
+  assert.equal(l.secret, undefined);
+  assert.deepEqual(l.age, {});
+});
+
+test("splitCollection: полный текст уходит из списка в details", () => {
+  const { list, details } = splitCollection([
+    { document_id: "a", full_text: "текст" },
+    { document_id: "b", summary: "кратко" },
+  ]);
+  assert.deepEqual(list, [{ document_id: "a", has_full_text: true }, { document_id: "b", summary: "кратко" }]);
+  assert.deepEqual(details, { a: { full_text: "текст" } });
 });

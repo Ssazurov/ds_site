@@ -7,7 +7,7 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  assertNoSecrets, buildCollection, needsContent,
+  assertNoSecrets, buildCollection, buildLabels, needsContent,
 } from "./export-lib.mjs";
 
 const COLLECTIONS = {
@@ -71,6 +71,9 @@ async function main() {
     manifest.collections[name] = { count: items.length, skipped };
     console.log(`${name}: ${items.length} выгружено, отброшено ${JSON.stringify(skipped)}`);
   }
+  const lres = await fetch(`${gar}/public/metadata-fields?${new URLSearchParams({ dataset_id: datasetId })}`, { headers });
+  if (!lres.ok) throw new Error(`GAR metadata-fields: HTTP ${lres.status}`);
+  await writeFile(path.join(outDir, "labels.json"), JSON.stringify(buildLabels(await lres.json()), null, 2), "utf-8");
   await writeFile(path.join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2), "utf-8");
   console.log(`готово: ${outDir}`);
 }

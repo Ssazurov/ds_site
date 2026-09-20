@@ -71,6 +71,7 @@ export function buildRecord(doc, content) {
   }
   const rec = {
     document_id: doc.document_id,
+    doc_name: doc.doc_name,
     title: typeof meta.title === "string" && meta.title ? meta.title : doc.doc_name,
     permission,
     summary,
@@ -103,4 +104,26 @@ export function assertNoSecrets(serialized, secrets) {
       throw new Error("export aborted: secret/GAR address found in output");
     }
   }
+}
+
+// Словарь value -> русская подпись (как app/api/gar/metadata-fields) — для статики.
+export const LABEL_KEYS = ["direction", "category", "doc_type", "age", "target_audience"];
+export function buildLabels(raw) {
+  const labels = Object.fromEntries(LABEL_KEYS.map((k) => [k, {}]));
+  for (const f of raw?.fields ?? []) {
+    if (!LABEL_KEYS.includes(f.key)) continue;
+    for (const o of f.options ?? []) labels[f.key][o.value] = o.label;
+  }
+  return labels;
+}
+
+// Список без полного текста + отдельные файлы с полным текстом (лёгкий список для браузера).
+export function splitCollection(items) {
+  const details = {};
+  const list = items.map(({ full_text, ...rest }) => {
+    if (!full_text) return rest;
+    details[rest.document_id] = { full_text };
+    return { ...rest, has_full_text: true };
+  });
+  return { list, details };
 }

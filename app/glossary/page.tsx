@@ -6,6 +6,8 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { fetchAllDocuments, metaStr } from "@/lib/gar/documents-by-type";
+import { getDocumentContent, getStaticSummary, IS_STATIC, searchCollection } from "@/lib/gar/data";
+import { SearchInput } from "@/components/SearchBox";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import FilterBar from "@/components/FilterBar";
@@ -32,8 +34,8 @@ function TermCard({ term, ruLabel }: { term: DocumentSummary; ruLabel: (k: Filte
     setOpen(next);
     if (next && definition === null) {
       try {
-        const res = await fetch(`/api/gar/documents/${term.document_id}/content`);
-        setDefinition(res.ok ? await res.text() : "");
+        const text = await getDocumentContent(term.document_id);
+        setDefinition(text ?? (await getStaticSummary(term.document_id)));
       } catch {
         setDefinition("");
       }
@@ -42,6 +44,7 @@ function TermCard({ term, ruLabel }: { term: DocumentSummary; ruLabel: (k: Filte
   const dir = ruLabel("direction", metaStr(term, "direction"));
   const cat = ruLabel("category", metaStr(term, "category"));
   const kind = ruLabel("doc_type", metaStr(term, "doc_type"));
+  const src = metaStr(term, "source_url");
   return (
     <article className="source-card">
       {dir && <span className="tag">{dir}</span>}
@@ -49,7 +52,7 @@ function TermCard({ term, ruLabel }: { term: DocumentSummary; ruLabel: (k: Filte
       <h2>{term.doc_name}</h2>
       {open && <p style={{ whiteSpace: "pre-line" }}>{definition === null ? "Загружаю..." : definition || "Определение недоступно."}</p>}
       <div className="card-foot">
-        <span>{kind}</span>
+        <span>{kind}{IS_STATIC && src && (<> · <a href={src} target="_blank" rel="noreferrer">Источник ↗</a></>)}</span>
         <button type="button" onClick={toggle} className="fb-link" aria-expanded={open}>
           {open ? "Скрыть определение" : "Показать определение"}
         </button>
@@ -67,6 +70,15 @@ export default function GlossaryPage() {
   const [terms, setTerms] = useState<DocumentSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [q, setQ] = useState("");
+  const [qIds, setQIds] = useState<Set<string> | null>(null);
+  useEffect(() => {
+    if (!IS_STATIC || !q.trim()) return;
+    let cancelled = false;
+    searchCollection("glossary", q).then((ids) => { if (!cancelled) setQIds(new Set(ids)); }).catch(() => {});
+    return () => { cancelled = true; };
+  }, [q]);
+  const activeIds = IS_STATIC && q.trim() ? qIds : null;
 
   useEffect(() => {
     let cancelled = false;
@@ -100,9 +112,10 @@ export default function GlossaryPage() {
   const filtered = useMemo(() => {
     return terms
       .filter((t) => !docType || metaStr(t, "doc_type") === docType)
+      .filter((t) => !activeIds || activeIds.has(t.document_id))
       .filter((t) => FILTER_ORDER.every((key) => !filters[key] || termFacetValue(t, key) === filters[key]))
       .sort((a, b) => a.doc_name.localeCompare(b.doc_name, "ru"));
-  }, [terms, docType, filters]);
+  }, [terms, docType, filters, activeIds]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     setFilters((prev) => ({ ...prev, [key]: value, ...(key === "direction" && value !== prev.direction ? { category: "" } : {}) }));
@@ -111,6 +124,7 @@ export default function GlossaryPage() {
   function clearFilters() {
     setFilters({ direction: "", category: "", age: "", target_audience: "" });
     setDocType("");
+    setQ("");
   }
 
   return (
@@ -120,6 +134,7 @@ export default function GlossaryPage() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список терминов">
+        {IS_STATIC && <SearchInput value={q} onChange={setQ} placeholder="Поиск по глоссарию" />}
         <div className="fb-chips" role="group" aria-label="Тип">
           {([["glossary_term", "Термины"], ["glossary_abb", "Сокращения"]] as const).map(([v, l]) => (
             <button key={v} type="button" className={`fb-chip${docType === v ? " on" : ""}`} aria-pressed={docType === v} disabled={loading} onClick={() => setDocType(docType === v ? "" : v)}>{l}</button>

@@ -16,6 +16,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Солнечный мир",
   description: "Солнечный мир",
+  // Внешний сайт: до проверки прав закрыт от индексации (ADR-0018 п.8).
+  ...(process.env.NEXT_PUBLIC_STATIC_EXPORT === "1" ? { robots: { index: false, follow: false } } : {}),
 };
 
 export default function RootLayout({

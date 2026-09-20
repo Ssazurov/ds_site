@@ -44,3 +44,8 @@ next-env.d.ts
 
 # выгрузка из GAR для внешнего сайта (ADR-0018, #92)
 /data/export/
+
+# статическая сборка внешнего сайта (ADR-0018, #93/#95)
+/public/data/
+/.next-static/
+/.next-check/
