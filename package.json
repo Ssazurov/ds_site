@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "export:content": "node scripts/export-content.mjs",
-    "test:export": "node --test scripts/export-lib.test.mjs",
+    "test:export": "node --test scripts/export-lib.test.mjs lib/favorites-core.test.mjs",
     "build:static": "node scripts/publish-pages.mjs --skip-export --dry-run",
     "publish:pages": "node scripts/publish-pages.mjs"
   },

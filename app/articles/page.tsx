@@ -13,6 +13,8 @@ import Link from "next/link";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import FavoriteButton from "@/components/FavoriteButton";
+import { useFavorites } from "@/lib/favorites";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
 import { UrlSearchBox } from "@/components/SearchBox";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
@@ -58,6 +60,7 @@ function ArticlesContent() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, string>>({}); // document_id -> title
+  const favCount = useFavorites().length;
   const assistantEnabled = useAssistantEnabled() === true; // ds_site#94: выбор для Помощника только при включённом флаге
 
   const urlFilters = Object.fromEntries(
@@ -185,6 +188,7 @@ function ArticlesContent() {
         {IS_STATIC && <UrlSearchBox />}
         <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
 
+        <p className="fb-total"><Link href="/favorites">★ Избранное ({favCount})</Link></p>
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
 
 
@@ -212,6 +216,7 @@ function ArticlesContent() {
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
                     <div className="card-head">
                       {dir ? <Link className="tag" href={`/articles?direction=${dirValue}`}>{dir}</Link> : <span />}
+                      <FavoriteButton id={doc.document_id} title={articleTitle(doc)} />
                       {assistantEnabled && <label className="select-check" title="Выбрать для чата">
                         <input
                           type="checkbox"
