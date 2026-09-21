@@ -13,6 +13,7 @@ import Link from "next/link";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import DomainFilter, { type DomainCount } from "@/components/DomainFilter";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useFavorites } from "@/lib/favorites";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
@@ -56,6 +57,7 @@ function ArticlesContent() {
   const [documents, setDocuments] = useState<DocumentSummary[]>([]);
   const [total, setTotal] = useState(0);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
+  const [domainFacet, setDomainFacet] = useState<DomainCount[]>([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -67,6 +69,8 @@ function ArticlesContent() {
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<FilterKey, string>;
   const q = searchParams.get("q") || "";
+  const urlDomains = searchParams.getAll("domain"); // ADR-0020: мультивыбор, OR внутри фильтра
+  const domainKey = urlDomains.join("|");
 
   // Первая загрузка / смена фильтров — сброс накопленного списка.
   useEffect(() => {
@@ -77,6 +81,7 @@ function ArticlesContent() {
     }
     params.set("per_page", String(PER_PAGE));
     params.set("page", "1");
+    for (const d of urlDomains) params.append("domain", d);
     if (q) params.set("q", q);
 
     let cancelled = false;
@@ -90,6 +95,7 @@ function ArticlesContent() {
         setDocuments(data.documents || []);
         setTotal(data.total || 0);
         setFacets((prev) => (data.facets ? data.facets : prev));
+        setDomainFacet((prev) => (data.domains ? data.domains : prev));
         setPage(1);
       } catch (e) {
         if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить статьи.");
@@ -102,7 +108,7 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q, domainKey]);
 
   async function loadMore() {
     if (!DATASET_ID || loadingMore) return;
@@ -113,6 +119,7 @@ function ArticlesContent() {
     }
     params.set("per_page", String(PER_PAGE));
     params.set("page", String(nextPage));
+    for (const d of urlDomains) params.append("domain", d);
     if (q) params.set("q", q);
 
     setLoadingMore(true);
@@ -140,14 +147,15 @@ function ArticlesContent() {
   function clearFilters() {
     const emptyFilters = { direction: "", category: "", doc_type: "", age: "", target_audience: "" };
     setFilters(emptyFilters);
-    updateURL(emptyFilters);
+    updateURL(emptyFilters, []);
   }
 
-  function updateURL(f: Record<FilterKey, string>) {
+  function updateURL(f: Record<FilterKey, string>, domains: string[] = urlDomains) {
     const params = new URLSearchParams();
     for (const key of FILTER_ORDER) {
       if (f[key]) params.set(key, f[key]);
     }
+    for (const d of domains) params.append("domain", d);
     if (q) params.set("q", q);
     router.replace(`/articles?${params.toString()}`, { scroll: false });
   }
@@ -187,6 +195,8 @@ function ArticlesContent() {
       <section className="chat-panel" aria-label="Фильтры и список статей">
         {IS_STATIC && <UrlSearchBox />}
         <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+
+        <DomainFilter domains={domainFacet} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
 
         <p className="fb-total"><Link href="/favorites">★ Избранное ({favCount})</Link></p>
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}

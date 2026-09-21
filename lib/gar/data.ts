@@ -4,6 +4,7 @@
 // (его готовят scripts/export-content.mjs + prepare-static.mjs); фильтры, пагинация
 // и поиск (MiniSearch, индекс строится в браузере) — на клиенте.
 import type { DocumentDetail, DocumentSummary, DocumentsResponse, MetadataLabels } from "./types";
+import { registrableDomain } from "./domain";
 
 export const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
 // Буквальное обращение к process.env.NEXT_PUBLIC_* — Next подставляет значение при сборке.
@@ -109,8 +110,20 @@ async function staticDocuments(p: URLSearchParams): Promise<DocumentsResponse> {
     pool = [...recs].sort(byDateDesc);
   }
   const sel = Object.fromEntries(FILTER_KEYS.map((k) => [k, p.get(k) || ""]));
+  const doms = p.getAll("domain");
+  const domOf = (r: Rec) => registrableDomain(r.source_url ?? r.metadata.source_url ?? r.metadata.original_url);
   const matching = (skip?: string) =>
-    pool.filter((r) => FILTER_KEYS.every((k) => k === skip || !sel[k] || has(r, k, sel[k])));
+    pool.filter(
+      (r) =>
+        FILTER_KEYS.every((k) => k === skip || !sel[k] || has(r, k, sel[k])) &&
+        (skip === "domain" || !doms.length || doms.includes(domOf(r) ?? "")),
+    );
+  const domCount = new Map<string, number>();
+  for (const r of matching("domain")) {
+    const d = domOf(r);
+    if (d) domCount.set(d, (domCount.get(d) ?? 0) + 1);
+  }
+  const domains = [...domCount].map(([domain, count]) => ({ domain, count })).sort((a, b) => b.count - a.count || a.domain.localeCompare(b.domain));
   const facets: Record<string, string[]> = {};
   for (const k of FILTER_KEYS) {
     const values = new Set<string>();
@@ -122,7 +135,7 @@ async function staticDocuments(p: URLSearchParams): Promise<DocumentsResponse> {
   const list = matching();
   const per = Number(p.get("per_page")) || 20;
   const page = Number(p.get("page")) || 1;
-  return { documents: list.slice((page - 1) * per, page * per).map(toSummary), total: list.length, facets };
+  return { documents: list.slice((page - 1) * per, page * per).map(toSummary), total: list.length, facets, domains };
 }
 
 export async function getDocuments(params: URLSearchParams): Promise<DocumentsResponse> {
