@@ -18,6 +18,7 @@ const LIBRARY_ITEMS = [
   { href: "/articles", label: "Статьи" },
   { href: "/glossary", label: "Глоссарий" },
   { href: "/links", label: "Ссылки" },
+  { href: "/favorites", label: "Избранное" },
 ];
 
 function isActiveHref(pathname: string | null, href: string) {

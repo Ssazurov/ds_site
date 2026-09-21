@@ -321,3 +321,8 @@
 
 ### ds_site#96 — инструкция по обновлению внешнего сайта (2026-09-20)
 - README.md: раздел «Внешний сайт (GitHub Pages)» — обновление (кнопка в ds_search / npm run publish:pages), проверка публикации, флаг Помощника, отзыв. Только документация, код не менялся.
+
+### ds_site#103 — Избранное статей (2026-09-21)
+- Решение: localStorage в браузере (без сервера/cookie anon_id/БД — работает и в статике publish-pages); merge с профилем и хранение в GAR — отдельная будущая задача при появлении авторизации. ADR не нужен.
+- Код: `lib/favorites-core.mjs` (+`.d.mts`, тесты `favorites-core.test.mjs`), хук `lib/favorites.ts`, `components/FavoriteButton.tsx` (★ toggle; до согласия — подсказка «разрешите cookie»), `components/ConsentBanner.tsx` (текст + «Принять»), страница `app/favorites/` (поиск по названию, сортировка по дате добавления, фильтр «только избранное», пометка «хранится в этом браузере»), ★ в выдаче `app/articles` и на странице статьи, пункт «Библиотека» в Header.
+- Проверка: node --test 13/13, tsc и eslint без ошибок. Node в WSL: `~/.nvm/versions/node/v22.23.1/bin` (в /tmp/chk.sh PATH чистится от /mnt/c).

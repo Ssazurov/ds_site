@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
+import FavoriteButton from "@/components/FavoriteButton";
 import { formatDate, readingMinutes, metaReadingMinutes, readingLabel } from "@/lib/format";
 
 function articleTitle(doc: DocumentDetail) {
@@ -58,7 +59,7 @@ export default function ArticlePage({ id }: { id: string }) {
     <main className="chat-shell">
       <header className="chat-header">
         <p className="eyebrow"><Link href="/articles">← Статьи</Link></p>
-        {doc && <h1>{articleTitle(doc)}</h1>}
+        {doc && <h1>{articleTitle(doc)} <FavoriteButton id={id} title={articleTitle(doc)} /></h1>}
       </header>
 
       <section className="chat-panel" aria-label="Материал">
