@@ -15,6 +15,8 @@ export type DocumentsResponse = {
   documents?: DocumentSummary[];
   total?: number;
   facets?: Record<string, string[]>;
+  // ADR-0020: домены источников со счётчиками (только статический режим, пока GAR не отдаёт).
+  domains?: { domain: string; count: number }[];
   error?: string;
 };
 

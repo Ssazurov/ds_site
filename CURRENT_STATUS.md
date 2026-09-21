@@ -326,3 +326,6 @@
 - Решение: localStorage в браузере (без сервера/cookie anon_id/БД — работает и в статике publish-pages); merge с профилем и хранение в GAR — отдельная будущая задача при появлении авторизации. ADR не нужен.
 - Код: `lib/favorites-core.mjs` (+`.d.mts`, тесты `favorites-core.test.mjs`), хук `lib/favorites.ts`, `components/FavoriteButton.tsx` (★ toggle; до согласия — подсказка «разрешите cookie»), `components/ConsentBanner.tsx` (текст + «Принять»), страница `app/favorites/` (поиск по названию, сортировка по дате добавления, фильтр «только избранное», пометка «хранится в этом браузере»), ★ в выдаче `app/articles` и на странице статьи, пункт «Библиотека» в Header.
 - Проверка: node --test 13/13, tsc и eslint без ошибок. Node в WSL: `~/.nvm/versions/node/v22.23.1/bin` (в /tmp/chk.sh PATH чистится от /mnt/c).
+
+## 2026-09-21 — фильтр доменов на «Статьях» (#105, ADR-0020)
+- lib/gar/domain.ts (registrable domain), data.ts (domain=, domains со счётчиками), components/DomainFilter.tsx, app/articles/page.tsx. Работает в static-режиме; live GAR пока не отдаёт domains — блок скрыт.
