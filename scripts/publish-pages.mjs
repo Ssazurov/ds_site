@@ -82,8 +82,10 @@ function main() {
 
   const remote = out("git", ["remote", "get-url", "origin"]);
   const repo = remote.replace(/^.*github\.com[:/]/, "").replace(/\.git$/, "");
-  const name = out("git", ["config", "user.name"]) || "ds-site-publisher";
-  const email = out("git", ["config", "user.email"]) || "noreply@users.noreply.github.com";
+  // git config возвращает код 1, если ключ не задан (например в контейнере) — это не ошибка
+  const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
+  const name = soft("user.name") || "ds-site-publisher";
+  const email = soft("user.email") || "noreply@users.noreply.github.com";
   const tmp = mkdtempSync(path.join(os.tmpdir(), "ds-pages-"));
   try {
     cpSync(OUT, tmp, { recursive: true });

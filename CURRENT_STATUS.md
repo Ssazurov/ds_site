@@ -329,3 +329,7 @@
 
 ## 2026-09-21 — фильтр доменов на «Статьях» (#105, ADR-0020)
 - lib/gar/domain.ts (registrable domain), data.ts (domain=, domains со счётчиками), components/DomainFilter.tsx, app/articles/page.tsx. Работает в static-режиме; live GAR пока не отдаёт domains — блок скрыт.
+
+## 2026-09-24 — publish-pages: падение без git user.name (#107)
+- Причина: `git config user.name` даёт код 1 при незаданном ключе (контейнер ds_search), `out()` бросал исключение до применения запасных значений.
+- Фикс: `scripts/publish-pages.mjs` — мягкое чтение user.name/user.email с запасными значениями. Проверка: `node --check`, реальная публикация из UI прошла успешно.
