@@ -7,6 +7,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
 import FavoriteButton from "@/components/FavoriteButton";
@@ -83,7 +85,9 @@ export default function ArticlePage({ id }: { id: string }) {
             )}
 
             {content ? (
-              <div className="reading">{content}</div>
+              <div className="reading">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+              </div>
             ) : (
               <>
                 {IS_STATIC && typeof doc.metadata?.description === "string" && doc.metadata.description && (
