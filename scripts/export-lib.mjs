@@ -114,6 +114,13 @@ export function buildLabels(raw) {
     if (!LABEL_KEYS.includes(f.key)) continue;
     for (const o of f.options ?? []) labels[f.key][o.value] = o.label;
   }
+  const dir = (raw?.fields ?? []).find((f) => f.key === "direction");
+  const cat = (raw?.fields ?? []).find((f) => f.key === "category");
+  const tree = {};
+  for (const d of dir?.options ?? []) {
+    tree[d.value] = (cat?.options ?? []).filter((o) => o.active !== false && o.parent_option_id === d.id).map((o) => o.value);
+  }
+  labels.tree = tree;
   return labels;
 }
 

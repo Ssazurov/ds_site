@@ -17,8 +17,9 @@ import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
-import { UrlSearchBox } from "@/components/SearchBox";
 import { formatDate } from "@/lib/format";
+
+const norm = (s: string) => s.toLowerCase().replace(/ё/g, "е").trim();
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -47,8 +48,8 @@ function newsUrl(doc: DocumentSummary): string | null {
 function NewsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { ruLabel } = useMetadataLabels(DATASET_ID);
-  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
+  const { ruLabel, tree } = useMetadataLabels(DATASET_ID);
+  const [docsRaw, setDocuments] = useState<DocumentSummary[]>([]);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -58,10 +59,24 @@ function NewsContent() {
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
   const q = searchParams.get("q") || "";
 
+  // Динамический режим: GAR не принимает q — фильтруем по названию (префикс слова) на клиенте.
+  // Статика ищет MiniSearch'ем в getDocuments.
+  const documents = IS_STATIC || !q ? docsRaw : docsRaw.filter((d) => {
+    const words = norm(newsTitle(d)).split(/[^\p{L}\p{N}]+/u);
+    return norm(q).split(/\s+/).filter(Boolean).every((t) => words.some((w) => w.startsWith(t)));
+  });
+
+  function setQuery(v: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (v) params.set("q", v);
+    else params.delete("q");
+    router.replace(`/news?${params.toString()}`, { scroll: false });
+  }
+
   useEffect(() => {
     if (!DATASET_ID) return;
     const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "news", per_page: "50" });
-    if (q) params.set("q", q);
+    if (q && IS_STATIC) params.set("q", q);
     for (const key of FILTER_ORDER) {
       if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
@@ -92,7 +107,7 @@ function NewsContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : ""]);
 
   function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
     const next = { ...urlFilters, [key]: value };
@@ -121,8 +136,7 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        {IS_STATIC && <UrlSearchBox />}
-        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
 
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}

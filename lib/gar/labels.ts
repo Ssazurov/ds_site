@@ -45,5 +45,5 @@ export function useMetadataLabels(datasetId: string) {
     return labels[key]?.[value] || value;
   }
 
-  return { labels, ruLabel };
+  return { labels, ruLabel, tree: labels.tree ?? {} };
 }
