@@ -10,6 +10,9 @@ import Link from "next/link";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
 import AuthorLink, { SourceLink } from "@/components/AuthorLink";
+import { useMetadataLabels } from "@/lib/gar/labels";
+
+const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function newsTitle(doc: DocumentDetail) {
   return String(doc.metadata?.title || doc.doc_name);
@@ -26,6 +29,7 @@ function author(doc: DocumentDetail) {
 }
 
 export default function NewsItemPage({ id }: { id: string }) {
+  const { ruLabel } = useMetadataLabels(DATASET_ID);
   const [doc, setDoc] = useState<DocumentDetail | null>(null);
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -67,6 +71,26 @@ export default function NewsItemPage({ id }: { id: string }) {
 
         {doc && !loading && !error && (
           <>
+            {(doc.metadata?.direction || doc.metadata?.category) && (() => {
+              const dirValue = typeof doc.metadata?.direction === "string" ? doc.metadata.direction : null;
+              const catValue = typeof doc.metadata?.category === "string" ? doc.metadata.category : null;
+              if (!dirValue && !catValue) return null;
+              return (
+                <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                  {dirValue && (
+                    <Link className="tag" href={`/news?direction=${dirValue}`}>
+                      {ruLabel("direction", dirValue) ?? dirValue}
+                    </Link>
+                  )}
+                  {catValue && (
+                    <Link className="tag" href={`/news?direction=${dirValue || ""}&category=${catValue}`}>
+                      {ruLabel("category", catValue) ?? catValue}
+                    </Link>
+                  )}
+                </div>
+              );
+            })()}
+
             {(author(doc) || sourceUrl(doc)) && (
               <p className="lede">
                 {author(doc) && <>Автор: <AuthorLink value={author(doc)!} />. </>}

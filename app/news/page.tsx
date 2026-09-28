@@ -153,13 +153,18 @@ function NewsContent() {
               const url = newsUrl(doc);
               const date = formatDate(doc.metadata?.publish_date);
               const summary = newsSummary(doc);
-              const dirValue = doc.metadata?.direction;
+              const dirValue = typeof doc.metadata?.direction === "string" ? doc.metadata.direction : null;
+              const catValue = typeof doc.metadata?.category === "string" ? doc.metadata.category : null;
               const dir = dirValue ? ruLabel("direction", dirValue) : null;
-              const cat = doc.metadata?.category ? ruLabel("category", doc.metadata.category) : null;
+              const cat = catValue ? ruLabel("category", catValue) : null;
               return (
                 <article className="source-card" key={doc.document_id}>
-                  {dir && <Link className="tag" href={`/news?direction=${dirValue}`}>{dir}</Link>}
-                  {cat && <p className="card-cat">{cat}</p>}
+                  {dir && dirValue && <Link className="tag" href={`/news?direction=${dirValue}`}>{dir}</Link>}
+                  {cat && catValue && (
+                    <Link className="card-cat" href={`/news?direction=${dirValue || ""}&category=${catValue}`}>
+                      {cat}
+                    </Link>
+                  )}
                   <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
                   {summary && <p className="card-desc">{summary}</p>}
                   <div className="card-foot">
