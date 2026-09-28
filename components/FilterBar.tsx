@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FilterKey } from "@/lib/gar";
 
 export type FilterField = Exclude<FilterKey, "doc_type">;
@@ -24,9 +24,15 @@ type Props = {
   onChange: (key: FilterField, value: string) => void;
   onClear: () => void;
   disabled?: boolean;
+  /** Если задан — главное поле ищет по названию, а Тема/Категория уходят под ⚙. */
+  titleQuery?: string;
+  onTitleQuery?: (v: string) => void;
+  /** direction -> [category]; категория зависит от направления. */
+  tree?: Record<string, string[]>;
 };
 
-export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled }: Props) {
+export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, tree }: Props) {
+  const titleMode = onTitleQuery !== undefined;
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [panel, setPanel] = useState(false);
@@ -39,12 +45,41 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   };
   const cats = withSel("category").filter((c) => lab("category", c).toLowerCase().includes(q.trim().toLowerCase()));
   const active = ALL.filter((k) => values[k]);
-  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0);
+  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0)
+    + (titleMode ? (values.direction ? 1 : 0) + (values.category ? 1 : 0) : 0);
+
+  const [tq, setTq] = useState(titleQuery ?? "");
+  useEffect(() => {
+    if (!onTitleQuery || tq.trim() === (titleQuery ?? "")) return;
+    const t = setTimeout(() => onTitleQuery(tq.trim()), 300);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tq]);
 
   function pickCategory(c: string) {
     onChange("category", c);
     setQ("");
     setOpen(false);
+  }
+
+  function select(k: "direction" | "category") {
+    let list = withSel(k);
+    if (k === "category" && values.direction && tree?.[values.direction]) {
+      const allowed = tree[values.direction];
+      list = list.filter((c) => allowed.includes(c) || c === values.category);
+    }
+    return (
+      <select
+        className="fb-select"
+        aria-label={FILTER_LABELS[k]}
+        value={values[k]}
+        disabled={disabled}
+        onChange={(e) => onChange(k, e.target.value)}
+      >
+        <option value="">Все</option>
+        {list.map((v) => <option key={v} value={v}>{lab(k, v)}</option>)}
+      </select>
+    );
   }
 
   function chips(k: FilterField) {
@@ -66,12 +101,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
     );
   }
 
-  return (
-    <div className="fb" role="search" aria-label="Фильтры">
-      <p className="fb-lab">{FILTER_LABELS.direction}</p>
-      {chips("direction")}
-
-      <div className="fb-bar">
+  const catCombo = (
         <div className="fb-combo">
           <div className="fb-in">
             <span aria-hidden="true">🔍</span>
@@ -103,14 +133,48 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
             </ul>
           )}
         </div>
-        <button type="button" className="fb-gear" aria-label="Фильтры: возраст и аудитория" aria-expanded={panel} title="Фильтры" onClick={() => setPanel((p) => !p)}>
-          <span aria-hidden="true">⚙</span>
-          {extra > 0 && <b>{extra}</b>}
-        </button>
+  );
+
+  const gear = (
+    <button type="button" className="fb-gear" aria-label="Фильтры" aria-expanded={panel} title="Фильтры" onClick={() => setPanel((p) => !p)}>
+      <span aria-hidden="true">⚙</span>
+      {extra > 0 && <b>{extra}</b>}
+    </button>
+  );
+
+  const titleInput = (
+    <div className="fb-combo">
+      <div className="fb-in">
+        <span aria-hidden="true">🔍</span>
+        <input
+          type="search"
+          aria-label="Поиск по названию"
+          placeholder="Поиск по названию…"
+          autoComplete="off"
+          value={tq}
+          onChange={(e) => setTq(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="fb" role="search" aria-label="Фильтры">
+      {!titleMode && (<><p className="fb-lab">{FILTER_LABELS.direction}</p>{chips("direction")}</>)}
+
+      <div className="fb-bar">
+        {titleMode ? titleInput : catCombo}
+        {gear}
       </div>
 
       {panel && (
         <div className="fb-panel">
+          {titleMode && (
+            <>
+              <div><p className="fb-lab">{FILTER_LABELS.direction}</p>{select("direction")}</div>
+              <div><p className="fb-lab">{FILTER_LABELS.category}</p>{select("category")}</div>
+            </>
+          )}
           <div><p className="fb-lab">{FILTER_LABELS.age}</p>{chips("age")}</div>
           <div><p className="fb-lab">{FILTER_LABELS.target_audience}</p>{chips("target_audience")}</div>
         </div>

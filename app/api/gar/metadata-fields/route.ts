@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: `GAR ${res.status}` }, { status: 502 });
     }
     const raw = (await res.json()) as {
-      fields?: { key: string; options?: { value: string; label: string }[] }[];
+      fields?: { key: string; options?: { id?: string; value: string; label: string; active?: boolean; parent_option_id?: string }[] }[];
     };
     const labels = {} as MetadataLabels;
     for (const key of KNOWN_KEYS) labels[key] = {};
@@ -36,6 +36,13 @@ export async function GET(req: NextRequest) {
         labels[field.key as FilterKey][opt.value] = opt.label;
       }
     }
+    const dir = (raw.fields || []).find((f) => f.key === "direction");
+    const cat = (raw.fields || []).find((f) => f.key === "category");
+    const tree: Record<string, string[]> = {};
+    for (const d of dir?.options || []) {
+      tree[d.value] = (cat?.options || []).filter((o) => o.active !== false && o.parent_option_id === d.id).map((o) => o.value);
+    }
+    labels.tree = tree;
     cache = { datasetId, data: labels, ts: Date.now() };
     return NextResponse.json(labels);
   } catch (e) {
