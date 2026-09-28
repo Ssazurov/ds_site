@@ -12,6 +12,7 @@ import remarkGfm from "remark-gfm";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
 import FavoriteButton from "@/components/FavoriteButton";
+import AuthorLink, { SourceLink, stripAuthorLine } from "@/components/AuthorLink";
 import { formatDate, readingMinutes, metaReadingMinutes, readingLabel } from "@/lib/format";
 
 function articleTitle(doc: DocumentDetail) {
@@ -75,18 +76,16 @@ export default function ArticlePage({ id }: { id: string }) {
             </p>
             {(author(doc) || sourceUrl(doc)) && (
               <p className="lede">
-                {author(doc) && <>Автор: {author(doc)}. </>}
+                {author(doc) && <>Автор: <AuthorLink value={author(doc)!} />. </>}
                 {sourceUrl(doc) && (
-                  <a href={sourceUrl(doc)!} target="_blank" rel="noreferrer">
-                    Источник <span aria-hidden="true">↗</span>
-                  </a>
+                  <>Источник: <SourceLink url={sourceUrl(doc)!} title={articleTitle(doc)} short /></>
                 )}
               </p>
             )}
 
             {content ? (
               <div className="reading">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{content}</ReactMarkdown>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>{stripAuthorLine(content)}</ReactMarkdown>
               </div>
             ) : (
               <>

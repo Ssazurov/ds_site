@@ -31,7 +31,7 @@ body {
 .chat-shell { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 32px 0 96px; }
 .chat-header { max-width: 680px; margin-bottom: 20px; }
 .eyebrow, .section-label, .source-index { margin: 0; color: var(--accent); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-.chat-header h1 { margin: 6px 0 7px; font-size: clamp(2rem, 5vw, 3.7rem); line-height: 1.04; letter-spacing: 0; }
+.chat-header h1 { margin: 6px 0 7px; font-size: clamp(1.5rem, 3.75vw, 2.775rem); line-height: 1.04; letter-spacing: 0; }
 .lede { max-width: 580px; margin: 0; color: var(--ink-muted); font-size: 18px; line-height: 1.55; }
 .chat-panel { border-top: 1px solid var(--line); }
 .query-form { padding: 28px 0 30px; }
@@ -178,7 +178,7 @@ a.tag:hover { text-decoration: underline; }
 .project-line { background: var(--card); }
 .project-line span { display: block; width: min(100% - 40px, 1080px); margin: 0 auto; padding: 6px 0 0; color: var(--ink-muted); font-size: 11px; letter-spacing: .02em; }
 .about-header { max-width: none; }
-.about-header h1 { font-size: clamp(1.4rem, 6.2vw, 3.7rem); white-space: nowrap; }
+.about-header h1 { font-size: clamp(1.05rem, 4.65vw, 2.775rem); white-space: nowrap; }
 .about-text p { margin: 0 0 14px; }
 .about-text h3 { margin: 18px 0 8px; font-family: Georgia, "Times New Roman", serif; font-size: 17px; }
 .about-text a { color: var(--accent-dark); font-weight: 700; text-decoration: none; }

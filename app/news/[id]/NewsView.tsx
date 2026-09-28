@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
+import AuthorLink, { SourceLink } from "@/components/AuthorLink";
 
 function newsTitle(doc: DocumentDetail) {
   return String(doc.metadata?.title || doc.doc_name);
@@ -68,11 +69,9 @@ export default function NewsItemPage({ id }: { id: string }) {
           <>
             {(author(doc) || sourceUrl(doc)) && (
               <p className="lede">
-                {author(doc) && <>Автор: {author(doc)}. </>}
+                {author(doc) && <>Автор: <AuthorLink value={author(doc)!} />. </>}
                 {sourceUrl(doc) && (
-                  <a href={sourceUrl(doc)!} target="_blank" rel="noreferrer">
-                    Источник <span aria-hidden="true">↗</span>
-                  </a>
+                  <>Источник: <SourceLink url={sourceUrl(doc)!} title={newsTitle(doc)} short /></>
                 )}
               </p>
             )}
