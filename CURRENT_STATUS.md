@@ -346,3 +346,9 @@
 - Динамика: при `q` грузятся все статьи (per_page=100, постранично) и фильтруются на клиенте; без `q` — пагинация 20 + «Показать ещё». Статика: MiniSearch в getDocuments.
 - Общая логика вынесена в `lib/title-search.ts` (norm/matchesTitle/filterByTitle), используется в news и articles.
 - Сохранено: DomainFilter, избранное, выбор для Помощника, doc_type=article, URL-параметры q/direction/category/age/target_audience/domain.
+
+## 2026-09-29 -- issue #119 (fix): URL-параметры фильтров после прямого захода
+- Симптом: после открытия `/articles?domain=...` чипы доменов, «Сбросить домены» и др. не реагировали (то же на `/news?direction=...`).
+- Причина: `router.replace` в Next 16 не срабатывал при прямом заходе по URL с query.
+- Фикс: `lib/url-state.ts` (`replaceQuery` на `history.replaceState`, относительный `?query`) в `app/articles` и `app/news` (PR #122). `SearchBox.tsx` не менялся.
+- Проверка: headless-браузер (playwright из ds-search) — добавление/сброс доменов после прямого захода работает; `ds-site` пересобран. Статическая сборка не проверялась.
