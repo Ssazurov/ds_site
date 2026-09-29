@@ -17,7 +17,7 @@ import DomainFilter, { type DomainCount } from "@/components/DomainFilter";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useFavorites } from "@/lib/favorites";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
-import { UrlSearchBox } from "@/components/SearchBox";
+import { filterByTitle } from "@/lib/title-search";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
 import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 
@@ -45,16 +45,9 @@ function articleUrl(doc: DocumentSummary) {
 function ArticlesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { ruLabel } = useMetadataLabels(DATASET_ID);
-  const [filters, setFilters] = useState<Record<FilterKey, string>>(() => ({
-    direction: searchParams.get("direction") || "",
-    category: searchParams.get("category") || "",
-    doc_type: "",
-    age: searchParams.get("age") || "",
-    target_audience: searchParams.get("target_audience") || "",
-  }));
+  const { ruLabel, tree } = useMetadataLabels(DATASET_ID);
   const [page, setPage] = useState(1);
-  const [documents, setDocuments] = useState<DocumentSummary[]>([]);
+  const [docsRaw, setDocuments] = useState<DocumentSummary[]>([]);
   const [total, setTotal] = useState(0);
   const [facets, setFacets] = useState<Record<string, string[]>>({});
   const [domainFacet, setDomainFacet] = useState<DomainCount[]>([]);
@@ -69,6 +62,8 @@ function ArticlesContent() {
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<FilterKey, string>;
   const q = searchParams.get("q") || "";
+  const searchAll = Boolean(q) && !IS_STATIC; // динамика: все статьи + клиентский префиксный поиск
+  const documents = searchAll ? filterByTitle(docsRaw, q, articleTitle) : docsRaw;
   const urlDomains = searchParams.getAll("domain"); // ADR-0020: мультивыбор, OR внутри фильтра
   const domainKey = urlDomains.join("|");
 
@@ -82,16 +77,31 @@ function ArticlesContent() {
     params.set("per_page", String(PER_PAGE));
     params.set("page", "1");
     for (const d of urlDomains) params.append("domain", d);
-    if (q) params.set("q", q);
+    // Динамика: GAR не принимает q — при поиске грузим все статьи и фильтруем на клиенте.
+    // Статика: поиск MiniSearch'ем внутри getDocuments.
+    if (searchAll) params.set("per_page", "100");
+    if (q && IS_STATIC) params.set("q", q);
 
     let cancelled = false;
     async function load() {
       setLoading(true);
       setError(null);
       try {
-        const data = await getDocuments(params);
+        let data = await getDocuments(params);
         if (cancelled) return;
         if (data.error) throw new Error(data.error);
+        if (searchAll) {
+          const all = [...(data.documents || [])];
+          for (let p = 2; all.length < (data.total || 0) && p <= 50; p++) {
+            params.set("page", String(p));
+            const more = await getDocuments(params);
+            if (cancelled) return;
+            if (more.error) throw new Error(more.error);
+            if (!more.documents?.length) break;
+            all.push(...more.documents);
+          }
+          data = { ...data, documents: all };
+        }
         setDocuments(data.documents || []);
         setTotal(data.total || 0);
         setFacets((prev) => (data.facets ? data.facets : prev));
@@ -108,7 +118,14 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, q, domainKey]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : Boolean(q), domainKey]);
+
+  function setQuery(v: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (v) params.set("q", v);
+    else params.delete("q");
+    router.replace(`/articles?${params.toString()}`, { scroll: false });
+  }
 
   async function loadMore() {
     if (!DATASET_ID || loadingMore) return;
@@ -120,7 +137,7 @@ function ArticlesContent() {
     params.set("per_page", String(PER_PAGE));
     params.set("page", String(nextPage));
     for (const d of urlDomains) params.append("domain", d);
-    if (q) params.set("q", q);
+    if (q && IS_STATIC) params.set("q", q);
 
     setLoadingMore(true);
     setError(null);
@@ -138,15 +155,13 @@ function ArticlesContent() {
   }
 
   function setFilter(key: FilterKey, value: string) {
-    const nextFilters = { ...filters, [key]: value };
-    if (key === "direction" && value !== filters.direction) nextFilters.category = "";
-    setFilters(nextFilters);
+    const nextFilters = { ...urlFilters, [key]: value };
+    if (key === "direction" && value !== urlFilters.direction) nextFilters.category = "";
     updateURL(nextFilters);
   }
 
   function clearFilters() {
     const emptyFilters = { direction: "", category: "", doc_type: "", age: "", target_audience: "" };
-    setFilters(emptyFilters);
     updateURL(emptyFilters, []);
   }
 
@@ -184,7 +199,7 @@ function ArticlesContent() {
   }
 
   const selectedCount = Object.keys(selected).length;
-  const hasMore = documents.length < total;
+  const hasMore = !searchAll && docsRaw.length < total;
 
   return (
     <main className="chat-shell">
@@ -193,13 +208,12 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        {IS_STATIC && <UrlSearchBox />}
-        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
 
         <DomainFilter domains={domainFacet} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
 
         <p className="fb-total"><Link href="/favorites">★ Избранное ({favCount})</Link></p>
-        {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
+        {total > 0 && <p className="fb-total">Всего найдено: {searchAll ? documents.length : total}</p>}
 
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}

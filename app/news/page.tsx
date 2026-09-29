@@ -19,7 +19,7 @@ import FilterBar from "@/components/FilterBar";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
 import { formatDate } from "@/lib/format";
 
-const norm = (s: string) => s.toLowerCase().replace(/ё/g, "е").trim();
+import { filterByTitle } from "@/lib/title-search";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -61,10 +61,7 @@ function NewsContent() {
 
   // Динамический режим: GAR не принимает q — фильтруем по названию (префикс слова) на клиенте.
   // Статика ищет MiniSearch'ем в getDocuments.
-  const documents = IS_STATIC || !q ? docsRaw : docsRaw.filter((d) => {
-    const words = norm(newsTitle(d)).split(/[^\p{L}\p{N}]+/u);
-    return norm(q).split(/\s+/).filter(Boolean).every((t) => words.some((w) => w.startsWith(t)));
-  });
+  const documents = IS_STATIC ? docsRaw : filterByTitle(docsRaw, q, newsTitle);
 
   function setQuery(v: string) {
     const params = new URLSearchParams(searchParams.toString());
