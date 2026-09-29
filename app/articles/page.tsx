@@ -17,6 +17,7 @@ import DomainFilter, { type DomainCount } from "@/components/DomainFilter";
 import FavoriteButton from "@/components/FavoriteButton";
 import { useFavorites } from "@/lib/favorites";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
+import { replaceQuery } from "@/lib/url-state";
 import { filterByTitle } from "@/lib/title-search";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
 import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
@@ -124,7 +125,7 @@ function ArticlesContent() {
     const params = new URLSearchParams(searchParams.toString());
     if (v) params.set("q", v);
     else params.delete("q");
-    router.replace(`/articles?${params.toString()}`, { scroll: false });
+    replaceQuery(params);
   }
 
   async function loadMore() {
@@ -172,7 +173,7 @@ function ArticlesContent() {
     }
     for (const d of domains) params.append("domain", d);
     if (q) params.set("q", q);
-    router.replace(`/articles?${params.toString()}`, { scroll: false });
+    replaceQuery(params);
   }
 
   function toggleSelected(doc: DocumentSummary) {
