@@ -12,13 +12,14 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import { getDocuments, IS_STATIC } from "@/lib/gar/data";
 import { formatDate } from "@/lib/format";
 
+import { replaceQuery } from "@/lib/url-state";
 import { filterByTitle } from "@/lib/title-search";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
@@ -46,7 +47,6 @@ function newsUrl(doc: DocumentSummary): string | null {
 }
 
 function NewsContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const { ruLabel, tree } = useMetadataLabels(DATASET_ID);
   const [docsRaw, setDocuments] = useState<DocumentSummary[]>([]);
@@ -67,7 +67,7 @@ function NewsContent() {
     const params = new URLSearchParams(searchParams.toString());
     if (v) params.set("q", v);
     else params.delete("q");
-    router.replace(`/news?${params.toString()}`, { scroll: false });
+    replaceQuery(params);
   }
 
   useEffect(() => {
@@ -122,7 +122,7 @@ function NewsContent() {
       if (f[key]) params.set(key, f[key]);
     }
     if (q) params.set("q", q);
-    router.replace(`/news?${params.toString()}`, { scroll: false });
+    replaceQuery(params);
   }
 
 
