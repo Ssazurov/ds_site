@@ -352,3 +352,34 @@
 - Причина: `router.replace` в Next 16 не срабатывал при прямом заходе по URL с query.
 - Фикс: `lib/url-state.ts` (`replaceQuery` на `history.replaceState`, относительный `?query`) в `app/articles` и `app/news` (PR #122). `SearchBox.tsx` не менялся.
 - Проверка: headless-браузер (playwright из ds-search) — добавление/сброс доменов после прямого захода работает; `ds-site` пересобран. Статическая сборка не проверялась.
+
+## 2026-09-30 — issue #129: пагинация «Показать ещё» на /articles, /news, /links, /glossary (ADR-0025)
+- Решения пользователя: кнопка «Показать ещё» (не нумерованные страницы),
+  порция 20 везде, глоссарий — алфавитный указатель; вопрос про `q` в GAR
+  вынесен на обсуждение (см. ниже).
+- Новые файлы: `lib/pagination.ts` (PAGE_SIZE=20, `pageParam`,
+  `withPageParam`), `lib/use-document-feed.ts` (хук для страниц на GAR
+  /public/documents), `lib/use-paged-list.ts` (хук для наборов в памяти),
+  `components/LoadMore.tsx`; CSS `.load-more`, `.az-index`, `.az-group` в
+  `app/globals.css`.
+- Состояние в URL: `?page=N` — число уже загруженных порций (1 не пишется),
+  глоссарий дополнительно `?letter=`. Смена фильтра/поиска сбрасывает `?page=`.
+  Восстановление: `?page=1..5` — один запрос (`page=1`, `per_page=20*N`,
+  лимит GAR 100), больше — последовательные запросы по 20.
+- `/articles`, `/news`, `/links` переведены на `useDocumentFeed`: порция 20,
+  кнопка «Показать ещё», подпись «Показано: N из M». `/links` больше не грузит
+  все 126 документов — постраничный запрос `doc_type=link`. `/news` вместо
+  фиксированных 50. `/articles`/`/news` при клиентском поиске по названию
+  грузят весь набор (GAR не принимает `q`) — кнопки в этом режиме нет.
+- `/glossary`: набор по-прежнему грузится целиком (нужен для счётчиков
+  указателя), показ порциями по 20 с группировкой карточек по первой букве,
+  указатель А-Я + «#» с числом терминов, выбор буквы фильтрует список.
+  Страница обёрнута в Suspense (использует `useSearchParams`), как /articles,
+  /news, /links.
+- Проверка: `npx tsc --noEmit`, `npx eslint app components lib` (чисто),
+  `npm run build` (16 страниц). ADR: `ds/docs/adr/0025-site-load-more-pagination.md`.
+- Известная проблема контракта (не в этом PR): `GET /public/documents` в
+  gar-core-api принимает `doc_type` скаляром, поэтому `doc_type=article&doc_type=digest`
+  (ADR-0024, ds_site#127) обрабатывается как `doc_type=digest`, и «Статьи» в
+  динамическом режиме показывают 0 документов (проверено на работающем API).
+  Нужен `list[str]` в gar-core-api.

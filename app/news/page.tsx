@@ -7,20 +7,24 @@
 // target_audience (как на /articles, по образцу ds_site#53) — ds_site#52.
 // Фильтр по тегам не реализован: поля tags нет в схеме метаданных GAR,
 // см. #61 (нужен ADR).
+// Пагинация — общая накопительная «Показать ещё», порция 20, ?page= в URL
+// (ds_site#129, ADR-0025).
 
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
-import { getDocuments, IS_STATIC } from "@/lib/gar/data";
+import LoadMore from "@/components/LoadMore";
+import { IS_STATIC } from "@/lib/gar/data";
+import { useDocumentFeed } from "@/lib/use-document-feed";
+import { pageParam, withPageParam } from "@/lib/pagination";
 import { formatDate } from "@/lib/format";
 
 import { replaceQuery } from "@/lib/url-state";
-import { filterByTitle } from "@/lib/title-search";
 
 const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
   direction: "Направление",
@@ -46,22 +50,37 @@ function newsUrl(doc: DocumentSummary): string | null {
   return typeof url === "string" ? url : null;
 }
 
+// Новости сортируются по дате публикации (в GAR порядок свой), сортировка
+// внутри загруженных порций — на весь набор сразу сортировка не влияет.
+function byDateDesc(a: DocumentSummary, b: DocumentSummary) {
+  return String(b.metadata?.publish_date || "").localeCompare(String(a.metadata?.publish_date || ""));
+}
+
 function NewsContent() {
   const searchParams = useSearchParams();
   const { ruLabel, tree } = useMetadataLabels(DATASET_ID);
-  const [docsRaw, setDocuments] = useState<DocumentSummary[]>([]);
-  const [facets, setFacets] = useState<Record<string, string[]>>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
   const q = searchParams.get("q") || "";
 
-  // Динамический режим: GAR не принимает q — фильтруем по названию (префикс слова) на клиенте.
+  // Динамический режим: GAR не принимает q — фильтруем по названию (префикс
+  // слова) на клиенте, поэтому весь набор новостей грузится сразу.
   // Статика ищет MiniSearch'ем в getDocuments.
-  const documents = IS_STATIC ? docsRaw : filterByTitle(docsRaw, q, newsTitle);
+  const feed = useDocumentFeed({
+    datasetId: DATASET_ID,
+    docTypes: ["news"],
+    filters: urlFilters,
+    domains: [],
+    q,
+    searchAll: Boolean(q) && !IS_STATIC,
+    titleOf: newsTitle,
+    initialPage: pageParam(searchParams),
+    onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
+  });
+  const documents = feed.documents.slice().sort(byDateDesc);
+  const { loaded, total, loading, loadingMore, hasMore, showMore, error } = feed;
 
   function setQuery(v: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -69,42 +88,6 @@ function NewsContent() {
     else params.delete("q");
     replaceQuery(params);
   }
-
-  useEffect(() => {
-    if (!DATASET_ID) return;
-    const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "news", per_page: "50" });
-    if (q && IS_STATIC) params.set("q", q);
-    for (const key of FILTER_ORDER) {
-      if (urlFilters[key]) params.set(key, urlFilters[key]);
-    }
-
-    let cancelled = false;
-    async function load() {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await getDocuments(params);
-        if (cancelled) return;
-        if (data.error) throw new Error(data.error);
-        const docs = [...(data.documents || [])].sort((a, b) => {
-          const da = String(a.metadata?.publish_date || "");
-          const dbv = String(b.metadata?.publish_date || "");
-          return dbv.localeCompare(da);
-        });
-        setDocuments(docs);
-        setFacets((prev) => (data.facets ? data.facets : prev));
-      } catch (e) {
-        if (!cancelled) setError(e instanceof Error ? e.message : "Не удалось загрузить новости.");
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    }
-    void load();
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : ""]);
 
   function setFilter(key: FilterKey, value: string) {
     if (key === "doc_type") return; // news не использует doc_type
@@ -134,9 +117,9 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        <FilterBar values={urlFilters} facets={facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
 
-
+        {total > 0 && <p className="fb-total">Всего найдено: {feed.documents.length}</p>}
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}
@@ -146,37 +129,46 @@ function NewsContent() {
         )}
 
         {!loading && documents.length > 0 && (
-          <div className="source-grid">
-            {documents.map((doc) => {
-              const url = newsUrl(doc);
-              const date = formatDate(doc.metadata?.publish_date);
-              const summary = newsSummary(doc);
-              const dirValue = typeof doc.metadata?.direction === "string" ? doc.metadata.direction : null;
-              const catValue = typeof doc.metadata?.category === "string" ? doc.metadata.category : null;
-              const dir = dirValue ? ruLabel("direction", dirValue) : null;
-              const cat = catValue ? ruLabel("category", catValue) : null;
-              return (
-                <article className="source-card" key={doc.document_id}>
-                  {dir && dirValue && <Link className="tag" href={`/news?direction=${dirValue}`}>{dir}</Link>}
-                  {cat && catValue && (
-                    <Link className="card-cat" href={`/news?direction=${dirValue || ""}&category=${catValue}`}>
-                      {cat}
-                    </Link>
-                  )}
-                  <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
-                  {summary && <p className="card-desc">{summary}</p>}
-                  <div className="card-foot">
-                    <span>{date}</span>
-                    {url && (
-                      <a href={url} target="_blank" rel="noreferrer">
-                        Источник <span aria-hidden="true">↗</span>
-                      </a>
+          <>
+            <div className="source-grid">
+              {documents.map((doc) => {
+                const url = newsUrl(doc);
+                const date = formatDate(doc.metadata?.publish_date);
+                const summary = newsSummary(doc);
+                const dirValue = typeof doc.metadata?.direction === "string" ? doc.metadata.direction : null;
+                const catValue = typeof doc.metadata?.category === "string" ? doc.metadata.category : null;
+                const dir = dirValue ? ruLabel("direction", dirValue) : null;
+                const cat = catValue ? ruLabel("category", catValue) : null;
+                return (
+                  <article className="source-card" key={doc.document_id}>
+                    {dir && dirValue && <Link className="tag" href={`/news?direction=${dirValue}`}>{dir}</Link>}
+                    {cat && catValue && (
+                      <Link className="card-cat" href={`/news?direction=${dirValue || ""}&category=${catValue}`}>
+                        {cat}
+                      </Link>
                     )}
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+                    <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
+                    {summary && <p className="card-desc">{summary}</p>}
+                    <div className="card-foot">
+                      <span>{date}</span>
+                      {url && (
+                        <a href={url} target="_blank" rel="noreferrer">
+                          Источник <span aria-hidden="true">↗</span>
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+
+            <LoadMore
+              hasMore={hasMore}
+              loading={loadingMore}
+              onClick={showMore}
+              hint={total > 0 ? `Показано: ${loaded} из ${total}` : null}
+            />
+          </>
         )}
       </section>
     </main>
