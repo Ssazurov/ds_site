@@ -8,14 +8,15 @@
 import { useEffect, useState } from "react";
 import type { FilterKey } from "@/lib/gar";
 
-export type FilterField = Exclude<FilterKey, "doc_type">;
+export type FilterField = FilterKey;
 export const FILTER_LABELS: Record<FilterField, string> = {
   direction: "Тема",
   category: "Категория",
+  doc_type: "Тип статьи",
   age: "Возраст",
   target_audience: "Аудитория",
 };
-const ALL: FilterField[] = ["direction", "category", "age", "target_audience"];
+const ALL: FilterField[] = ["direction", "category", "doc_type", "age", "target_audience"];
 
 type Props = {
   values: Record<FilterField, string>;
@@ -45,7 +46,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   };
   const cats = withSel("category").filter((c) => lab("category", c).toLowerCase().includes(q.trim().toLowerCase()));
   const active = ALL.filter((k) => values[k]);
-  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0)
+  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0) + (values.doc_type ? 1 : 0)
     + (titleMode ? (values.direction ? 1 : 0) + (values.category ? 1 : 0) : 0);
 
   const [tq, setTq] = useState(titleQuery ?? "");
@@ -174,6 +175,9 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
               <div><p className="fb-lab">{FILTER_LABELS.direction}</p>{select("direction")}</div>
               <div><p className="fb-lab">{FILTER_LABELS.category}</p>{select("category")}</div>
             </>
+          )}
+          {facets.doc_type && facets.doc_type.length > 1 && (
+            <div><p className="fb-lab">{FILTER_LABELS.doc_type}</p>{chips("doc_type")}</div>
           )}
           <div><p className="fb-lab">{FILTER_LABELS.age}</p>{chips("age")}</div>
           <div><p className="fb-lab">{FILTER_LABELS.target_audience}</p>{chips("target_audience")}</div>

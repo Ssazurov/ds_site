@@ -97,17 +97,26 @@ function has(r: Rec, k: string, v: string) {
 }
 
 async function staticDocuments(p: URLSearchParams): Promise<DocumentsResponse> {
-  const docType = p.get("doc_type") ?? "article";
-  const c = collFor(docType);
-  let recs = await load(c);
-  if (c === "glossary") recs = recs.filter((r) => r.metadata.doc_type === docType);
+  const docTypes = p.getAll("doc_type");
+  // ds_site#127: если doc_type не указан, по умолчанию article+digest для articles.
+  const types = docTypes.length ? docTypes : ["article", "digest"];
+  const colls = [...new Set(types.map(collFor))];
+  let allRecs: Rec[] = [];
+  for (const c of colls) {
+    let recs = await load(c);
+    if (c === "glossary") recs = recs.filter((r) => types.includes(String(r.metadata.doc_type ?? "")));
+    else if (c === "articles") recs = recs.filter((r) => types.includes(String(r.metadata.doc_type ?? "article")));
+    allRecs = allRecs.concat(recs);
+  }
   const q = (p.get("q") ?? "").trim();
   let pool: Rec[];
   if (q) {
-    const byId = new Map(recs.map((r) => [r.document_id, r]));
-    pool = (await searchCollection(c, q)).map((id) => byId.get(id)).filter((r): r is Rec => !!r);
+    const byId = new Map(allRecs.map((r) => [r.document_id, r]));
+    const searchPromises = colls.map((c) => searchCollection(c, q));
+    const allIds = (await Promise.all(searchPromises)).flat();
+    pool = allIds.map((id) => byId.get(id)).filter((r): r is Rec => !!r);
   } else {
-    pool = [...recs].sort(byDateDesc);
+    pool = [...allRecs].sort(byDateDesc);
   }
   const sel = Object.fromEntries(FILTER_KEYS.map((k) => [k, p.get(k) || ""]));
   const doms = p.getAll("domain");

@@ -2,6 +2,7 @@
 // Просмотр статьи (issue ds_search#138, ADR-0006):
 // - assets.canonical_md.available=true -> полный текст + автор + ссылка на источник
 // - иначе -> карточка метаданных + ссылка на источник, без текста
+// Для digest (ds_site#127, ADR-0024): блок "Оригинал статьи" перед текстом.
 
 "use client";
 
@@ -74,7 +75,17 @@ export default function ArticlePage({ id }: { id: string }) {
             <p className="fb-total">
               {[formatDate(doc.metadata?.publish_date), (content ? readingMinutes(content) : metaReadingMinutes(doc.metadata)) ? readingLabel((content ? readingMinutes(content) : metaReadingMinutes(doc.metadata))!) : null].filter(Boolean).join(" · ")}
             </p>
-            {(author(doc) || sourceUrl(doc)) && (
+
+            {doc.metadata?.doc_type === "digest" && sourceUrl(doc) && (
+              <div className="digest-source-block">
+                <p className="digest-label">Пересказ</p>
+                <p className="digest-note">
+                  Оригинал статьи: <a href={sourceUrl(doc)!} target="_blank" rel="noopener nofollow">{sourceUrl(doc)!}</a>
+                </p>
+              </div>
+            )}
+
+            {(author(doc) || sourceUrl(doc)) && doc.metadata?.doc_type !== "digest" && (
               <p className="lede">
                 {author(doc) && <>Автор: <AuthorLink value={author(doc)!} />. </>}
                 {sourceUrl(doc) && (

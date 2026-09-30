@@ -1,9 +1,8 @@
 // app/articles/page.tsx
 // Раздел "Библиотека" -> "Статьи": список материалов с фильтрами по
-// direction/category/age/target_audience поверх схемы метаданных ds_search
-// (issue ds_site#4, ADR-0003). doc_type жёстко зафиксирован как "article"
-// (ds_site#51, по аналогии с news/page.tsx). Пагинация — накопительная
-// "Показать ещё" (ds_site#48).
+// direction/category/age/target_audience/doc_type поверх схемы метаданных ds_search
+// (issue ds_site#4, ADR-0003). doc_type запрашивает "article" и "digest"
+// (ds_site#127, ADR-0024). Пагинация — накопительная "Показать ещё" (ds_site#48).
 
 "use client";
 
@@ -28,8 +27,8 @@ import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 // app/page.tsx при монтировании.
 const SCOPE_STORAGE_KEY = "ds-chat-scope";
 
-// doc_type исключён (ds_site#51) — фиксирован как "article" на запросе.
-const FILTER_ORDER: FilterKey[] = ["direction", "category", "age", "target_audience"];
+// doc_type включён (ds_site#127, ADR-0024): article + digest.
+const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
 
 const PER_PAGE = 20;
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
@@ -71,8 +70,16 @@ function ArticlesContent() {
   // Первая загрузка / смена фильтров — сброс накопленного списка.
   useEffect(() => {
     if (!DATASET_ID) return;
-    const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "article" });
+    const params = new URLSearchParams({ dataset_id: DATASET_ID });
+    // ds_site#127: запрашиваем article и digest; если doc_type фильтр выбран — только его.
+    if (urlFilters.doc_type) {
+      params.set("doc_type", urlFilters.doc_type);
+    } else {
+      params.append("doc_type", "article");
+      params.append("doc_type", "digest");
+    }
     for (const key of FILTER_ORDER) {
+      if (key === "doc_type") continue; // уже добавлен выше
       if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
     params.set("per_page", String(PER_PAGE));
@@ -119,7 +126,7 @@ function ArticlesContent() {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : Boolean(q), domainKey]);
+  }, [urlFilters.direction, urlFilters.category, urlFilters.doc_type, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : Boolean(q), domainKey]);
 
   function setQuery(v: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -131,8 +138,16 @@ function ArticlesContent() {
   async function loadMore() {
     if (!DATASET_ID || loadingMore) return;
     const nextPage = page + 1;
-    const params = new URLSearchParams({ dataset_id: DATASET_ID, doc_type: "article" });
+    const params = new URLSearchParams({ dataset_id: DATASET_ID });
+    // ds_site#127: запрашиваем article и digest; если doc_type фильтр выбран — только его.
+    if (urlFilters.doc_type) {
+      params.set("doc_type", urlFilters.doc_type);
+    } else {
+      params.append("doc_type", "article");
+      params.append("doc_type", "digest");
+    }
     for (const key of FILTER_ORDER) {
+      if (key === "doc_type") continue; // уже добавлен выше
       if (urlFilters[key]) params.set(key, urlFilters[key]);
     }
     params.set("per_page", String(PER_PAGE));
@@ -237,6 +252,8 @@ function ArticlesContent() {
                 const desc = typeof doc.metadata?.description === "string" ? doc.metadata.description : "";
                 const mins = metaReadingMinutes(doc.metadata);
                 const when = [formatDate(doc.metadata?.publish_date), mins ? readingLabel(mins) : null].filter(Boolean).join(" · ");
+                const docType = typeof doc.metadata?.doc_type === "string" ? doc.metadata.doc_type : null;
+                const isDigest = docType === "digest";
                 return (
                   <article className={`source-card${isSelected ? " selected" : ""}`} key={doc.document_id}>
                     <div className="card-head">
@@ -252,13 +269,14 @@ function ArticlesContent() {
                       </label>}
                     </div>
                     {cat && <p className="card-cat">{cat}</p>}
+                    {isDigest && <span className="tag digest-badge">Пересказ</span>}
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                     {desc && <p className="card-desc">{desc}</p>}
                     <div className="card-foot">
                       <span>{when}</span>
                       {url && (
-                        <a href={url} target="_blank" rel="noreferrer">
-                          Источник <span aria-hidden="true">↗</span>
+                        <a href={url} target="_blank" rel="noopener nofollow">
+                          {isDigest ? "Полный текст на сайте источника" : "Источник"} <span aria-hidden="true">↗</span>
                         </a>
                       )}
                     </div>
