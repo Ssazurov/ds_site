@@ -1,10 +1,18 @@
-// Автор в формате `[Имя](url)` -> ссылка; иначе обычный текст.
-const RE = /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/;
+// Авторы в формате `[Имя](url)` (один или несколько через запятую) -> ссылки; остальной текст как есть.
+const LINK = /^\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)$/;
+const SPLIT = /(\[[^\]]+\]\(https?:\/\/[^)\s]+\))/;
 
 export default function AuthorLink({ value }: { value: string }) {
-  const m = RE.exec(value.trim());
-  if (!m) return <>{value}</>;
-  return <a href={m[2]} target="_blank" rel="noreferrer">{m[1]}</a>;
+  return (
+    <>
+      {value.split(SPLIT).map((part, i) => {
+        const m = LINK.exec(part);
+        return m
+          ? <a key={i} href={m[2]} target="_blank" rel="noreferrer">{m[1]}</a>
+          : <span key={i}>{part}</span>;
+      })}
+    </>
+  );
 }
 
 // Автор уже показан в шапке — убираем строку `Автор: ...` из тела, сохраняя `Журнал: ...`.
