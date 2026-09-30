@@ -19,7 +19,7 @@ export const FILTER_LABELS: Record<FilterField, string> = {
 const ALL: FilterField[] = ["direction", "category", "doc_type", "age", "target_audience"];
 
 type Props = {
-  values: Record<FilterField, string>;
+  values: Partial<Record<FilterField, string>>;
   facets: Record<string, string[]>;
   ruLabel: (field: FilterKey, value: unknown) => string | null;
   onChange: (key: FilterField, value: string) => void;
@@ -42,7 +42,8 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   // Выбранное значение всегда должно быть в списке, даже если facets его не вернул.
   const withSel = (k: FilterField) => {
     const list = facets[k] ?? [];
-    return values[k] && !list.includes(values[k]) ? [values[k], ...list] : list;
+    const val = values[k];
+    return val && !list.includes(val) ? [val, ...list] : list;
   };
   const cats = withSel("category").filter((c) => lab("category", c).toLowerCase().includes(q.trim().toLowerCase()));
   const active = ALL.filter((k) => values[k]);
@@ -65,15 +66,17 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
 
   function select(k: "direction" | "category") {
     let list = withSel(k);
-    if (k === "category" && values.direction && tree?.[values.direction]) {
-      const allowed = tree[values.direction];
-      list = list.filter((c) => allowed.includes(c) || c === values.category);
+    const dirVal = values.direction;
+    if (k === "category" && dirVal && tree?.[dirVal]) {
+      const allowed = tree[dirVal];
+      const catVal = values.category;
+      list = list.filter((c) => allowed.includes(c) || c === catVal);
     }
     return (
       <select
         className="fb-select"
         aria-label={FILTER_LABELS[k]}
-        value={values[k]}
+        value={values[k] ?? ""}
         disabled={disabled}
         onChange={(e) => onChange(k, e.target.value)}
       >
