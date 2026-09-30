@@ -15,6 +15,15 @@ export default function AuthorLink({ value }: { value: string }) {
   );
 }
 
+// Убирает ведущий H1 (после возможных картинок), если он дублирует заголовок страницы.
+export function stripLeadingTitle(md: string, title: string): string {
+  const norm = (s: string) => s.replace(/[^\p{L}\p{N}]+/gu, "").toLowerCase();
+  return md.replace(/^((?:\s*!\[[^\]]*\]\([^)]*\)\s*)*)#[ \t]+(.+)\n+/, (m, pre: string, h: string) => {
+    const a = norm(title), b = norm(h);
+    return b && (a.startsWith(b) || b.startsWith(a)) ? pre : m;
+  });
+}
+
 // Автор уже показан в шапке — убираем строку `Автор: ...` из тела, сохраняя `Журнал: ...`.
 export function stripAuthorLine(md: string): string {
   return md.replace(/^[ \t]*Авторы?:.*$/gm, (line) => {
