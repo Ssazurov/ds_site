@@ -117,7 +117,8 @@ export default function GlossaryPage() {
       .sort((a, b) => a.doc_name.localeCompare(b.doc_name, "ru"));
   }, [terms, docType, filters, activeIds]);
 
-  function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
+  function setFilter(key: FilterKey, value: string) {
+    if (key === "doc_type") return; // glossary не использует doc_type в filters
     setFilters((prev) => ({ ...prev, [key]: value, ...(key === "direction" && value !== prev.direction ? { category: "" } : {}) }));
   }
 
