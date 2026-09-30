@@ -130,6 +130,11 @@ h1, .about-text h2, .source-card h2 { font-family: Georgia, "Times New Roman", s
 .source-card .tag, .source-card .select-check, .source-card .card-foot a { position: relative; z-index: 1; }
 .tag { align-self: flex-start; display: inline-block; padding: 3px 10px; border-radius: 999px; background: var(--acbg); color: var(--accent-dark); font-size: 12px; font-weight: 600; text-decoration: none; }
 a.tag:hover { text-decoration: underline; }
+.digest-badge { background: #f0f9ff; color: #0369a1; border: 1px solid #bae6fd; }
+.digest-source-block { margin: 16px 0; padding: 14px 16px; border-left: 3px solid #0ea5e9; background: #f0f9ff; border-radius: 6px; }
+.digest-label { margin: 0 0 6px; color: #0369a1; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.digest-note { margin: 0; font-size: 14px; line-height: 1.5; }
+.digest-note a { color: #0369a1; text-decoration: underline; }
 .card-cat { margin: 0; color: var(--ink-muted); font-size: 13px; text-decoration: none; }
 a.card-cat:hover { text-decoration: underline; }
 .card-desc { flex: 1; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
