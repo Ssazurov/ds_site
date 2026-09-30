@@ -190,7 +190,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
       <div className="fb-active" aria-live="polite">
         {active.map((k) => (
           <button key={k} type="button" className="fb-chip act" onClick={() => onChange(k, "")}>
-            {FILTER_LABELS[k]}: {lab(k, values[k])} ✕
+            {FILTER_LABELS[k]}: {lab(k, values[k] ?? "")} ✕
           </button>
         ))}
         {active.length > 0 && <button type="button" className="fb-link" onClick={onClear}>Сбросить всё</button>}
