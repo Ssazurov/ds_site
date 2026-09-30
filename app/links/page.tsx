@@ -71,7 +71,8 @@ export default function LinksPage() {
     return links.filter((l) => OTHER_FILTERS.every((key) => !filters[key] || linkFacetValue(l, key) === filters[key]));
   }, [links, filters]);
 
-  function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
+  function setFilter(key: FilterKey, value: string) {
+    if (key === "doc_type") return; // links не использует doc_type
     setFilters((prev) => ({ ...prev, [key]: value, ...(key === "direction" && value !== prev.direction ? { category: "" } : {}) }));
   }
 

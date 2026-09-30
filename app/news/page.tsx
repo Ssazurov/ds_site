@@ -106,7 +106,8 @@ function NewsContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [urlFilters.direction, urlFilters.category, urlFilters.age, urlFilters.target_audience, IS_STATIC ? q : ""]);
 
-  function setFilter(key: Exclude<FilterKey, "doc_type">, value: string) {
+  function setFilter(key: FilterKey, value: string) {
+    if (key === "doc_type") return; // news не использует doc_type
     const next = { ...urlFilters, [key]: value };
     if (key === "direction" && value !== urlFilters.direction) next.category = "";
     updateURL(next);
