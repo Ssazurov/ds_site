@@ -17,7 +17,6 @@ import DomainFilter from "@/components/DomainFilter";
 import FavoriteButton from "@/components/FavoriteButton";
 import LoadMore from "@/components/LoadMore";
 import { useFavorites } from "@/lib/favorites";
-import { IS_STATIC } from "@/lib/gar/data";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { pageParam, withPageParam } from "@/lib/pagination";
 import { replaceQuery } from "@/lib/url-state";
@@ -34,10 +33,6 @@ const SCOPE_STORAGE_KEY = "ds-chat-scope";
 const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
 
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
-
-function articleTitle(doc: DocumentSummary) {
-  return String(doc.metadata?.title || doc.doc_name);
-}
 
 function articleUrl(doc: DocumentSummary) {
   const url = doc.metadata?.source_url || doc.metadata?.original_url || doc.metadata?.canonical_md_url;
@@ -66,9 +61,6 @@ function ArticlesContent() {
     filters: urlFilters,
     domains: urlDomains,
     q,
-    // GAR не принимает q — при поиске грузим весь набор и фильтруем по названию.
-    searchAll: Boolean(q) && !IS_STATIC,
-    titleOf: articleTitle,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
@@ -126,7 +118,6 @@ function ArticlesContent() {
   }
 
   const selectedCount = Object.keys(selected).length;
-  const searchAll = Boolean(q) && !IS_STATIC;
 
   return (
     <main className="chat-shell">
@@ -140,7 +131,7 @@ function ArticlesContent() {
         <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
 
         <p className="fb-total"><Link href="/favorites">★ Избранное ({favCount})</Link></p>
-        {total > 0 && <p className="fb-total">Всего найдено: {searchAll ? documents.length : total}</p>}
+        {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
 
 
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}

@@ -19,7 +19,6 @@ import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import LoadMore from "@/components/LoadMore";
-import { IS_STATIC } from "@/lib/gar/data";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { pageParam, withPageParam } from "@/lib/pagination";
 import { formatDate } from "@/lib/format";
@@ -65,8 +64,7 @@ function NewsContent() {
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
   const q = searchParams.get("q") || "";
 
-  // Динамический режим: GAR не принимает q — фильтруем по названию (префикс
-  // слова) на клиенте, поэтому весь набор новостей грузится сразу.
+  // ds_site#131, ADR-0026: q передаётся в GAR, серверная фильтрация по названию.
   // Статика ищет MiniSearch'ем в getDocuments.
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
@@ -74,8 +72,6 @@ function NewsContent() {
     filters: urlFilters,
     domains: [],
     q,
-    searchAll: Boolean(q) && !IS_STATIC,
-    titleOf: newsTitle,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
@@ -119,7 +115,7 @@ function NewsContent() {
       <section className="chat-panel" aria-label="Фильтры и список новостей">
         <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
 
-        {total > 0 && <p className="fb-total">Всего найдено: {feed.documents.length}</p>}
+        {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
         {error && <p className="message error" role="alert">{error}</p>}
         {loading && <p className="message">Загружаю...</p>}

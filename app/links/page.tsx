@@ -49,8 +49,6 @@ function LinksContent() {
     filters,
     domains: [],
     q: "",
-    searchAll: false,
-    titleOf: (doc) => doc.doc_name,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
