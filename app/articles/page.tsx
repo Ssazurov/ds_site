@@ -32,6 +32,10 @@ const SCOPE_STORAGE_KEY = "ds-chat-scope";
 // doc_type включён (ds_site#127, ADR-0024): article + digest.
 const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
 
+function articleTitle(doc: DocumentSummary) {
+  return String(doc.metadata?.title || doc.doc_name);
+}
+
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function articleUrl(doc: DocumentSummary) {
