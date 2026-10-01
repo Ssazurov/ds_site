@@ -66,9 +66,9 @@ function index(c: Coll): Promise<Index> {
   if (!p) {
     p = Promise.all([import("minisearch"), load(c)]).then(([{ default: MiniSearch }, recs]) => {
       const ms = new MiniSearch({
-        fields: ["title", "summary", "tags"],
+        fields: ["title", "keywords", "summary"],
         processTerm: (t) => norm(t),
-        searchOptions: { prefix: true, fuzzy: 0.2, combineWith: "AND", boost: { title: 3 } },
+        searchOptions: { prefix: true, combineWith: "AND" },
       });
       ms.addAll(recs.map((r) => ({
         id: r.document_id, title: r.title, summary: r.summary,
