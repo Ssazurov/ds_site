@@ -100,10 +100,15 @@ export function buildCollection(docs, contents = {}) {
   const items = [];
   const skipped = {};
   const byDomain = new Map();
+  const stats = new Map();
   for (const doc of docs) {
     const rec = buildRecord(doc, contents[doc.document_id] ?? null);
-    if (rec) items.push(rec);
+    const dom = typeof doc.metadata?.source_domain === "string" ? doc.metadata.source_domain.trim().toLowerCase() : "";
+    const st = stats.get(dom) ?? { published: 0, dropped: 0 };
+    stats.set(dom, st);
+    if (rec) { items.push(rec); st.published++; }
     else {
+      st.dropped++;
       const p = permissionOf(doc.metadata);
       skipped[p] = (skipped[p] ?? 0) + 1;
       const d = typeof doc.metadata?.source_domain === "string" ? doc.metadata.source_domain.trim().toLowerCase() : "";
@@ -116,7 +121,8 @@ export function buildCollection(docs, contents = {}) {
     const [domain, permission] = k.split("\u0000");
     return { domain, permission, count };
   }).sort((a, b) => b.count - a.count || a.domain.localeCompare(b.domain));
-  return { items, skipped, dropped };
+  const sourceStats = [...stats].map(([domain, v]) => ({ domain, ...v })).sort((a, b) => a.domain.localeCompare(b.domain));
+  return { items, skipped, dropped, stats: sourceStats };
 }
 
 // Страховка: секреты не должны попасть в выходной файл.

@@ -65,17 +65,19 @@ async function main() {
   const generatedAt = new Date().toISOString();
   const manifest = { generated_at: generatedAt, collections: {} };
   const droppedAll = [];
+  const statsAll = [];
   for (const [name, types] of Object.entries(COLLECTIONS)) {
     const docs = (await Promise.all(types.map(listAll))).flat();
     const contents = {};
     await pool(docs.filter(needsContent), 4, async (d) => {
       contents[d.document_id] = await content(d.document_id);
     });
-    const { items, skipped, dropped } = buildCollection(docs, contents);
+    const { items, skipped, dropped, stats } = buildCollection(docs, contents);
     const body = JSON.stringify({ generated_at: generatedAt, count: items.length, items }, null, 2);
     assertNoSecrets(body, [key, gar]);
     await writeFile(path.join(outDir, `${name}.json`), body, "utf-8");
     for (const d of dropped) droppedAll.push({ type: name, ...d });
+    for (const x of stats) statsAll.push({ type: name, ...x });
     manifest.collections[name] = { count: items.length, skipped };
     console.log(`${name}: ${items.length} выгружено, отброшено ${JSON.stringify(skipped)}`);
   }
@@ -84,6 +86,7 @@ async function main() {
   await writeFile(path.join(outDir, "labels.json"), JSON.stringify(buildLabels(await lres.json()), null, 2), "utf-8");
   // Только для отчёта в ds_search; prepare-static.mjs копирует файлы по белому списку, сюда не входит.
   await writeFile(path.join(outDir, "dropped.json"), JSON.stringify({ generated_at: generatedAt, items: droppedAll }, null, 2), "utf-8");
+  await writeFile(path.join(outDir, "source_stats.json"), JSON.stringify({ generated_at: generatedAt, items: statsAll }, null, 2), "utf-8");
   await writeFile(path.join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2), "utf-8");
   console.log(`готово: ${outDir}`);
 }

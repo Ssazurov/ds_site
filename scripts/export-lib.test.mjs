@@ -105,3 +105,13 @@ test("buildCollection: dropped группирует отброшенные по 
     { domain: SRC("denied"), permission: "denied", count: 1 },
   ]);
 });
+
+test("buildCollection: stats считает опубликованные и отброшенные по домену", () => {
+  const docs = [doc("a", "granted"), doc("b", "granted"), doc("c", "not_set"), doc("e")];
+  const { stats } = buildCollection(docs, {});
+  assert.deepEqual(stats, [
+    { domain: "", published: 0, dropped: 1 },
+    { domain: SRC("granted"), published: 2, dropped: 0 },
+    { domain: SRC("not_set"), published: 0, dropped: 1 },
+  ]);
+});
