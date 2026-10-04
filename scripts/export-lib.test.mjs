@@ -2,22 +2,34 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import {
-  assertNoSecrets, buildCollection, buildLabels, buildRecord, isPublishable, needsContent, permissionOf, splitCollection, summarize,
+  assertNoSecrets, buildCollection, buildLabels, buildRecord, isPublishable, needsContent, permissionOf, setSourcePermissions, splitCollection, summarize,
 } from "./export-lib.mjs";
+
+// Разрешение берётся от источника (домена) из реестра, а не от статьи.
+// Домен (lowercase, как в permissionOf) — по индексу, чтобы "Granted" и "granted" не совпали.
+const PERMS = ["granted", "not_required", "denied", "not_set", "Granted", "yes", "", null];
+const SRC = (perm) => `src${PERMS.indexOf(perm)}.test`;
+const registry = (perms) => Object.fromEntries(perms.map((p) => [SRC(p), { publish_permission: p }]));
+setSourcePermissions(registry(PERMS));
 
 const doc = (id, perm, extra = {}) => ({
   document_id: id, doc_name: `Doc ${id}`,
-  metadata: { ...(perm === undefined ? {} : { publish_permission: perm }), ...extra },
+  metadata: { ...(perm === undefined ? {} : { source_domain: SRC(perm) }), ...extra },
 });
 
-test("filter: only not_required and granted are publishable", () => {
-  assert.equal(isPublishable({ publish_permission: "not_required" }), true);
-  assert.equal(isPublishable({ publish_permission: "granted" }), true);
-  for (const p of ["not_set", "denied", "Granted", "yes", "", null, undefined]) {
-    assert.equal(isPublishable({ publish_permission: p }), false, String(p));
+test("filter: only not_required and granted (source) are publishable", () => {
+  assert.equal(isPublishable({ source_domain: SRC("not_required") }), true);
+  assert.equal(isPublishable({ source_domain: SRC("granted") }), true);
+  for (const p of ["not_set", "denied", "Granted", "yes", "", null]) {
+    assert.equal(isPublishable({ source_domain: SRC(p) }), false, String(p));
   }
   assert.equal(isPublishable({}), false);
   assert.equal(permissionOf({}), "not_set");
+});
+
+test("личное publish_permission статьи игнорируется", () => {
+  assert.equal(isPublishable({ source_domain: SRC("denied"), publish_permission: "granted" }), false);
+  assert.equal(isPublishable({ source_domain: SRC("granted"), publish_permission: "denied" }), true);
 });
 
 test("buildCollection drops not_set/denied/missing and counts them", () => {
@@ -55,7 +67,7 @@ test("source link: external only, internal GAR url and extra metadata excluded",
     internal_path: "/srv/secret", direction: "law",
   }), "t");
   assert.equal(r.source_url, "https://example.org/a");
-  assert.deepEqual(r.metadata, { direction: "law" });
+  assert.deepEqual(r.metadata, { direction: "law", source_domain: SRC("granted") });
   assert.equal(buildRecord(doc("b", "granted", { canonical_md_url: "http://localhost:8000/x.md" }), "t").source_url, null);
 });
 
