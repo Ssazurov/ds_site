@@ -99,15 +99,24 @@ export function buildRecord(doc, content) {
 export function buildCollection(docs, contents = {}) {
   const items = [];
   const skipped = {};
+  const byDomain = new Map();
   for (const doc of docs) {
     const rec = buildRecord(doc, contents[doc.document_id] ?? null);
     if (rec) items.push(rec);
     else {
       const p = permissionOf(doc.metadata);
       skipped[p] = (skipped[p] ?? 0) + 1;
+      const d = typeof doc.metadata?.source_domain === "string" ? doc.metadata.source_domain.trim().toLowerCase() : "";
+      const k = `${d}\u0000${p}`;
+      byDomain.set(k, (byDomain.get(k) ?? 0) + 1);
     }
   }
-  return { items, skipped };
+  // dropped: домены отброшенных материалов (только для внутреннего отчёта, не публикуется).
+  const dropped = [...byDomain].map(([k, count]) => {
+    const [domain, permission] = k.split("\u0000");
+    return { domain, permission, count };
+  }).sort((a, b) => b.count - a.count || a.domain.localeCompare(b.domain));
+  return { items, skipped, dropped };
 }
 
 // Страховка: секреты не должны попасть в выходной файл.

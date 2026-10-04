@@ -95,3 +95,13 @@ test("splitCollection: полный текст уходит из списка в
   assert.deepEqual(list, [{ document_id: "a", has_full_text: true }, { document_id: "b", summary: "кратко" }]);
   assert.deepEqual(details, { a: { full_text: "текст" } });
 });
+
+test("buildCollection: dropped группирует отброшенные по домену и причине", () => {
+  const docs = [doc("a", "granted"), doc("c", "denied"), doc("d", "not_set"), doc("d2", "not_set"), doc("e")];
+  const { dropped } = buildCollection(docs, {});
+  assert.deepEqual(dropped, [
+    { domain: SRC("not_set"), permission: "not_set", count: 2 },
+    { domain: "", permission: "not_set", count: 1 },
+    { domain: SRC("denied"), permission: "denied", count: 1 },
+  ]);
+});

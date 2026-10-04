@@ -64,22 +64,26 @@ async function main() {
   await mkdir(outDir, { recursive: true });
   const generatedAt = new Date().toISOString();
   const manifest = { generated_at: generatedAt, collections: {} };
+  const droppedAll = [];
   for (const [name, types] of Object.entries(COLLECTIONS)) {
     const docs = (await Promise.all(types.map(listAll))).flat();
     const contents = {};
     await pool(docs.filter(needsContent), 4, async (d) => {
       contents[d.document_id] = await content(d.document_id);
     });
-    const { items, skipped } = buildCollection(docs, contents);
+    const { items, skipped, dropped } = buildCollection(docs, contents);
     const body = JSON.stringify({ generated_at: generatedAt, count: items.length, items }, null, 2);
     assertNoSecrets(body, [key, gar]);
     await writeFile(path.join(outDir, `${name}.json`), body, "utf-8");
+    for (const d of dropped) droppedAll.push({ type: name, ...d });
     manifest.collections[name] = { count: items.length, skipped };
     console.log(`${name}: ${items.length} выгружено, отброшено ${JSON.stringify(skipped)}`);
   }
   const lres = await fetch(`${gar}/public/metadata-fields?${new URLSearchParams({ dataset_id: datasetId })}`, { headers });
   if (!lres.ok) throw new Error(`GAR metadata-fields: HTTP ${lres.status}`);
   await writeFile(path.join(outDir, "labels.json"), JSON.stringify(buildLabels(await lres.json()), null, 2), "utf-8");
+  // Только для отчёта в ds_search; prepare-static.mjs копирует файлы по белому списку, сюда не входит.
+  await writeFile(path.join(outDir, "dropped.json"), JSON.stringify({ generated_at: generatedAt, items: droppedAll }, null, 2), "utf-8");
   await writeFile(path.join(outDir, "manifest.json"), JSON.stringify(manifest, null, 2), "utf-8");
   console.log(`готово: ${outDir}`);
 }
