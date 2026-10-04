@@ -3,11 +3,11 @@
 // здесь): node scripts/export-content.mjs [--out data/export]
 // Фильтр по publish_permission — здесь, а не в браузере: опубликованный JSON
 // виден всем. Ключ и адрес GAR в выходные файлы не попадают.
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import {
-  assertNoSecrets, buildCollection, buildLabels, needsContent,
+  assertNoSecrets, buildCollection, buildLabels, needsContent, setSourcePermissions,
 } from "./export-lib.mjs";
 
 const COLLECTIONS = {
@@ -54,6 +54,12 @@ async function main() {
       while (i < items.length) await fn(items[i++]);
     }));
   }
+
+  // Разрешение источника (домена) из локального кэша реестра ds_search (#263).
+  const regPath = path.resolve(process.env.SOURCE_REGISTRY_CACHE ?? "../ds_search/data/source_registry_cache.json");
+  const registry = JSON.parse(await readFile(regPath, "utf-8")).entries ?? {};
+  setSourcePermissions(registry);
+  console.log(`реестр источников: ${Object.keys(registry).length} доменов`);
 
   await mkdir(outDir, { recursive: true });
   const generatedAt = new Date().toISOString();
