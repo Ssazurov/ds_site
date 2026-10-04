@@ -49,3 +49,4 @@ next-env.d.ts
 /public/data/
 /.next-static/
 /.next-check/
+tmp/
