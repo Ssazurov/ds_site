@@ -16,6 +16,9 @@ import FilterBar from "@/components/FilterBar";
 import DomainFilter from "@/components/DomainFilter";
 import FavoriteButton from "@/components/FavoriteButton";
 import LoadMore from "@/components/LoadMore";
+import TagChips from "@/components/TagChips";
+import TagFilterNotice from "@/components/TagFilterNotice";
+import { docTags, TAG_PARAM } from "@/lib/gar/tags";
 import { useFavorites } from "@/lib/favorites";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { pageParam, withPageParam } from "@/lib/pagination";
@@ -56,13 +59,14 @@ function ArticlesContent() {
   ) as Record<FilterKey, string>;
   const q = searchParams.get("q") || "";
   const urlDomains = searchParams.getAll("domain"); // ADR-0020: мультивыбор, OR внутри фильтра
+  const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138: ?tag= (ADR-0028 п.6)
 
   // ds_site#127: без явного doc_type — article + digest; с фильтром — только он.
   const docTypes = urlFilters.doc_type ? [urlFilters.doc_type] : ["article", "digest"];
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
     docTypes,
-    filters: urlFilters,
+    filters: { ...urlFilters, [TAG_PARAM]: tag },
     domains: urlDomains,
     q,
     initialPage: pageParam(searchParams),
@@ -95,6 +99,14 @@ function ArticlesContent() {
     }
     for (const d of domains) params.append("domain", d);
     if (q) params.set("q", q);
+    if (tag) params.set(TAG_PARAM, tag);
+    replaceQuery(params);
+  }
+
+  function clearTag() {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(TAG_PARAM);
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -133,6 +145,8 @@ function ArticlesContent() {
         <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
 
         <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
+
+        <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
         <p className="fb-total"><Link href="/favorites">★ Избранное ({favCount})</Link></p>
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
@@ -177,6 +191,7 @@ function ArticlesContent() {
                     {cat && <p className="card-cat">{cat}</p>}
                     {isDigest && <span className="tag digest-badge">Пересказ</span>}
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
+                    <TagChips tags={docTags(doc.metadata)} basePath="/articles" />
                     {desc && <p className="card-desc">{desc}</p>}
                     <div className="card-foot">
                       <span>{when}</span>

@@ -215,3 +215,7 @@ a.card-cat:hover { text-decoration: underline; }
 .consent-banner p { margin: 0; max-width: 60ch; font-size: 0.9rem; }
 .consent-actions { display: flex; gap: 0.5rem; }
 .fb-select { width: 100%; max-width: 320px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--foreground); font: inherit; font-size: 14px; }
+
+/* ds_site#138: чипы тегов на карточках (ADR-0028 п.6) */
+.tag-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.tag-chip { text-decoration: none; font-size: 0.85em; }
