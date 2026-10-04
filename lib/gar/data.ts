@@ -5,6 +5,7 @@
 // и поиск (MiniSearch, индекс строится в браузере) — на клиенте.
 import type { DocumentDetail, DocumentSummary, DocumentsResponse, MetadataLabels } from "./types";
 import { registrableDomain } from "./domain";
+import { docTags } from "./tags";
 
 export const IS_STATIC = process.env.NEXT_PUBLIC_STATIC_EXPORT === "1";
 // Буквальное обращение к process.env.NEXT_PUBLIC_* — Next подставляет значение при сборке.
@@ -119,12 +120,14 @@ async function staticDocuments(p: URLSearchParams): Promise<DocumentsResponse> {
     pool = [...allRecs].sort(byDateDesc);
   }
   const sel = Object.fromEntries(FILTER_KEYS.map((k) => [k, p.get(k) || ""]));
+  const tag = p.get("tag") || ""; // ds_site#138: фильтр по тегу (ADR-0028 п.6)
   const doms = p.getAll("domain");
   const domOf = (r: Rec) => registrableDomain(r.source_url ?? r.metadata.source_url ?? r.metadata.original_url);
   const matching = (skip?: string) =>
     pool.filter(
       (r) =>
         FILTER_KEYS.every((k) => k === skip || !sel[k] || has(r, k, sel[k])) &&
+        (!tag || docTags(r.metadata).includes(tag)) &&
         (skip === "domain" || !doms.length || doms.includes(domOf(r) ?? "")),
     );
   const domCount = new Map<string, number>();

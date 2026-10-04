@@ -19,6 +19,9 @@ import { useMetadataLabels } from "@/lib/gar/labels";
 import type { FilterKey } from "@/lib/gar";
 import FilterBar from "@/components/FilterBar";
 import LoadMore from "@/components/LoadMore";
+import TagChips from "@/components/TagChips";
+import TagFilterNotice from "@/components/TagFilterNotice";
+import { docTags, TAG_PARAM } from "@/lib/gar/tags";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { pageParam, withPageParam } from "@/lib/pagination";
 import { replaceQuery } from "@/lib/url-state";
@@ -43,10 +46,12 @@ function LinksContent() {
     OTHER_FILTERS.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
 
+  const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138
+
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
     docTypes: ["link"],
-    filters,
+    filters: { ...filters, [TAG_PARAM]: tag },
     domains: [],
     q: "",
     initialPage: pageParam(searchParams),
@@ -70,6 +75,14 @@ function LinksContent() {
     for (const key of OTHER_FILTERS) {
       if (f[key]) params.set(key, f[key]);
     }
+    if (tag) params.set(TAG_PARAM, tag);
+    replaceQuery(params);
+  }
+
+  function clearTag() {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(TAG_PARAM);
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -81,6 +94,8 @@ function LinksContent() {
 
       <section className="chat-panel" aria-label="Фильтры и список ссылок">
         <FilterBar values={filters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} />
+
+        <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
         {error && <p className="message error" role="alert">{error}</p>}
@@ -103,6 +118,7 @@ function LinksContent() {
                     {dir && <span className="tag">{dir}</span>}
                     {cat && <p className="card-cat">{cat}</p>}
                     <h2>{src ? <a href={src} target="_blank" rel="noreferrer">{link.doc_name}</a> : link.doc_name}</h2>
+                    <TagChips tags={docTags(link.metadata)} basePath="/links" />
                     <div className="card-foot">
                       <span>{aud}</span>
                       {src ? <span aria-hidden="true">↗</span> : <span className="no-link">Ссылка недоступна</span>}

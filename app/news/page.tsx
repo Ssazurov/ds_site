@@ -19,6 +19,9 @@ import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import LoadMore from "@/components/LoadMore";
+import TagChips from "@/components/TagChips";
+import TagFilterNotice from "@/components/TagFilterNotice";
+import { docTags, TAG_PARAM } from "@/lib/gar/tags";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { pageParam, withPageParam } from "@/lib/pagination";
 import { formatDate } from "@/lib/format";
@@ -63,13 +66,14 @@ function NewsContent() {
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
   const q = searchParams.get("q") || "";
+  const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138
 
   // ds_site#131, ADR-0026: q передаётся в GAR, серверная фильтрация по названию.
   // Статика ищет MiniSearch'ем в getDocuments.
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
     docTypes: ["news"],
-    filters: urlFilters,
+    filters: { ...urlFilters, [TAG_PARAM]: tag },
     domains: [],
     q,
     initialPage: pageParam(searchParams),
@@ -102,6 +106,14 @@ function NewsContent() {
       if (f[key]) params.set(key, f[key]);
     }
     if (q) params.set("q", q);
+    if (tag) params.set(TAG_PARAM, tag);
+    replaceQuery(params);
+  }
+
+  function clearTag() {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(TAG_PARAM);
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -114,6 +126,8 @@ function NewsContent() {
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
         <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
+
+        <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
         {total > 0 && <p className="fb-total">Всего найдено: {total}</p>}
         {!DATASET_ID && <p className="message error" role="alert">Не настроен идентификатор набора данных.</p>}
@@ -144,6 +158,7 @@ function NewsContent() {
                       </Link>
                     )}
                     <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
+                    <TagChips tags={docTags(doc.metadata)} basePath="/news" />
                     {summary && <p className="card-desc">{summary}</p>}
                     <div className="card-foot">
                       <span>{date}</span>
