@@ -15,8 +15,21 @@ export const META_WHITELIST = [
   "reading_time_min", "source_domain",
 ];
 
+// Разрешение берётся только от источника (домена) из реестра; личное
+// publish_permission статьи в UI GAR не задаётся, поэтому не читается.
+// Реестр {domain: {publish_permission, ...}} передаёт setSourcePermissions().
+let SOURCE_PERMISSIONS = {};
+export function setSourcePermissions(map) {
+  SOURCE_PERMISSIONS = map ?? {};
+}
+
 export function permissionOf(meta) {
-  const v = meta?.publish_permission;
+  // --- личное разрешение статьи (отключено, не удалять) ---
+  // const v = meta?.publish_permission;
+  // return typeof v === "string" && v ? v : "not_set";
+  // --------------------------------------------------------
+  const domain = typeof meta?.source_domain === "string" ? meta.source_domain.trim().toLowerCase() : "";
+  const v = SOURCE_PERMISSIONS[domain]?.publish_permission;
   return typeof v === "string" && v ? v : "not_set";
 }
 
