@@ -1,6 +1,6 @@
 // components/Header.tsx
-// Навигация сайта (ds_site#5, #14, #44, #45): Новости / Помощник (= "/",
-// бывш. "Главная") / Библиотека (dropdown: Статьи/Глоссарий/Ссылки) / О нас.
+// Навигация сайта (ds_site#5, #14, #44, #45): Статьи / Новости / Помощник (= "/",
+// бывш. "Главная") / Библиотека (dropdown: Глоссарий/Ссылки/Избранное) / О нас.
 
 "use client";
 
@@ -10,12 +10,12 @@ import { useEffect, useRef, useState } from "react";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
 
 const NAV_ITEMS = [
+  { href: "/articles", label: "Статьи" },
   { href: "/news", label: "Новости" },
   { href: "/", label: "Помощник" },
 ];
 
 const LIBRARY_ITEMS = [
-  { href: "/articles", label: "Статьи" },
   { href: "/glossary", label: "Глоссарий" },
   { href: "/links", label: "Ссылки" },
   { href: "/favorites", label: "Избранное" },
