@@ -14,6 +14,7 @@ import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import DomainFilter from "@/components/DomainFilter";
+import SortDateBar, { DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
 import FavoriteButton from "@/components/FavoriteButton";
 import LoadMore from "@/components/LoadMore";
 import TagChips from "@/components/TagChips";
@@ -33,7 +34,9 @@ import { formatDate, metaReadingMinutes, readingLabel } from "@/lib/format";
 const SCOPE_STORAGE_KEY = "ds-chat-scope";
 
 // doc_type включён (ds_site#127, ADR-0024): article + digest.
-const FILTER_ORDER: FilterKey[] = ["direction", "category", "doc_type", "age", "target_audience"];
+// Фильтр типа убран из UI: на /articles всегда article + digest.
+const FILTER_ORDER: FilterKey[] = ["direction", "category", "age", "target_audience"];
+const SORT_PARAMS = ["date_from", "date_to", "sort_by", "sort_dir"] as const;
 
 function articleTitle(doc: DocumentSummary) {
   return String(doc.metadata?.title || doc.doc_name);
@@ -54,19 +57,24 @@ function ArticlesContent() {
   const favCount = useFavorites().length;
   const assistantEnabled = useAssistantEnabled() === true; // ds_site#94: выбор для Помощника только при включённом флаге
 
-  const urlFilters = Object.fromEntries(
-    FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
-  ) as Record<FilterKey, string>;
+  const urlFilters = {
+    ...Object.fromEntries(FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""])),
+    doc_type: "",
+  } as Record<FilterKey, string>;
+  const dateFrom = searchParams.get("date_from") || "";
+  const dateTo = searchParams.get("date_to") || "";
+  const sortBy = (searchParams.get("sort_by") as SortBy) || DEFAULT_SORT.by;
+  const sortDir = (searchParams.get("sort_dir") as SortDir) || DEFAULT_SORT.dir;
   const q = searchParams.get("q") || "";
   const urlDomains = searchParams.getAll("domain"); // ADR-0020: мультивыбор, OR внутри фильтра
   const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138: ?tag= (ADR-0028 п.6)
 
-  // ds_site#127: без явного doc_type — article + digest; с фильтром — только он.
-  const docTypes = urlFilters.doc_type ? [urlFilters.doc_type] : ["article", "digest"];
+  // ds_site#127: article + digest.
+  const docTypes = ["article", "digest"];
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
     docTypes,
-    filters: { ...urlFilters, [TAG_PARAM]: tag },
+    filters: { ...urlFilters, [TAG_PARAM]: tag, date_from: dateFrom, date_to: dateTo, sort_by: sortBy, sort_dir: sortDir },
     domains: urlDomains,
     q,
     initialPage: pageParam(searchParams),
@@ -100,6 +108,20 @@ function ArticlesContent() {
     for (const d of domains) params.append("domain", d);
     if (q) params.set("q", q);
     if (tag) params.set(TAG_PARAM, tag);
+    for (const k of SORT_PARAMS) {
+      const v = searchParams.get(k);
+      if (v) params.set(k, v);
+    }
+    replaceQuery(params);
+  }
+
+  function setSortDate(patch: Partial<Record<(typeof SORT_PARAMS)[number], string>>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [k, v] of Object.entries(patch)) {
+      if (v) params.set(k, v);
+      else params.delete(k);
+    }
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -142,9 +164,11 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} hide={["doc_type"]}>
+          <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
+        </FilterBar>
 
-        <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
+        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} />
 
         <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
