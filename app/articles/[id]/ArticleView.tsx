@@ -15,6 +15,9 @@ import type { DocumentDetail } from "@/lib/gar";
 import FavoriteButton from "@/components/FavoriteButton";
 import AuthorLink, { SourceLink, stripAuthorLine, stripLeadingTitle } from "@/components/AuthorLink";
 import { formatDate, readingMinutes, metaReadingMinutes, readingLabel } from "@/lib/format";
+import { useMetadataLabels } from "@/lib/gar/labels";
+
+const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function articleTitle(doc: DocumentDetail) {
   return String(doc.metadata?.title || doc.doc_name);
@@ -35,6 +38,7 @@ export default function ArticlePage({ id }: { id: string }) {
   const [content, setContent] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { ruLabel } = useMetadataLabels(DATASET_ID);
 
   useEffect(() => {
     let cancelled = false;
@@ -72,6 +76,25 @@ export default function ArticlePage({ id }: { id: string }) {
 
         {doc && !loading && !error && (
           <>
+            {(() => {
+              const dirValue = typeof doc.metadata?.direction === "string" ? doc.metadata.direction : null;
+              const catValue = typeof doc.metadata?.category === "string" ? doc.metadata.category : null;
+              if (!dirValue && !catValue) return null;
+              return (
+                <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
+                  {dirValue && (
+                    <Link className="tag" href={`/articles?direction=${dirValue}`}>
+                      {ruLabel("direction", dirValue) ?? dirValue}
+                    </Link>
+                  )}
+                  {catValue && (
+                    <Link className="tag" href={`/articles?direction=${dirValue || ""}&category=${catValue}`}>
+                      {ruLabel("category", catValue) ?? catValue}
+                    </Link>
+                  )}
+                </div>
+              );
+            })()}
             <p className="fb-total">
               {[formatDate(doc.metadata?.publish_date), (content ? readingMinutes(content) : metaReadingMinutes(doc.metadata)) ? readingLabel((content ? readingMinutes(content) : metaReadingMinutes(doc.metadata))!) : null].filter(Boolean).join(" · ")}
             </p>
