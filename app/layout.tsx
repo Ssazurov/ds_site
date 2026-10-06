@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import ConsentBanner from "@/components/ConsentBanner";
+import ScrollToTop from "@/components/ScrollToTop";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,7 @@ export default function RootLayout({
         </div>
         <Header />
         <div className="flex-1">{children}</div>
+        <ScrollToTop />
         <ConsentBanner />
       </body>
     </html>
