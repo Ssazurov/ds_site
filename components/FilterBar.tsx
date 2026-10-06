@@ -176,7 +176,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
         {titleMode && onTextSearch && process.env.NEXT_PUBLIC_STATIC_EXPORT !== "1" && (
           <label className="fb-scope">
             <input type="checkbox" checked={Boolean(textSearch)} disabled={disabled} onChange={(e) => onTextSearch(e.target.checked)} />
-            Искать в тексте
+            В тексте
           </label>
         )}
         {gear}
