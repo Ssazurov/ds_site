@@ -5,7 +5,7 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import type { FilterKey } from "@/lib/gar";
 
 export type FilterField = FilterKey;
@@ -30,9 +30,13 @@ type Props = {
   onTitleQuery?: (v: string) => void;
   /** direction -> [category]; категория зависит от направления. */
   tree?: Record<string, string[]>;
+  /** Фильтры, которые не показываем (напр. doc_type на /articles). */
+  hide?: FilterField[];
+  /** Длинные списки-чипы (напр. домены) — в общую панель рядом с Возрастом/Аудиторией. */
+  children?: ReactNode;
 };
 
-export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, tree }: Props) {
+export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, tree, hide = [], children }: Props) {
   const titleMode = onTitleQuery !== undefined;
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
@@ -46,8 +50,8 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
     return val && !list.includes(val) ? [val, ...list] : list;
   };
   const cats = withSel("category").filter((c) => lab("category", c).toLowerCase().includes(q.trim().toLowerCase()));
-  const active = ALL.filter((k) => values[k]);
-  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0) + (values.doc_type ? 1 : 0)
+  const active = ALL.filter((k) => values[k] && !hide.includes(k));
+  const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0) + (values.doc_type && !hide.includes("doc_type") ? 1 : 0)
     + (titleMode ? (values.direction ? 1 : 0) + (values.category ? 1 : 0) : 0);
 
   const [tq, setTq] = useState(titleQuery ?? "");
@@ -64,7 +68,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
     setOpen(false);
   }
 
-  function select(k: "direction" | "category") {
+  function select(k: FilterField) {
     let list = withSel(k);
     const dirVal = values.direction;
     if (k === "category" && dirVal && tree?.[dirVal]) {
@@ -179,11 +183,12 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
               <div><p className="fb-lab">{FILTER_LABELS.category}</p>{select("category")}</div>
             </>
           )}
-          {facets.doc_type && facets.doc_type.length > 1 && (
-            <div><p className="fb-lab">{FILTER_LABELS.doc_type}</p>{chips("doc_type")}</div>
+          {!hide.includes("doc_type") && facets.doc_type && facets.doc_type.length > 1 && (
+            <div><p className="fb-lab">{FILTER_LABELS.doc_type}</p>{select("doc_type")}</div>
           )}
-          <div><p className="fb-lab">{FILTER_LABELS.age}</p>{chips("age")}</div>
-          <div><p className="fb-lab">{FILTER_LABELS.target_audience}</p>{chips("target_audience")}</div>
+          <div><p className="fb-lab">{FILTER_LABELS.age}</p>{select("age")}</div>
+          <div><p className="fb-lab">{FILTER_LABELS.target_audience}</p>{select("target_audience")}</div>
+          {children}
         </div>
       )}
 

@@ -7,7 +7,6 @@
 import { useState } from "react";
 
 export type DomainCount = { domain: string; count: number };
-const TOP = 8;
 
 type Props = {
   domains: DomainCount[];
@@ -33,21 +32,7 @@ export default function DomainFilter({ domains, selected, onChange, disabled }: 
   return (
     <div className="fb-domain">
       <p className="fb-lab">Домен</p>
-      <div className="fb-chips">
-        {domains.slice(0, TOP).map(({ domain, count }) => (
-          <button
-            key={domain}
-            type="button"
-            className={`fb-chip${selected.includes(domain) ? " on" : ""}`}
-            aria-pressed={selected.includes(domain)}
-            disabled={disabled}
-            onClick={() => toggle(domain)}
-          >
-            {domain} ({count})
-          </button>
-        ))}
-      </div>
-      {domains.length > TOP && (
+      {domains.length > 0 && (
         <div className="fb-combo">
           <div className="fb-in">
             <span aria-hidden="true">🔍</span>
@@ -56,7 +41,7 @@ export default function DomainFilter({ domains, selected, onChange, disabled }: 
               aria-expanded={open}
               aria-controls="fb-dom-list"
               aria-label="Домен"
-              placeholder={`Все домены (${domains.length}): найти…`}
+              placeholder={`Домен (${domains.length}): выбрать или найти…`}
               autoComplete="off"
               value={q}
               disabled={disabled}
