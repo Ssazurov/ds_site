@@ -26,6 +26,8 @@ export type DocumentFeedOptions = {
   domains: string[];
   /** поисковый запрос из URL */
   q: string;
+  /** ADR-0029: true — искать и в тексте статей (q_scope=text) */
+  qScope?: boolean;
   pageSize?: number;
   /** сколько порций уже загружено (?page=) — восстанавливаемое состояние */
   initialPage?: number;
@@ -57,7 +59,7 @@ type Loaded = {
 
 export function useDocumentFeed(options: DocumentFeedOptions): DocumentFeed {
   const {
-    datasetId, docTypes, filters, domains, q,
+    datasetId, docTypes, filters, domains, q, qScope = false,
     pageSize = PAGE_SIZE, initialPage = 1, onPageChange,
   } = options;
   const [loaded, setLoaded] = useState<Loaded | null>(null);
@@ -69,7 +71,7 @@ export function useDocumentFeed(options: DocumentFeedOptions): DocumentFeed {
   // из них перезагружает ленту с первой порции. Страницы создают объекты
   // заново на каждом рендере, поэтому в эффект попадает строка, а из неё
   // восстанавливается стабильная конфигурация запроса.
-  const key = JSON.stringify({ datasetId, docTypes, filters, domains, q });
+  const key = JSON.stringify({ datasetId, docTypes, filters, domains, q, qScope });
   const cfg = useMemo(
     () => JSON.parse(key) as {
       datasetId: string;
@@ -91,11 +93,12 @@ export function useDocumentFeed(options: DocumentFeedOptions): DocumentFeed {
       // q передаётся всегда (GAR поддерживает с ds_site#131, ADR-0026;
       // статический экспорт ищет MiniSearch'ем внутри getDocuments).
       if (q) params.set("q", q);
+      if (q && qScope) params.set("q_scope", "text");
       params.set("per_page", String(perPage));
       params.set("page", String(pageNumber));
       return params;
     },
-    [cfg, q],
+    [cfg, q, qScope],
   );
 
   useEffect(() => {

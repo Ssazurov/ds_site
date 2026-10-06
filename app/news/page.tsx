@@ -23,6 +23,7 @@ import LoadMore from "@/components/LoadMore";
 import TagChips from "@/components/TagChips";
 import TagFilterNotice from "@/components/TagFilterNotice";
 import { docTags, TAG_PARAM } from "@/lib/gar/tags";
+import Snippet from "@/components/Snippet";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { useScrollRestore } from "@/lib/scroll-restore";
 import { pageParam, withPageParam } from "@/lib/pagination";
@@ -68,6 +69,7 @@ function NewsContent() {
   const sortBy = (searchParams.get("sort_by") as SortBy) || DEFAULT_SORT.by;
   const sortDir = (searchParams.get("sort_dir") as SortDir) || DEFAULT_SORT.dir;
   const q = searchParams.get("q") || "";
+  const textScope = searchParams.get("scope") === "text"; // ADR-0029
   const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138
 
   // ds_site#131, ADR-0026: q передаётся в GAR, серверная фильтрация по названию.
@@ -78,6 +80,7 @@ function NewsContent() {
     filters: { ...urlFilters, [TAG_PARAM]: tag, date_from: dateFrom, date_to: dateTo, sort_by: sortBy, sort_dir: sortDir },
     domains: [],
     q,
+    qScope: textScope,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
@@ -88,6 +91,14 @@ function NewsContent() {
     const params = new URLSearchParams(searchParams.toString());
     if (v) params.set("q", v);
     else params.delete("q");
+    replaceQuery(params);
+  }
+
+  function setTextScope(on: boolean) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (on) params.set("scope", "text");
+    else params.delete("scope");
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -108,6 +119,7 @@ function NewsContent() {
       if (f[key]) params.set(key, f[key]);
     }
     if (q) params.set("q", q);
+    if (textScope) params.set("scope", "text");
     if (tag) params.set(TAG_PARAM, tag);
     for (const k of SORT_PARAMS) {
       const v = searchParams.get(k);
@@ -141,7 +153,7 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} hide={["doc_type"]} />
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]} />
 
         <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} />
 
@@ -178,6 +190,7 @@ function NewsContent() {
                     <h2><Link href={`/news/${doc.document_id}`}>{newsTitle(doc)}</Link></h2>
                     <TagChips tags={docTags(doc.metadata)} basePath="/news" />
                     {summary && <p className="card-desc">{summary}</p>}
+                    {textScope && <Snippet text={doc.snippet} q={q} />}
                     <div className="card-foot">
                       <span>{date}</span>
                       {url && (

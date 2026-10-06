@@ -157,6 +157,9 @@ a.card-cat:hover { text-decoration: underline; }
 .fb-dd li { padding: 8px 10px; border-radius: 8px; }
 .fb-dd li[role="option"]:hover, .fb-dd li.hl { background: var(--acbg); }
 .fb-dd li.empty { color: var(--ink-muted); }
+.fb-scope { display: flex; align-items: center; gap: 6px; min-height: 44px; font-size: 14px; cursor: pointer; white-space: nowrap; }
+.snippet { margin: 8px 0 0; font-size: 14px; color: var(--muted, inherit); }
+.snippet mark { background: color-mix(in srgb, var(--accent) 25%, transparent); color: inherit; border-radius: 3px; }
 .fb-gear { position: relative; min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); box-shadow: var(--sh); color: var(--foreground); font-size: 18px; }
 .fb-gear b { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 11px; line-height: 18px; }
 .fb-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-bottom: 10px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); }
