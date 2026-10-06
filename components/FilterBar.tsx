@@ -157,8 +157,8 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
       <div className="fb-in">
         <input
           type="search"
-          aria-label="Поиск по названию"
-          placeholder="Поиск по названию…"
+          aria-label="Поиск по названию и описанию"
+          placeholder="Поиск по названию и описанию…"
           autoComplete="off"
           value={tq}
           onChange={(e) => setTq(e.target.value)}
