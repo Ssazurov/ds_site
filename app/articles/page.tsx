@@ -22,6 +22,7 @@ import TagFilterNotice from "@/components/TagFilterNotice";
 import { docTags, TAG_PARAM } from "@/lib/gar/tags";
 import { useFavorites } from "@/lib/favorites";
 import { useDocumentFeed } from "@/lib/use-document-feed";
+import { useScrollRestore } from "@/lib/scroll-restore";
 import { pageParam, withPageParam } from "@/lib/pagination";
 import { replaceQuery } from "@/lib/url-state";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
@@ -81,6 +82,7 @@ function ArticlesContent() {
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
   const { documents, loaded, total, loading, loadingMore, hasMore, showMore, error } = feed;
+  useScrollRestore(!loading && documents.length > 0); // ds_site#167
 
   function setQuery(v: string) {
     const params = new URLSearchParams(searchParams.toString());
