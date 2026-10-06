@@ -6,8 +6,11 @@ export function formatDate(raw: unknown): string | null {
   if (typeof raw !== "string" || !raw) return null;
   const d = new Date(raw);
   if (Number.isNaN(d.getTime())) return raw;
-  const opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "long" };
-  if (d.getFullYear() !== new Date().getFullYear()) opts.year = "numeric";
+  // МСК (+3 ч): день и «текущий год» считаем в Europe/Moscow, а не в TZ сервера (UTC)
+  const TZ = "Europe/Moscow";
+  const yearOf = (x: Date) => new Intl.DateTimeFormat("en-US", { timeZone: TZ, year: "numeric" }).format(x);
+  const opts: Intl.DateTimeFormatOptions = { day: "numeric", month: "long", timeZone: TZ };
+  if (yearOf(d) !== yearOf(new Date())) opts.year = "numeric";
   return d.toLocaleDateString("ru-RU", opts).replace(/\s?г\.$/, "");
 }
 
