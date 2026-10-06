@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
+import SortDateBar, { DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
 import LoadMore from "@/components/LoadMore";
 import TagChips from "@/components/TagChips";
 import TagFilterNotice from "@/components/TagFilterNotice";
@@ -36,6 +37,8 @@ const FILTER_LABELS: Record<Exclude<FilterKey, "doc_type">, string> = {
 };
 const FILTER_ORDER = Object.keys(FILTER_LABELS) as Exclude<FilterKey, "doc_type">[];
 
+const SORT_PARAMS = ["date_from", "date_to", "sort_by", "sort_dir"] as const;
+
 const DATASET_ID = process.env.NEXT_PUBLIC_GAR_DATASET_ID ?? "";
 
 function newsTitle(doc: DocumentSummary) {
@@ -52,12 +55,6 @@ function newsUrl(doc: DocumentSummary): string | null {
   return typeof url === "string" ? url : null;
 }
 
-// Новости сортируются по дате публикации (в GAR порядок свой), сортировка
-// внутри загруженных порций — на весь набор сразу сортировка не влияет.
-function byDateDesc(a: DocumentSummary, b: DocumentSummary) {
-  return String(b.metadata?.publish_date || "").localeCompare(String(a.metadata?.publish_date || ""));
-}
-
 function NewsContent() {
   const searchParams = useSearchParams();
   const { ruLabel, tree } = useMetadataLabels(DATASET_ID);
@@ -65,6 +62,10 @@ function NewsContent() {
   const urlFilters = Object.fromEntries(
     FILTER_ORDER.map((key) => [key, searchParams.get(key) || ""]),
   ) as Record<Exclude<FilterKey, "doc_type">, string>;
+  const dateFrom = searchParams.get("date_from") || "";
+  const dateTo = searchParams.get("date_to") || "";
+  const sortBy = (searchParams.get("sort_by") as SortBy) || DEFAULT_SORT.by;
+  const sortDir = (searchParams.get("sort_dir") as SortDir) || DEFAULT_SORT.dir;
   const q = searchParams.get("q") || "";
   const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138
 
@@ -73,14 +74,13 @@ function NewsContent() {
   const feed = useDocumentFeed({
     datasetId: DATASET_ID,
     docTypes: ["news"],
-    filters: { ...urlFilters, [TAG_PARAM]: tag },
+    filters: { ...urlFilters, [TAG_PARAM]: tag, date_from: dateFrom, date_to: dateTo, sort_by: sortBy, sort_dir: sortDir },
     domains: [],
     q,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
-  const documents = feed.documents.slice().sort(byDateDesc);
-  const { loaded, total, loading, loadingMore, hasMore, showMore, error } = feed;
+  const { documents, loaded, total, loading, loadingMore, hasMore, showMore, error } = feed;
 
   function setQuery(v: string) {
     const params = new URLSearchParams(searchParams.toString());
@@ -107,6 +107,20 @@ function NewsContent() {
     }
     if (q) params.set("q", q);
     if (tag) params.set(TAG_PARAM, tag);
+    for (const k of SORT_PARAMS) {
+      const v = searchParams.get(k);
+      if (v) params.set(k, v);
+    }
+    replaceQuery(params);
+  }
+
+  function setSortDate(patch: Partial<Record<(typeof SORT_PARAMS)[number], string>>) {
+    const params = new URLSearchParams(searchParams.toString());
+    for (const [k, v] of Object.entries(patch)) {
+      if (v) params.set(k, v);
+      else params.delete(k);
+    }
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -125,7 +139,9 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} />
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} hide={["doc_type"]} />
+
+        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} />
 
         <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
