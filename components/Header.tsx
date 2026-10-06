@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
+import "@/lib/scroll-restore"; // ds_site#167: регистрирует popstate-флаг раньше монтирования списков
 
 const NAV_ITEMS = [
   { href: "/articles", label: "Статьи" },
