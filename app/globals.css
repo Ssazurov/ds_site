@@ -222,7 +222,7 @@ a.card-cat:hover { text-decoration: underline; }
 .tag-chip { text-decoration: none; font-size: 0.85em; }
 
 /* ds_site: период дат + сортировка (всегда видимая строка) */
-.fb-sort { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin: 12px 0; }
+.fb-sort { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin: 6px 0 12px; }
 .fb-sort label { display: flex; align-items: center; gap: 8px; }
 .fb-sort .fb-lab { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; }
 .fb-sort input[type="date"] { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--foreground); font: inherit; font-size: 14px; }
