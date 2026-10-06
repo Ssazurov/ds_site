@@ -9,6 +9,8 @@ export type DocumentSummary = {
   document_id: string;
   doc_name: string;
   metadata?: Record<string, unknown>;
+  /** ADR-0029: фрагмент текста вокруг совпадения (только q_scope=text) */
+  snippet?: string | null;
 };
 
 export type DocumentsResponse = {

@@ -28,6 +28,9 @@ type Props = {
   /** Если задан — главное поле ищет по названию, а Тема/Категория уходят под ⚙. */
   titleQuery?: string;
   onTitleQuery?: (v: string) => void;
+  /** ADR-0029: флажок «Искать в тексте» между полем поиска и ⚙ (скрыт в статическом экспорте). */
+  textSearch?: boolean;
+  onTextSearch?: (v: boolean) => void;
   /** direction -> [category]; категория зависит от направления. */
   tree?: Record<string, string[]>;
   /** Фильтры, которые не показываем (напр. doc_type на /articles). */
@@ -36,7 +39,7 @@ type Props = {
   children?: ReactNode;
 };
 
-export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, tree, hide = [], children }: Props) {
+export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, textSearch, onTextSearch, tree, hide = [], children }: Props) {
   const titleMode = onTitleQuery !== undefined;
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
@@ -170,6 +173,12 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
 
       <div className="fb-bar">
         {titleMode ? titleInput : catCombo}
+        {titleMode && onTextSearch && process.env.NEXT_PUBLIC_STATIC_EXPORT !== "1" && (
+          <label className="fb-scope">
+            <input type="checkbox" checked={Boolean(textSearch)} disabled={disabled} onChange={(e) => onTextSearch(e.target.checked)} />
+            Искать в тексте
+          </label>
+        )}
         {gear}
       </div>
 

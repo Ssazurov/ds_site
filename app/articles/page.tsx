@@ -21,6 +21,7 @@ import TagChips from "@/components/TagChips";
 import TagFilterNotice from "@/components/TagFilterNotice";
 import { docTags, TAG_PARAM } from "@/lib/gar/tags";
 import { useFavorites } from "@/lib/favorites";
+import Snippet from "@/components/Snippet";
 import { useDocumentFeed } from "@/lib/use-document-feed";
 import { useScrollRestore } from "@/lib/scroll-restore";
 import { pageParam, withPageParam } from "@/lib/pagination";
@@ -67,6 +68,7 @@ function ArticlesContent() {
   const sortBy = (searchParams.get("sort_by") as SortBy) || DEFAULT_SORT.by;
   const sortDir = (searchParams.get("sort_dir") as SortDir) || DEFAULT_SORT.dir;
   const q = searchParams.get("q") || "";
+  const textScope = searchParams.get("scope") === "text"; // ADR-0029
   const urlDomains = searchParams.getAll("domain"); // ADR-0020: мультивыбор, OR внутри фильтра
   const tag = searchParams.get(TAG_PARAM) || ""; // ds_site#138: ?tag= (ADR-0028 п.6)
 
@@ -78,6 +80,7 @@ function ArticlesContent() {
     filters: { ...urlFilters, [TAG_PARAM]: tag, date_from: dateFrom, date_to: dateTo, sort_by: sortBy, sort_dir: sortDir },
     domains: urlDomains,
     q,
+    qScope: textScope,
     initialPage: pageParam(searchParams),
     onPageChange: (p) => replaceQuery(withPageParam(searchParams, p)),
   });
@@ -88,6 +91,14 @@ function ArticlesContent() {
     const params = new URLSearchParams(searchParams.toString());
     if (v) params.set("q", v);
     else params.delete("q");
+    replaceQuery(params);
+  }
+
+  function setTextScope(on: boolean) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (on) params.set("scope", "text");
+    else params.delete("scope");
+    params.delete("page");
     replaceQuery(params);
   }
 
@@ -109,6 +120,7 @@ function ArticlesContent() {
     }
     for (const d of domains) params.append("domain", d);
     if (q) params.set("q", q);
+    if (textScope) params.set("scope", "text");
     if (tag) params.set(TAG_PARAM, tag);
     for (const k of SORT_PARAMS) {
       const v = searchParams.get(k);
@@ -166,7 +178,7 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} hide={["doc_type"]}>
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]}>
           <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
         </FilterBar>
 
@@ -219,6 +231,7 @@ function ArticlesContent() {
                     <h2><Link href={`/articles/${doc.document_id}`}>{articleTitle(doc)}</Link></h2>
                     <TagChips tags={docTags(doc.metadata)} basePath="/articles" />
                     {desc && <p className="card-desc">{desc}</p>}
+                    {textScope && <Snippet text={doc.snippet} q={q} />}
                     <div className="card-foot">
                       <span>{when}</span>
                       {url && (
