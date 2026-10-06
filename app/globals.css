@@ -227,3 +227,10 @@ a.card-cat:hover { text-decoration: underline; }
 .fb-sort .fb-lab { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; }
 .fb-sort input[type="date"] { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--foreground); font: inherit; font-size: 14px; }
 .fb-sort .fb-select { width: auto; }
+
+/* ds_site: подсказки светло-серым; домен — как соседние поля; без лупы */
+.fb input::placeholder, .fb-sort input::placeholder { color: #9ca3af; opacity: 1; }
+.fb-sort input[type="date"].empty { color: #9ca3af; }
+.fb-domain .fb-combo { flex: none; min-width: 0; max-width: 320px; }
+.fb-domain .fb-in { border-radius: 8px; box-shadow: none; padding: 0 10px; }
+.fb-domain .fb-in input { font-size: 14px; padding: 8px 0; }

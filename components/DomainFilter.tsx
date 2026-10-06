@@ -35,7 +35,6 @@ export default function DomainFilter({ domains, selected, onChange, disabled }: 
       {domains.length > 0 && (
         <div className="fb-combo">
           <div className="fb-in">
-            <span aria-hidden="true">🔍</span>
             <input
               role="combobox"
               aria-expanded={open}

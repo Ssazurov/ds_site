@@ -112,7 +112,6 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   const catCombo = (
         <div className="fb-combo">
           <div className="fb-in">
-            <span aria-hidden="true">🔍</span>
             <input
               role="combobox"
               aria-expanded={open}
@@ -153,7 +152,6 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   const titleInput = (
     <div className="fb-combo">
       <div className="fb-in">
-        <span aria-hidden="true">🔍</span>
         <input
           type="search"
           aria-label="Поиск по названию"

@@ -27,12 +27,12 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
     <div className="fb-sort" role="group" aria-label="Период и сортировка">
       <label>
         <span className="fb-lab">Период с</span>
-        <input type="date" value={dateFrom} max={dateTo || undefined} disabled={disabled}
+        <input type="date" className={dateFrom ? "" : "empty"} value={dateFrom} max={dateTo || undefined} disabled={disabled}
           onChange={(e) => onChange({ date_from: e.target.value })} />
       </label>
       <label>
         <span className="fb-lab">по</span>
-        <input type="date" value={dateTo} min={dateFrom || undefined} disabled={disabled}
+        <input type="date" className={dateTo ? "" : "empty"} value={dateTo} min={dateFrom || undefined} disabled={disabled}
           onChange={(e) => onChange({ date_to: e.target.value })} />
       </label>
       <label>
@@ -46,7 +46,7 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
         aria-label={sortDir === "asc" ? "По возрастанию" : "По убыванию"}
         title={sortDir === "asc" ? "По возрастанию (нажмите: по убыванию)" : "По убыванию (нажмите: по возрастанию)"}
         onClick={() => onChange({ sort_dir: sortDir === "asc" ? "desc" : "asc" })}>
-        {sortDir === "asc" ? "↑ по возрастанию" : "↓ по убыванию"}
+        {sortDir === "asc" ? "↑" : "↓"}
       </button>
       {(dateFrom || dateTo) && (
         <button type="button" className="fb-link" disabled={disabled}
