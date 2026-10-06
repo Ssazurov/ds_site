@@ -188,6 +188,8 @@ a.card-cat:hover { text-decoration: underline; }
 .reading h2 { font-size: 23px; }
 .reading h3 { font-size: 19px; }
 .reading ul, .reading ol { margin: 0 0 16px; padding-left: 28px; }
+.reading ul { list-style: disc; }
+.reading ol { list-style: decimal; }
 .reading li { margin: 0 0 6px; }
 .reading blockquote { margin: 0 0 16px; padding-left: 16px; border-left: 3px solid var(--line); color: var(--ink-muted); }
 .reading a { color: var(--accent-dark); }
