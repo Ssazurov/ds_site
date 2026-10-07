@@ -4,6 +4,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import ConsentBanner from "@/components/ConsentBanner";
 import ScrollToTop from "@/components/ScrollToTop";
+import YandexMetrika from "@/components/YandexMetrika";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
         <div className="flex-1">{children}</div>
         <ScrollToTop />
         <ConsentBanner />
+        <YandexMetrika />
       </body>
     </html>
   );
