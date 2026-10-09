@@ -18,6 +18,7 @@ const NAV_ITEMS = [
 
 const LIBRARY_ITEMS = [
   { href: "/glossary", label: "Глоссарий" },
+  { href: "/words", label: "Слова" },
   { href: "/links", label: "Ссылки" },
   { href: "/favorites", label: "Избранное" },
 ];
