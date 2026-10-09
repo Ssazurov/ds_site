@@ -15,3 +15,10 @@
 **Файл**: [adr/0026-server-side-title-search.md](adr/0026-server-side-title-search.md)
 
 Поиск `?q=` передаётся в GAR `/public/documents` для полнотекстового поиска по всему корпусу с корректными facets/total.
+
+## ADR-0027: Каталог слов/карточек и печать в PDF
+**Дата**: 2026-10-09  
+**Статус**: Принято  
+**Файл**: [adr/0027-words-catalog-print.md](adr/0027-words-catalog-print.md)
+
+`/words` — каталог слов из ds_words с фильтрами по теме/возрасту; `/words/print` — печать набора карточек в PDF через `window.print()`. Данные и картинки — локальный скрипт `scripts/export-words.mjs`, коммитятся в репозиторий.
