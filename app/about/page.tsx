@@ -15,6 +15,11 @@ export default function AboutPage() {
         <section id="developer" aria-label="О разработчике">
           <h2>О разработчике</h2>
           <p>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/istok_logo.png" alt="Исток" width={96} height={96} />
+          </p>
+          <p><strong>Проект «Исток»</strong></p>
+          <p>
             Я — будущий отец «солнечного» ребёнка. Более 20 лет я работаю в
             IT и создаю программы, которые помогают людям с ограниченными
             возможностями. Этот сайт — моя посильная помощь «солнечным»
