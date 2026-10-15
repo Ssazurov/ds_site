@@ -14,7 +14,13 @@ const nextConfig: NextConfig = isStatic
       // сборке учитываем только *.tsx (page/layout), route.ts игнорируются.
       pageExtensions: ["tsx"],
     }
-  : { output: "standalone" };
+  : {
+      output: "standalone",
+      // Flutter web (ds_app) лежит в public/app (собирает ds_app/tools/publish_story.sh)
+      async rewrites() {
+        return [{ source: "/app", destination: "/app/index.html" }];
+      },
+    };
 
 // Отдельный distDir (NEXT_DIST_DIR) — чтобы внешняя сборка не затирала .next внутренней.
 if (process.env.NEXT_DIST_DIR) nextConfig.distDir = process.env.NEXT_DIST_DIR;
