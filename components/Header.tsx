@@ -88,6 +88,8 @@ export default function Header() {
             </div>
           )}
         </div>
+        {/* Flutter web (public/app) — не Next-маршрут, поэтому обычный <a> */}
+        <a href="/app/">Обучение</a>
         <Link href="/about" aria-current={isActiveHref(pathname, "/about") ? "page" : undefined}>
           О нас
         </Link>
