@@ -15,6 +15,10 @@ export default function Footer() {
           <Link href="/about#developer">Сазуров Сергей Владимирович</Link>
         </span>
       </nav>
+      <p className="footer-credit">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/istok_logo.png" alt="" width={16} height={16} /> Исток, 2026 год
+      </p>
     </footer>
   );
 }

@@ -35,7 +35,11 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <div className="project-line">
-          <span>Проект «Солнечный мир»</span>
+          <span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/app/icons/Icon-192.png" alt="" width={16} height={16} />
+            Проект «Солнечный мир»
+          </span>
         </div>
         <Header />
         <div className="flex-1">{children}</div>

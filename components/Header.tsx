@@ -1,6 +1,6 @@
 // components/Header.tsx
-// Навигация сайта (ds_site#5, #14, #44, #45): Статьи / Новости / Помощник (= "/",
-// бывш. "Главная") / Библиотека (dropdown: Глоссарий/Ссылки/Избранное) / О нас.
+// Навигация: Статьи / Новости / Помощник (= "/") / Обучение (/learning)
+// + меню "три черты" справа: Глоссарий, Слова, Ссылки, Избранное, О нас.
 
 "use client";
 
@@ -14,13 +14,15 @@ const NAV_ITEMS = [
   { href: "/articles", label: "Статьи" },
   { href: "/news", label: "Новости" },
   { href: "/", label: "Помощник" },
+  { href: "/learning", label: "Обучение" },
 ];
 
-const LIBRARY_ITEMS = [
+const MENU_ITEMS = [
   { href: "/glossary", label: "Глоссарий" },
   { href: "/words", label: "Слова" },
   { href: "/links", label: "Ссылки" },
   { href: "/favorites", label: "Избранное" },
+  { href: "/about", label: "О нас" },
 ];
 
 function isActiveHref(pathname: string | null, href: string) {
@@ -30,14 +32,14 @@ function isActiveHref(pathname: string | null, href: string) {
 export default function Header() {
   const pathname = usePathname();
   const assistantEnabled = useAssistantEnabled() === true;
-  const [libraryOpen, setLibraryOpen] = useState(false);
-  const libraryRef = useRef<HTMLDivElement>(null);
-  const libraryActive = LIBRARY_ITEMS.some((item) => isActiveHref(pathname, item.href));
+  const [menuOpen, setMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuActive = MENU_ITEMS.some((item) => isActiveHref(pathname, item.href));
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
-      if (libraryRef.current && !libraryRef.current.contains(e.target as Node)) {
-        setLibraryOpen(false);
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
       }
     }
     document.addEventListener("mousedown", onClickOutside);
@@ -56,31 +58,29 @@ export default function Header() {
             {item.label}
           </Link>
         ))}
-        <div
-          className="nav-library"
-          ref={libraryRef}
-          onMouseEnter={() => setLibraryOpen(true)}
-          onMouseLeave={() => setLibraryOpen(false)}
-        >
+        <div className="nav-burger" ref={menuRef}>
           <button
             type="button"
-            className="nav-library-trigger"
+            className="nav-burger-trigger"
+            aria-label="Меню"
             aria-haspopup="true"
-            aria-expanded={libraryOpen}
-            aria-current={libraryActive ? "page" : undefined}
-            onClick={() => setLibraryOpen((v) => !v)}
+            aria-expanded={menuOpen}
+            aria-current={menuActive ? "page" : undefined}
+            onClick={() => setMenuOpen((v) => !v)}
           >
-            Библиотека
+            <span />
+            <span />
+            <span />
           </button>
-          {libraryOpen && (
-            <div className="nav-library-menu" role="menu">
-              {LIBRARY_ITEMS.map((item) => (
+          {menuOpen && (
+            <div className="nav-library-menu nav-burger-menu" role="menu">
+              {MENU_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   role="menuitem"
                   aria-current={isActiveHref(pathname, item.href) ? "page" : undefined}
-                  onClick={() => setLibraryOpen(false)}
+                  onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
                 </Link>
@@ -88,11 +88,6 @@ export default function Header() {
             </div>
           )}
         </div>
-        {/* Flutter web (public/app) — не Next-маршрут, поэтому обычный <a> */}
-        <a href="/app/">Обучение</a>
-        <Link href="/about" aria-current={isActiveHref(pathname, "/about") ? "page" : undefined}>
-          О нас
-        </Link>
       </nav>
     </header>
   );
