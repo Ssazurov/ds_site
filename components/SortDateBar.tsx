@@ -20,13 +20,14 @@ type Props = {
   sortDir: SortDir;
   onChange: (patch: Partial<{ date_from: string; date_to: string; sort_by: SortBy; sort_dir: SortDir }>) => void;
   disabled?: boolean;
+  hideDates?: boolean;
 };
 
-export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChange, disabled }: Props) {
+export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChange, disabled, hideDates }: Props) {
   return (
     <div className="fb-sort" role="group" aria-label="Период и сортировка">
-      <label>
-        <span className="fb-lab">Период с</span>
+      {!hideDates && <><label>
+        <span className="fb-lab">с</span>
         <input type="date" className={dateFrom ? "" : "empty"} value={dateFrom} max={dateTo || undefined} disabled={disabled}
           onChange={(e) => onChange({ date_from: e.target.value })} />
       </label>
@@ -34,7 +35,7 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
         <span className="fb-lab">по</span>
         <input type="date" className={dateTo ? "" : "empty"} value={dateTo} min={dateFrom || undefined} disabled={disabled}
           onChange={(e) => onChange({ date_to: e.target.value })} />
-      </label>
+      </label></>}
       <label>
         <span className="fb-lab">Сортировка</span>
         <select className="fb-select" value={sortBy} disabled={disabled}
@@ -48,7 +49,7 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
         onClick={() => onChange({ sort_dir: sortDir === "asc" ? "desc" : "asc" })}>
         {sortDir === "asc" ? "↑" : "↓"}
       </button>
-      {(dateFrom || dateTo) && (
+      {!hideDates && (dateFrom || dateTo) && (
         <button type="button" className="fb-link" disabled={disabled}
           onClick={() => onChange({ date_from: "", date_to: "" })}>Сбросить даты</button>
       )}

@@ -8,7 +8,7 @@ export default function LearningPage() {
   return (
     <main className="chat-shell">
       <header className="chat-header about-header">
-        <h1>Приложение «Солнечный мир»: карточки</h1>
+        <h1>Приложение «Солнечный мир»</h1>
       </header>
       <section className="chat-panel about-text learning-text" aria-label="Обучение">
         <p>

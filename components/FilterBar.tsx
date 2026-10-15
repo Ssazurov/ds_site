@@ -37,9 +37,13 @@ type Props = {
   hide?: FilterField[];
   /** Длинные списки-чипы (напр. домены) — в общую панель рядом с Возрастом/Аудиторией. */
   children?: ReactNode;
+  /** Тема/Категория всегда видны (не под ⚙). */
+  primaryFilters?: boolean;
+  /** Доп. счётчик на ⚙ (напр. период дат). */
+  extraCount?: number;
 };
 
-export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, textSearch, onTextSearch, tree, hide = [], children }: Props) {
+export default function FilterBar({ values, facets, ruLabel, onChange, onClear, disabled, titleQuery, onTitleQuery, textSearch, onTextSearch, tree, hide = [], children, primaryFilters, extraCount = 0 }: Props) {
   const titleMode = onTitleQuery !== undefined;
   const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
@@ -55,7 +59,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
   const cats = withSel("category").filter((c) => lab("category", c).toLowerCase().includes(q.trim().toLowerCase()));
   const active = ALL.filter((k) => values[k] && !hide.includes(k));
   const extra = (values.age ? 1 : 0) + (values.target_audience ? 1 : 0) + (values.doc_type && !hide.includes("doc_type") ? 1 : 0)
-    + (titleMode ? (values.direction ? 1 : 0) + (values.category ? 1 : 0) : 0);
+    + (titleMode && !primaryFilters ? (values.direction ? 1 : 0) + (values.category ? 1 : 0) : 0) + extraCount;
 
   const [tq, setTq] = useState(titleQuery ?? "");
   useEffect(() => {
@@ -171,6 +175,13 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
     <div className="fb" role="search" aria-label="Фильтры">
       {!titleMode && (<><p className="fb-lab">{FILTER_LABELS.direction}</p>{chips("direction")}</>)}
 
+      {titleMode && primaryFilters && (
+        <div className="fb-sort" role="group" aria-label="Тема и категория">
+          <label><span className="fb-lab">{FILTER_LABELS.direction}</span>{select("direction")}</label>
+          <label><span className="fb-lab">{FILTER_LABELS.category}</span>{select("category")}</label>
+        </div>
+      )}
+
       <div className="fb-bar">
         {titleMode ? titleInput : catCombo}
         {titleMode && onTextSearch && process.env.NEXT_PUBLIC_STATIC_EXPORT !== "1" && (
@@ -184,7 +195,7 @@ export default function FilterBar({ values, facets, ruLabel, onChange, onClear, 
 
       {panel && (
         <div className="fb-panel">
-          {titleMode && (
+          {titleMode && !primaryFilters && (
             <>
               <div><p className="fb-lab">{FILTER_LABELS.direction}</p>{select("direction")}</div>
               <div><p className="fb-lab">{FILTER_LABELS.category}</p>{select("category")}</div>
