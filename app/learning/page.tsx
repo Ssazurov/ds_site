@@ -17,7 +17,7 @@ export default function LearningPage() {
           короткие истории от первого лица (например, «Я мою руки»), подбор
           материалов по возрасту ребёнка.
         </p>
-        <p><a className="btn" href="/app/">Открыть приложение в браузере</a></p>
+        <p><a className="btn" href={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/`}>Открыть приложение в браузере</a></p>
 
         <h2>Для родителей</h2>
         <ul>

@@ -37,7 +37,7 @@ export default function RootLayout({
         <div className="project-line">
           <span>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/app/icons/Icon-192.png" alt="" width={16} height={16} />
+            <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/icons/Icon-192.png`} alt="" width={16} height={16} />
             Проект «Солнечный мир»
           </span>
         </div>
