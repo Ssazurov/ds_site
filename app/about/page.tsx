@@ -8,7 +8,7 @@ export default function AboutPage() {
   return (
     <main className="chat-shell">
       <header className="chat-header about-header">
-        <h1>О проекте «Солнечный» мир</h1>
+        <h1>О проекте «Солнечный мир»</h1>
       </header>
 
       <section className="chat-panel about-text" aria-label="О проекте">
@@ -48,10 +48,10 @@ export default function AboutPage() {
 
         <h2>Карта сайта</h2>
         <ul>
+          <li><strong>Статьи</strong> — материалы по направлениям; сайт полезен для всех возрастов и не только для родителей</li>
           <li><strong>Новости</strong> — то, что происходит в солнечном сообществе прямо сейчас</li>
           <AssistantAboutItem />
           <li><strong>Обучение</strong> — веб-приложение для обучения людей с синдромом Дауна</li>
-          <li><strong>Статьи</strong> — материалы по направлениям; сайт полезен для всех возрастов и не только для родителей</li>
           <li><strong>Глоссарий</strong> — термины и сокращения по теме «синдром Дауна»</li>
           <li><strong>Ссылки</strong> — фонды и специалисты, законы, а также сообщества, где можно найти помощь и неформальную поддержку</li>
         </ul>

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import ConsentBanner from "@/components/ConsentBanner";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -34,15 +35,9 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <div className="project-line">
-          <span>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/app/icons/Icon-192.png`} alt="" width={16} height={16} />
-            Проект «Солнечный мир»
-          </span>
-        </div>
         <Header />
         <div className="flex-1">{children}</div>
+        <Footer />
         <ScrollToTop />
         <ConsentBanner />
         <YandexMetrika />

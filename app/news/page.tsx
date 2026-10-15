@@ -153,9 +153,20 @@ function NewsContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]} />
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]} primaryFilters extraCount={(dateFrom ? 1 : 0) + (dateTo ? 1 : 0)}>
+          <div>
+            <p className="fb-lab">с</p>
+            <input type="date" className={dateFrom ? "" : "empty"} value={dateFrom} max={dateTo || undefined} disabled={loading}
+              onChange={(e) => setSortDate({ date_from: e.target.value })} />
+          </div>
+          <div>
+            <p className="fb-lab">по</p>
+            <input type="date" className={dateTo ? "" : "empty"} value={dateTo} min={dateFrom || undefined} disabled={loading}
+              onChange={(e) => setSortDate({ date_to: e.target.value })} />
+          </div>
+        </FilterBar>
 
-        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} />
+        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} hideDates />
 
         <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 
