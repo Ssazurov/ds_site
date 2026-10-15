@@ -17,7 +17,7 @@ export default function Footer() {
       </nav>
       <p className="footer-credit">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/istok_logo.png" alt="" width={16} height={16} /> Исток, 2026 год
+        <img src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/istok_logo.png`} alt="" width={16} height={16} /> Исток, 2026 год
       </p>
     </footer>
   );
