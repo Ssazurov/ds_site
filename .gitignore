@@ -50,3 +50,6 @@ next-env.d.ts
 /.next-static/
 /.next-check/
 tmp/
+
+# Flutter web build (ds_app/tools/publish_story.sh)
+/public/app
