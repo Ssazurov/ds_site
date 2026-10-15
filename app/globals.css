@@ -271,3 +271,12 @@ a.card-cat:hover { text-decoration: underline; }
   .print-card { border: 1px solid #000; }
   @page { size: A4; margin: 12mm; }
 }
+
+.about-text h2, .about-text h3 { font-size: 20px; }
+.project-line span { display: flex; align-items: center; gap: 6px; }
+.footer-credit { width: min(100% - 40px, 1080px); margin: 0 auto; padding: 0 0 14px; display: flex; align-items: center; gap: 6px; color: var(--ink-muted); font-size: 11px; }
+.nav-burger { margin-left: auto; position: relative; display: flex; align-items: center; }
+.nav-burger-trigger { background: none; border: 0; padding: 6px; display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.nav-burger-trigger span { display: block; width: 20px; height: 2px; background: var(--accent-dark); border-radius: 1px; }
+.nav-burger-menu { left: auto; right: 0; }
+.learning-text .btn { display: inline-block; padding: 10px 18px; border-radius: 999px; background: var(--accent); color: var(--on-accent); }
