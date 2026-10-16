@@ -27,8 +27,7 @@ export default {
       const { id, voter, vote } = b;
       const kind = b.kind === "news" ? "news" : "article";
       if (!ID_RE.test(id || "") || !ID_RE.test(voter || "") || ![1, -1, 0].includes(vote)) return json(req, { error: "bad" }, 400);
-      if (vote === 0) await env.DB.prepare("DELETE FROM votes WHERE doc_id=? AND voter=?").bind(id, voter).run();
-      else await env.DB.prepare(
+      await env.DB.prepare(
         "INSERT INTO votes (doc_id,voter,kind,vote,ts) VALUES (?,?,?,?,?) ON CONFLICT(doc_id,voter) DO UPDATE SET vote=excluded.vote, ts=excluded.ts"
       ).bind(id, voter, kind, vote, Date.now()).run();
       return json(req, { ok: true });
