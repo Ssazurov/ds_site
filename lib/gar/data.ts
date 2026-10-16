@@ -92,6 +92,33 @@ const byDateDesc = (a: Rec, b: Rec) =>
   String(b.metadata.publish_date ?? "").localeCompare(String(a.metadata.publish_date ?? "")) ||
   a.title.localeCompare(b.title, "ru");
 
+// --- рейтинг (голоса 👍/👎 из Worker ds-votes) для sort_by=rating в статике ---
+const VOTES_URL = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-votes.sazurov.workers.dev";
+const ratingCache = new Map<string, number>();
+async function loadRatings(ids: string[]): Promise<Map<string, number>> {
+  const need = ids.filter((id) => !ratingCache.has(id));
+  const chunks: string[][] = [];
+  for (let i = 0; i < need.length; i += 60) chunks.push(need.slice(i, i + 60));
+  await Promise.all(chunks.map(async (c) => {
+    try {
+      const d = (await (await fetch(`${VOTES_URL}/counts?ids=${c.join(",")}`)).json()) as Record<string, { up?: number; down?: number }>;
+      for (const id of c) ratingCache.set(id, (d[id]?.up ?? 0) - (d[id]?.down ?? 0));
+    } catch { /* без голосов — рейтинг 0 */ }
+  }));
+  return ratingCache;
+}
+
+async function sortPool(pool: Rec[], by: string, dir: string): Promise<Rec[]> {
+  const asc = dir === "asc";
+  const base = [...pool].sort(byDateDesc); // при равенстве — новее выше
+  if (by === "title") return base.sort((a, b) => a.title.localeCompare(b.title, "ru") * (asc ? 1 : -1));
+  if (by === "rating") {
+    const score = await loadRatings(base.map((r) => r.document_id));
+    return base.sort((a, b) => ((score.get(a.document_id) ?? 0) - (score.get(b.document_id) ?? 0)) * (asc ? 1 : -1));
+  }
+  return asc ? base.reverse() : base; // publish_date / created_at (его нет в статике)
+}
+
 function has(r: Rec, k: string, v: string) {
   const x = r.metadata[k];
   return Array.isArray(x) ? x.includes(v) : x === v;
@@ -117,17 +144,22 @@ async function staticDocuments(p: URLSearchParams): Promise<DocumentsResponse> {
     const allIds = (await Promise.all(searchPromises)).flat();
     pool = allIds.map((id) => byId.get(id)).filter((r): r is Rec => !!r);
   } else {
-    pool = [...allRecs].sort(byDateDesc);
+    pool = await sortPool(allRecs, p.get("sort_by") || "publish_date", p.get("sort_dir") || "desc");
   }
   const sel = Object.fromEntries(FILTER_KEYS.map((k) => [k, p.get(k) || ""]));
   const tag = p.get("tag") || ""; // ds_site#138: фильтр по тегу (ADR-0028 п.6)
   const doms = p.getAll("domain");
+  const dFrom = p.get("date_from") || "";
+  const dTo = p.get("date_to") || "";
+  const dateOf = (r: Rec) => String(r.metadata.publish_date ?? "").slice(0, 10);
   const domOf = (r: Rec) => registrableDomain(r.source_url ?? r.metadata.source_url ?? r.metadata.original_url);
   const matching = (skip?: string) =>
     pool.filter(
       (r) =>
         FILTER_KEYS.every((k) => k === skip || !sel[k] || has(r, k, sel[k])) &&
         (!tag || docTags(r.metadata).includes(tag)) &&
+        (!dFrom || (dateOf(r) !== "" && dateOf(r) >= dFrom)) &&
+        (!dTo || (dateOf(r) !== "" && dateOf(r) <= dTo)) &&
         (skip === "domain" || !doms.length || doms.includes(domOf(r) ?? "")),
     );
   const domCount = new Map<string, number>();
