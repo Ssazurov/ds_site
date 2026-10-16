@@ -22,9 +22,11 @@ type Props = {
   onChange: (patch: Partial<{ date_from: string; date_to: string; sort_by: SortBy; sort_dir: SortDir }>) => void;
   disabled?: boolean;
   hideDates?: boolean;
+  /** Свой набор полей сортировки (напр. «Избранное»). */
+  fields?: { value: SortBy; label: string }[];
 };
 
-export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChange, disabled, hideDates }: Props) {
+export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChange, disabled, hideDates, fields = SORT_FIELDS }: Props) {
   return (
     <div className="fb-sort" role="group" aria-label="Период и сортировка">
       {!hideDates && <><label>
@@ -40,7 +42,7 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
       <label>
         <select className="fb-select" aria-label="Сортировка" value={sortBy} disabled={disabled}
           onChange={(e) => onChange({ sort_by: e.target.value as SortBy })}>
-          {SORT_FIELDS.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
+          {fields.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
         </select>
       </label>
       <button type="button" className="fb-chip" disabled={disabled}
