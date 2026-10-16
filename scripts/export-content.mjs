@@ -24,9 +24,9 @@ function loadRatings() {
   try {
     const out = execFileSync("docker", ["exec", "-i", process.env.GAR_DB_CONTAINER ?? "docker-db_postgres-1",
       "psql", "-U", "postgres", "-d", "gar_core", "-tA", "-F", "|", "-c",
-      "SELECT doc_id, COALESCE(SUM(vote),0) FROM site_votes GROUP BY doc_id"], { encoding: "utf-8", timeout: 20000 });
+      "SELECT doc_id, COALESCE(SUM(vote),0), COUNT(*) FILTER (WHERE vote>0), COUNT(*) FILTER (WHERE vote<0) FROM site_votes GROUP BY doc_id"], { encoding: "utf-8", timeout: 20000 });
     const m = new Map();
-    for (const line of out.split("\n")) { const [id, v] = line.split("|"); if (id && v !== undefined) m.set(id.trim(), Number(v)); }
+    for (const line of out.split("\n")) { const [id, v, up, down] = line.split("|"); if (id && v !== undefined) m.set(id.trim(), { rating: Number(v), up: Number(up), down: Number(down) }); }
     return m;
   } catch (e) {
     console.warn(`рейтинг не выгружен (site_votes недоступна): ${String(e.message ?? e).split("\n")[0]}`);
@@ -91,7 +91,7 @@ async function main() {
       contents[d.document_id] = await content(d.document_id);
     });
     const { items, skipped, dropped, stats } = buildCollection(docs, contents);
-    if (ratings) for (const it of items) it.metadata.rating = ratings.get(it.document_id) ?? 0;
+    if (ratings) for (const it of items) { const r = ratings.get(it.document_id); it.metadata.rating = r?.rating ?? 0; it.metadata.votes_up = r?.up ?? 0; it.metadata.votes_down = r?.down ?? 0; }
     const body = JSON.stringify({ generated_at: generatedAt, count: items.length, items }, null, 2);
     assertNoSecrets(body, [key, gar]);
     await writeFile(path.join(outDir, `${name}.json`), body, "utf-8");

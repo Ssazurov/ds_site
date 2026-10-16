@@ -200,6 +200,16 @@ async function findRec(id: string): Promise<{ rec: Rec; coll: Coll } | null> {
   return null;
 }
 
+/** Запечённые при экспорте счётчики 👍/👎 (запасной вариант, если Worker недоступен). */
+export async function bakedVotes(id: string): Promise<{ up: number; down: number } | null> {
+  if (!IS_STATIC) return null;
+  try {
+    const m = (await findRec(id))?.rec.metadata;
+    if (!m || typeof m.votes_up !== "number") return null;
+    return { up: m.votes_up, down: Number(m.votes_down ?? 0) };
+  } catch { return null; }
+}
+
 export async function getDocumentDetail(id: string): Promise<DocumentDetail> {
   if (IS_STATIC) {
     const f = await findRec(id);
