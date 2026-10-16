@@ -5,6 +5,7 @@
 
 "use client";
 
+import VoteButtons from "@/components/VoteButtons";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
@@ -63,6 +64,7 @@ export default function NewsItemPage({ id }: { id: string }) {
       <header className="chat-header">
         <p className="eyebrow"><Link href="/news">← Новости</Link></p>
         {doc && <h1>{newsTitle(doc)}</h1>}
+        {doc && <VoteButtons id={id} kind="news" />}
       </header>
 
       <section className="chat-panel" aria-label="Материал">

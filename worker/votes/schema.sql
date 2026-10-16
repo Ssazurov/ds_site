@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS votes (
+  doc_id TEXT NOT NULL,
+  voter TEXT NOT NULL,
+  kind TEXT NOT NULL DEFAULT '',
+  vote INTEGER NOT NULL,
+  ts INTEGER NOT NULL,
+  PRIMARY KEY (doc_id, voter)
+);
+CREATE INDEX IF NOT EXISTS votes_ts ON votes (ts);

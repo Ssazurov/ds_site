@@ -1,0 +1,8 @@
+name = "ds-votes"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ds-votes"
+database_id = "b0ea4b03-d2b5-47af-92d0-74d15db15a03"

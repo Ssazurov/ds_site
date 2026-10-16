@@ -12,6 +12,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getDocumentContent, getDocumentDetail, IS_STATIC } from "@/lib/gar/data";
 import type { DocumentDetail } from "@/lib/gar";
+import VoteButtons from "@/components/VoteButtons";
 import FavoriteButton from "@/components/FavoriteButton";
 import AuthorLink, { SourceLink, stripAuthorLine, stripLeadingTitle } from "@/components/AuthorLink";
 import { formatDate, readingMinutes, metaReadingMinutes, readingLabel } from "@/lib/format";
@@ -68,6 +69,7 @@ export default function ArticlePage({ id }: { id: string }) {
       <header className="chat-header">
         <p className="eyebrow"><Link href="/articles">← Статьи</Link></p>
         {doc && <h1>{articleTitle(doc)} <FavoriteButton id={id} title={articleTitle(doc)} /></h1>}
+        {doc && <VoteButtons id={id} kind="article" />}
       </header>
 
       <section className="chat-panel" aria-label="Материал">
