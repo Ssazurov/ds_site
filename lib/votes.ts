@@ -3,7 +3,7 @@
 
 import { bakedVotes } from "./gar/data";
 
-const URL_ = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-votes.sazurov.workers.dev";
+const URL_ = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-9plz.onrender.com";
 
 export type Counts = { up: number; down: number };
 
