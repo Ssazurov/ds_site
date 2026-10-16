@@ -93,7 +93,7 @@ const byDateDesc = (a: Rec, b: Rec) =>
   a.title.localeCompare(b.title, "ru");
 
 // --- рейтинг (голоса 👍/👎 из Worker ds-votes) для sort_by=rating в статике ---
-const VOTES_URL = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-votes.sazurov.workers.dev";
+const VOTES_URL = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-9plz.onrender.com";
 const ratingCache = new Map<string, number>();
 async function loadRatings(ids: string[]): Promise<Map<string, number>> {
   const need = ids.filter((id) => !ratingCache.has(id));
