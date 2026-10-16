@@ -101,9 +101,9 @@ async function loadRatings(ids: string[]): Promise<Map<string, number>> {
   for (let i = 0; i < need.length; i += 60) chunks.push(need.slice(i, i + 60));
   await Promise.all(chunks.map(async (c) => {
     try {
-      const d = (await (await fetch(`${VOTES_URL}/counts?ids=${c.join(",")}`)).json()) as Record<string, { up?: number; down?: number }>;
+      const d = (await (await fetch(`${VOTES_URL}/counts?ids=${c.join(",")}`, { signal: AbortSignal.timeout(4000) })).json()) as Record<string, { up?: number; down?: number }>;
       for (const id of c) ratingCache.set(id, (d[id]?.up ?? 0) - (d[id]?.down ?? 0));
-    } catch { /* без голосов — рейтинг 0 */ }
+    } catch { /* таймаут/сеть: рейтинг 0, не кэшируем — повторим при следующем запросе */ }
   }));
   return ratingCache;
 }
