@@ -7,10 +7,10 @@
 export type SortBy = "publish_date" | "title" | "created_at" | "rating";
 export type SortDir = "asc" | "desc";
 export const SORT_FIELDS: { value: SortBy; label: string }[] = [
-  { value: "publish_date", label: "Дата публикации" },
-  { value: "created_at", label: "Дата добавления" },
-  { value: "title", label: "Название" },
-  { value: "rating", label: "Рейтинг" },
+  { value: "publish_date", label: "По дате публикации" },
+  { value: "created_at", label: "По дате добавления" },
+  { value: "title", label: "По названию" },
+  { value: "rating", label: "По рейтингу" },
 ];
 export const DEFAULT_SORT: { by: SortBy; dir: SortDir } = { by: "publish_date", dir: "desc" };
 
