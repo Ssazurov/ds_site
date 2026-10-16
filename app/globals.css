@@ -287,3 +287,9 @@ a.card-cat:hover { text-decoration: underline; }
 .fb-dates .fb-lab { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; }
 .fb-dates input[type="date"] { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--foreground); font: inherit; font-size: 14px; }
 .fb-dates input[type="date"].empty { color: #9ca3af; }
+@media (max-width: 640px) {
+  .fb-sort[aria-label="Тема и категория"] { flex-wrap: nowrap; }
+  .fb-sort[aria-label="Тема и категория"] label { min-width: 0; flex: 4 1 0; }
+  .fb-sort[aria-label="Тема и категория"] label:last-child { flex: 6 1 0; }
+  .fb-sort[aria-label="Тема и категория"] .fb-select { flex: 1; min-width: 0; width: 100%; max-width: none; }
+}
