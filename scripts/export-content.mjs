@@ -5,6 +5,7 @@
 // виден всем. Ключ и адрес GAR в выходные файлы не попадают.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 import {
   assertNoSecrets, buildCollection, buildLabels, needsContent, setSourcePermissions,
@@ -16,6 +17,22 @@ const COLLECTIONS = {
   glossary: ["glossary_term", "glossary_abb"],
   links: ["link"],
 };
+
+// Рейтинг = сумма 👍(+1)/👎(-1) из gar_core.site_votes (её наполняет worker/votes/sync_votes.py).
+// Недоступна БД — рейтинг не выгружаем (статика откатится на запрос к Worker).
+function loadRatings() {
+  try {
+    const out = execFileSync("docker", ["exec", "-i", process.env.GAR_DB_CONTAINER ?? "docker-db_postgres-1",
+      "psql", "-U", "postgres", "-d", "gar_core", "-tA", "-F", "|", "-c",
+      "SELECT doc_id, COALESCE(SUM(vote),0) FROM site_votes GROUP BY doc_id"], { encoding: "utf-8", timeout: 20000 });
+    const m = new Map();
+    for (const line of out.split("\n")) { const [id, v] = line.split("|"); if (id && v !== undefined) m.set(id.trim(), Number(v)); }
+    return m;
+  } catch (e) {
+    console.warn(`рейтинг не выгружен (site_votes недоступна): ${String(e.message ?? e).split("\n")[0]}`);
+    return null;
+  }
+}
 
 async function main() {
   try { process.loadEnvFile(".env.local"); } catch { /* env уже задан */ }
@@ -61,6 +78,7 @@ async function main() {
   setSourcePermissions(registry);
   console.log(`реестр источников: ${Object.keys(registry).length} доменов`);
 
+  const ratings = loadRatings();
   await mkdir(outDir, { recursive: true });
   const generatedAt = new Date().toISOString();
   const manifest = { generated_at: generatedAt, collections: {} };
@@ -73,6 +91,7 @@ async function main() {
       contents[d.document_id] = await content(d.document_id);
     });
     const { items, skipped, dropped, stats } = buildCollection(docs, contents);
+    if (ratings) for (const it of items) it.metadata.rating = ratings.get(it.document_id) ?? 0;
     const body = JSON.stringify({ generated_at: generatedAt, count: items.length, items }, null, 2);
     assertNoSecrets(body, [key, gar]);
     await writeFile(path.join(outDir, `${name}.json`), body, "utf-8");

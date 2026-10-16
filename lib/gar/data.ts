@@ -113,8 +113,11 @@ async function sortPool(pool: Rec[], by: string, dir: string): Promise<Rec[]> {
   const base = [...pool].sort(byDateDesc); // при равенстве — новее выше
   if (by === "title") return base.sort((a, b) => a.title.localeCompare(b.title, "ru") * (asc ? 1 : -1));
   if (by === "rating") {
-    const score = await loadRatings(base.map((r) => r.document_id));
-    return base.sort((a, b) => ((score.get(a.document_id) ?? 0) - (score.get(b.document_id) ?? 0)) * (asc ? 1 : -1));
+    // рейтинг запечён в JSON при экспорте (metadata.rating); иначе — запрос к Worker
+    const baked = base.some((r) => typeof r.metadata.rating === "number");
+    const score = baked ? null : await loadRatings(base.map((r) => r.document_id));
+    const val = (r: Rec) => (baked ? Number(r.metadata.rating ?? 0) : score?.get(r.document_id) ?? 0);
+    return base.sort((a, b) => (val(a) - val(b)) * (asc ? 1 : -1));
   }
   return asc ? base.reverse() : base; // publish_date / created_at (его нет в статике)
 }
