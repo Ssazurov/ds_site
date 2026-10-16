@@ -14,7 +14,7 @@ import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
 import DomainFilter from "@/components/DomainFilter";
-import SortDateBar, { DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
+import SortDateBar, { DateRangeFields, DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
 import FavoriteButton from "@/components/FavoriteButton";
 import LoadMore from "@/components/LoadMore";
 import TagChips from "@/components/TagChips";
@@ -178,11 +178,12 @@ function ArticlesContent() {
       </header>
 
       <section className="chat-panel" aria-label="Фильтры и список статей">
-        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]}>
+        <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]} primaryFilters extraCount={(dateFrom ? 1 : 0) + (dateTo ? 1 : 0)}>
+          <DateRangeFields dateFrom={dateFrom} dateTo={dateTo} onChange={setSortDate} disabled={loading} />
           <DomainFilter domains={feed.domains} selected={urlDomains} onChange={(next) => updateURL(urlFilters, next)} disabled={loading} />
         </FilterBar>
 
-        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} />
+        <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} hideDates />
 
         <TagFilterNotice tag={tag} onClear={clearTag} disabled={loading} />
 

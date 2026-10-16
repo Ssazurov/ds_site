@@ -37,8 +37,7 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
           onChange={(e) => onChange({ date_to: e.target.value })} />
       </label></>}
       <label>
-        <span className="fb-lab">Сортировка</span>
-        <select className="fb-select" value={sortBy} disabled={disabled}
+        <select className="fb-select" aria-label="Сортировка" value={sortBy} disabled={disabled}
           onChange={(e) => onChange({ sort_by: e.target.value as SortBy })}>
           {SORT_FIELDS.map((f) => <option key={f.value} value={f.value}>{f.label}</option>)}
         </select>
@@ -53,6 +52,26 @@ export default function SortDateBar({ dateFrom, dateTo, sortBy, sortDir, onChang
         <button type="button" className="fb-link" disabled={disabled}
           onClick={() => onChange({ date_from: "", date_to: "" })}>Сбросить даты</button>
       )}
+    </div>
+  );
+}
+
+export function DateRangeFields({ dateFrom, dateTo, onChange, disabled }: {
+  dateFrom: string; dateTo: string; disabled?: boolean;
+  onChange: (patch: { date_from?: string; date_to?: string }) => void;
+}) {
+  return (
+    <div className="fb-dates">
+      <label>
+        <span className="fb-lab">с</span>
+        <input type="date" className={dateFrom ? "" : "empty"} value={dateFrom} max={dateTo || undefined} disabled={disabled}
+          onChange={(e) => onChange({ date_from: e.target.value })} />
+      </label>
+      <label>
+        <span className="fb-lab">по</span>
+        <input type="date" className={dateTo ? "" : "empty"} value={dateTo} min={dateFrom || undefined} disabled={disabled}
+          onChange={(e) => onChange({ date_to: e.target.value })} />
+      </label>
     </div>
   );
 }

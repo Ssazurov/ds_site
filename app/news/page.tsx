@@ -18,7 +18,7 @@ import { useSearchParams } from "next/navigation";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
 import FilterBar from "@/components/FilterBar";
-import SortDateBar, { DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
+import SortDateBar, { DateRangeFields, DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
 import LoadMore from "@/components/LoadMore";
 import TagChips from "@/components/TagChips";
 import TagFilterNotice from "@/components/TagFilterNotice";
@@ -154,16 +154,7 @@ function NewsContent() {
 
       <section className="chat-panel" aria-label="Фильтры и список новостей">
         <FilterBar values={urlFilters} facets={feed.facets} ruLabel={ruLabel} onChange={setFilter} onClear={clearFilters} disabled={loading} tree={tree} titleQuery={q} onTitleQuery={setQuery} textSearch={textScope} onTextSearch={setTextScope} hide={["doc_type"]} primaryFilters extraCount={(dateFrom ? 1 : 0) + (dateTo ? 1 : 0)}>
-          <div>
-            <p className="fb-lab">с</p>
-            <input type="date" className={dateFrom ? "" : "empty"} value={dateFrom} max={dateTo || undefined} disabled={loading}
-              onChange={(e) => setSortDate({ date_from: e.target.value })} />
-          </div>
-          <div>
-            <p className="fb-lab">по</p>
-            <input type="date" className={dateTo ? "" : "empty"} value={dateTo} min={dateFrom || undefined} disabled={loading}
-              onChange={(e) => setSortDate({ date_to: e.target.value })} />
-          </div>
+          <DateRangeFields dateFrom={dateFrom} dateTo={dateTo} onChange={setSortDate} disabled={loading} />
         </FilterBar>
 
         <SortDateBar dateFrom={dateFrom} dateTo={dateTo} sortBy={sortBy} sortDir={sortDir} onChange={setSortDate} disabled={loading} hideDates />
