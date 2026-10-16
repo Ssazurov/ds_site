@@ -296,4 +296,5 @@ a.card-cat:hover { text-decoration: underline; }
 
 .vote { display: inline-flex; gap: 6px; }
 .vote button { border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--foreground); padding: 3px 10px; font: inherit; font-size: 14px; }
-.vote button.on { background: var(--acbg); border-color: var(--accent); }
+.vote button.on { background: var(--acbg); border-color: #d98e04; color: #d98e04; }
+.vote button { display: inline-flex; align-items: center; gap: 4px; }
