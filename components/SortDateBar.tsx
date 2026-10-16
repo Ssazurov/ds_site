@@ -4,12 +4,13 @@
 
 "use client";
 
-export type SortBy = "publish_date" | "title" | "created_at";
+export type SortBy = "publish_date" | "title" | "created_at" | "rating";
 export type SortDir = "asc" | "desc";
 export const SORT_FIELDS: { value: SortBy; label: string }[] = [
   { value: "publish_date", label: "Дата публикации" },
   { value: "created_at", label: "Дата добавления" },
   { value: "title", label: "Название" },
+  { value: "rating", label: "Рейтинг" },
 ];
 export const DEFAULT_SORT: { by: SortBy; dir: SortDir } = { by: "publish_date", dir: "desc" };
 
