@@ -148,7 +148,7 @@ a.card-cat:hover { text-decoration: underline; }
 .fb-chip { border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--foreground); padding: 6px 14px; font: inherit; font-size: 14px; font-weight: 500; }
 .fb-chip.on { background: var(--accent); border-color: var(--accent); }
 .fb-chip.act { background: var(--acbg); border-color: transparent; color: var(--accent-dark); }
-.fb-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 10px; }
+.fb-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 4px; }
 .fb-combo { position: relative; flex: 1; min-width: 240px; }
 .fb-in { display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); box-shadow: var(--sh); padding: 0 12px; }
 .fb-in input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--foreground); font: inherit; padding: 11px 0; }
@@ -163,7 +163,7 @@ a.card-cat:hover { text-decoration: underline; }
 .fb-gear { position: relative; min-width: 44px; min-height: 44px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); box-shadow: var(--sh); color: var(--foreground); font-size: 18px; }
 .fb-gear b { position: absolute; top: -6px; right: -6px; min-width: 18px; height: 18px; border-radius: 999px; background: var(--accent); color: var(--on-accent); font-size: 11px; line-height: 18px; }
 .fb-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; margin-bottom: 10px; padding: 16px; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--sh); }
-.fb-active { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 30px; color: var(--ink-muted); font-size: 14px; }
+.fb-active { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 0; color: var(--ink-muted); font-size: 14px; }
 .fb-link { border: 0; background: none; color: var(--accent-dark); font: inherit; text-decoration: underline; }
 .fb-total { margin: 0 0 14px; color: var(--ink-muted); font-size: 14px; }
 /* ds_site#129: кнопка «Показать ещё» + счётчик показанного под списком карточек */
@@ -228,6 +228,7 @@ a.card-cat:hover { text-decoration: underline; }
 
 /* ds_site: период дат + сортировка (всегда видимая строка) */
 .fb-sort { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; margin: 6px 0 12px; }
+.fb-sort[aria-label="Период и сортировка"] { margin-top: 6px; }
 .fb-sort label { display: flex; align-items: center; gap: 8px; }
 .fb-sort .fb-lab { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; }
 .fb-sort input[type="date"] { padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--foreground); font: inherit; font-size: 14px; }
@@ -296,4 +297,5 @@ a.card-cat:hover { text-decoration: underline; }
 
 .vote { display: inline-flex; gap: 6px; }
 .vote button { border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--foreground); padding: 3px 10px; font: inherit; font-size: 14px; }
-.vote button.on { background: var(--acbg); border-color: var(--accent); }
+.vote button.on { background: var(--acbg); border-color: #d98e04; color: #d98e04; }
+.vote button { display: inline-flex; align-items: center; gap: 4px; }
