@@ -12,6 +12,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { DocumentSummary, FilterKey } from "@/lib/gar";
 import { useMetadataLabels } from "@/lib/gar/labels";
+import VoteButtons from "@/components/VoteButtons";
 import FilterBar from "@/components/FilterBar";
 import DomainFilter from "@/components/DomainFilter";
 import SortDateBar, { DateRangeFields, DEFAULT_SORT, type SortBy, type SortDir } from "@/components/SortDateBar";
@@ -235,6 +236,7 @@ function ArticlesContent() {
                     {textScope && <Snippet text={doc.snippet} q={q} />}
                     <div className="card-foot">
                       <span>{when}</span>
+                      <VoteButtons id={doc.document_id} kind="article" />
                       {url && (
                         <a href={url} target="_blank" rel="noopener nofollow">
                           {isDigest ? "Полный текст на сайте источника" : "Источник"} <span aria-hidden="true">↗</span>

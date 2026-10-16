@@ -293,3 +293,7 @@ a.card-cat:hover { text-decoration: underline; }
   .fb-sort[aria-label="Тема и категория"] label:last-child { flex: 6 1 0; }
   .fb-sort[aria-label="Тема и категория"] .fb-select { flex: 1; min-width: 0; width: 100%; max-width: none; }
 }
+
+.vote { display: inline-flex; gap: 6px; }
+.vote button { border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--foreground); padding: 3px 10px; font: inherit; font-size: 14px; }
+.vote button.on { background: var(--acbg); border-color: var(--accent); }
