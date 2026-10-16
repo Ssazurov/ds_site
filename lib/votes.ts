@@ -1,6 +1,8 @@
 // lib/votes.ts — голоса 👍/👎 через Worker ds-votes (Cloudflare). Один голос на браузер
 // (voter id и свой выбор — в localStorage). Счётчики запрашиваются пачкой за тик.
 
+import { bakedVotes } from "./gar/data";
+
 const URL_ = process.env.NEXT_PUBLIC_VOTES_URL || "https://ds-votes.sazurov.workers.dev";
 
 export type Counts = { up: number; down: number };
@@ -29,11 +31,16 @@ export function fetchCounts(id: string): Promise<Counts> {
     setTimeout(async () => {
       const batch = queue; queue = [];
       let data: Record<string, Counts> = {};
+      let ok = false;
       try {
         const ids = [...new Set(batch.map((b) => b.id))].slice(0, 60).join(",");
-        data = await (await fetch(`${URL_}/counts?ids=${ids}`)).json();
-      } catch { /* ignore */ }
-      batch.forEach((b) => b.res(data[b.id] ?? { up: 0, down: 0 }));
+        data = await (await fetch(`${URL_}/counts?ids=${ids}`, { signal: AbortSignal.timeout(4000) })).json();
+        ok = true;
+      } catch { /* Worker недоступен (напр. workers.dev в мобильной сети) — берём запечённые счётчики */ }
+      batch.forEach((b) => {
+        if (ok) b.res(data[b.id] ?? { up: 0, down: 0 });
+        else bakedVotes(b.id).then((v) => b.res(v ?? { up: 0, down: 0 }));
+      });
     }, 30);
   });
 }
