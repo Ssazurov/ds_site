@@ -23,7 +23,19 @@ export default async function DocPage({
     <main className="chat-shell">
       <section className="chat-panel about-text" aria-label={doc.title}>
         <p><Link href="/docs">← Документация</Link></p>
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{doc.body}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm]}
+          components={{
+            a: ({ href, children }) =>
+              href && /^[\w-]+\.md$/.test(href) ? (
+                <Link href={`/docs/${href.replace(/\.md$/, "")}`}>{children}</Link>
+              ) : (
+                <a href={href}>{children}</a>
+              ),
+          }}
+        >
+          {doc.body}
+        </ReactMarkdown>
       </section>
     </main>
   );
