@@ -22,7 +22,7 @@
 1. Задача в GitHub Project (Backlog → In progress → Done).
 2. Ветка от `main`, Pull Request с `Closes #N`.
 3. Автоматические проверки: `flutter analyze`, `flutter test`.
-4. Слияние (squash), сборка релиза, подпись, публикация ([док. 04](04-ustanovka-i-obnovlenie-rustore.md)).
+4. Слияние (squash), сборка релиза, подпись, публикация ([Руководство по установке и обновлению](04-ustanovka-i-obnovlenie-rustore.md)).
 5. Проверка на тестовом устройстве (запуск, карточки, озвучка, профили, «Для родителей»).
 
 ## 6. Обновление контента
