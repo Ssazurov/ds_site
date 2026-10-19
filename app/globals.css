@@ -299,3 +299,5 @@ a.card-cat:hover { text-decoration: underline; }
 .vote button { border: 1px solid var(--line); border-radius: 999px; background: var(--card); color: var(--foreground); padding: 3px 10px; font: inherit; font-size: 14px; }
 .vote button.on { background: var(--acbg); border-color: #d98e04; color: #d98e04; }
 .vote button { display: inline-flex; align-items: center; gap: 4px; }
+
+.about-text h1 { margin: 8px 0 18px; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 700; line-height: 1.2; color: var(--foreground); }
