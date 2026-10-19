@@ -22,6 +22,7 @@ const MENU_ITEMS = [
   { href: "/words", label: "Слова" },
   { href: "/links", label: "Ссылки" },
   { href: "/favorites", label: "Избранное" },
+  { href: "/docs", label: "Документация" },
   { href: "/about", label: "О нас" },
 ];
 
