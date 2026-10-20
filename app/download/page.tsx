@@ -16,7 +16,7 @@ export default function DownloadPage() {
       <section className="chat-panel about-text" aria-label="Актуальная версия">
         {cur ? (
           <>
-            <h2>Версия {cur.version}</h2>
+            <h2>Версия {cur.version}{cur.build ? ` (${cur.build})` : ""}</h2>
             <p>
               {cur.date}
               {cur.size_mb ? ` · ${cur.size_mb} МБ` : ""} · Android (APK)

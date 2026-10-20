@@ -12,6 +12,7 @@ export type Release = {
   apk_url?: string;
   size_mb?: number;
   sha256?: string;
+  build?: number;
 };
 
 export function listReleases(): Release[] {

@@ -7,7 +7,8 @@
       "notes": "- Первая публичная версия APK со всеми функциями\n- Добавлена страница «Скачать» и версия APK (ds_site#225)\n",
       "size_mb": 64.0,
       "sha256": "aec1ee230b5aa5747d0779e3469bf58db56aa9031bbf6c2bab1a5ffec11f4432",
-      "apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.0/ds_app-0.23.0.apk"
+      "apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.0/ds_app-0.23.0.apk",
+      "build": 3
     }
   ]
 }
