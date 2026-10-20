@@ -23,6 +23,7 @@ const MENU_ITEMS = [
   { href: "/links", label: "Ссылки" },
   { href: "/favorites", label: "Избранное" },
   { href: "/docs", label: "Документация" },
+  { href: "/download", label: "Скачать" },
   { href: "/about", label: "О нас" },
 ];
 

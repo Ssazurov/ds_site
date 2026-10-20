@@ -301,3 +301,7 @@ a.card-cat:hover { text-decoration: underline; }
 .vote button { display: inline-flex; align-items: center; gap: 4px; }
 
 .about-text h1 { margin: 8px 0 18px; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 700; line-height: 1.2; color: var(--foreground); }
+
+/* ds_site#225: кнопка «Скачать APK» */
+.dl-btn { display: inline-block; padding: .6rem 1.2rem; border-radius: .6rem; background: var(--accent, #2f6f4f); color: #fff !important; text-decoration: none; font-weight: 600; }
+.dl-btn:hover { opacity: .9; }
