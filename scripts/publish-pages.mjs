@@ -5,7 +5,7 @@
 //   --skip-export  не ходить в GAR, взять готовый data/export
 //   --dry-run      собрать и проверить, но не пушить
 import { spawnSync } from "node:child_process";
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { assertNoSecrets } from "./export-lib.mjs";
@@ -76,6 +76,11 @@ function main() {
   };
   run(process.execPath, ["node_modules/next/dist/bin/next", "build"], { env });
   scanForSecrets(OUT);
+  // web-приложение (public/app) собрано под локальный /app/; на Pages оно живёт в /ds_site/app/
+  const appIdx = path.join(OUT, "app", "index.html");
+  if (existsSync(appIdx)) {
+    writeFileSync(appIdx, readFileSync(appIdx, "utf-8").replace('<base href="/app/">', `<base href="${BASE_PATH}/app/">`));
+  }
   writeFileSync(path.join(OUT, ".nojekyll"), ""); // иначе Pages (Jekyll) игнорирует _next/
 
   if (args.has("--dry-run")) return console.log(`dry-run: сборка в ${OUT}/, публикация пропущена`);
