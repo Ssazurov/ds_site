@@ -11,7 +11,8 @@
     "export:words": "node scripts/export-words.mjs",
     "test:export": "node --test scripts/export-lib.test.mjs lib/favorites-core.test.mjs",
     "build:static": "node scripts/publish-pages.mjs --skip-export --dry-run",
-    "publish:pages": "node scripts/publish-pages.mjs"
+    "publish:pages": "node scripts/publish-pages.mjs",
+    "publish:release": "node scripts/publish-pages.mjs --release-only"
   },
   "dependencies": {
     "minisearch": "^7.2.0",

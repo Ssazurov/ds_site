@@ -61,7 +61,40 @@ function ensurePages(repo) {
   console.log("Pages включены (source: gh-pages)");
 }
 
+// Только релиз (ds_site#230): заменить data/releases.json в существующей gh-pages обычным коммитом.
+function releaseOnly() {
+  const src = "content/releases/releases.json";
+  const body = readFileSync(src, "utf-8");
+  JSON.parse(body);
+  assertNoSecrets(body, [envLocal().GAR_PUBLIC_API_KEY, envLocal().GAR_URL, envLocal().NEXT_PUBLIC_GAR_DATASET_ID]);
+  const remote = out("git", ["remote", "get-url", "origin"]);
+  const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
+  const name = soft("user.name") || "ds-site-publisher";
+  const email = soft("user.email") || "noreply@users.noreply.github.com";
+  const tmp = mkdtempSync(path.join(os.tmpdir(), "ds-pages-rel-"));
+  try {
+    const c = spawnSync("git", ["clone", "-q", "--depth", "1", "-b", BRANCH, remote, tmp], { stdio: "inherit" });
+    if (c.status !== 0) throw new Error("ветка gh-pages не найдена: сначала полная публикация (npm run publish:pages)");
+    const git = (...a) => run("git", ["-C", tmp, ...a]);
+    const dst = path.join(tmp, "data", "releases.json");
+    if (existsSync(dst) && readFileSync(dst, "utf-8") === body) return console.log("releases.json без изменений, публикация пропущена");
+    writeFileSync(dst, body);
+    git("add", "data/releases.json");
+    git("-c", `user.name=${name}`, "-c", `user.email=${email}`, "commit", "-q", "-m", `release ${new Date().toISOString()}`);
+    for (let i = 0; ; i++) {
+      const p = spawnSync("git", ["-C", tmp, "push", "origin", BRANCH], { stdio: "inherit" });
+      if (p.status === 0) break;
+      if (i >= 2) throw new Error("push gh-pages не удался");
+      git("pull", "--rebase", "origin", BRANCH);
+    }
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
+  console.log("релиз опубликован (только releases.json)");
+}
+
 function main() {
+  if (args.has("--release-only")) return releaseOnly();
   if (!args.has("--skip-export")) run(process.execPath, ["scripts/export-content.mjs"]);
   run(process.execPath, ["scripts/prepare-static.mjs"]);
 
