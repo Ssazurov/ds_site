@@ -181,3 +181,9 @@
 - Меню: «Скачать» после «Документации»; `/download` (актуальная версия, APK, sha256, описание, список прошлых) и `/download/[version]` (только описание). Данные: `content/releases/releases.json` (пишет ds_app/tools/release.py), `lib/releases.ts`, стиль `.dl-btn` в globals.css.
 - APK лежит в GitHub Release `Ssazurov/ds_app_site` (ADR-0002 в ds_app). Выпуск — блок «Управление релизом» в ds_search «Пересборка»; ds-site пересобирается воркером.
 - Проверка: tsc чистый; PR #226 смержен.
+
+## 2026-10-22 — Issue #230: релиз на Pages без пересборки
+- /download/ — клиентская оболочка (DownloadView.tsx), /download/[version] удалён → /download/?v=X.Y.Z; /api/releases для внутреннего режима; prepare-static кладёт eleases.json в public/data/.
+- scripts/publish-pages.mjs --release-only (
+pm run publish:release), тест scripts/release-only.test.mjs. ADR-0018 дополнен.
+- Проверка (docker node:22): tsc чисто, uild:static ок, тесты release-only 2/2.

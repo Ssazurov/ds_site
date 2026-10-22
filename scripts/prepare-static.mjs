@@ -2,7 +2,7 @@
 // data/export/*.json -> public/data/ (Next копирует public/ в статический вывод).
 // Списки без полного текста; полный текст — отдельными файлами <coll>/<id>.json,
 // чтобы список не тянул все статьи. public/data в .gitignore.
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { splitCollection } from "./export-lib.mjs";
@@ -24,6 +24,7 @@ export async function prepare(src = "data/export", dst = "public/data") {
     }
     console.log(`${name}: ${list.length} в списке, ${ids.length} с полным текстом`);
   }
+  await copyFile("content/releases/releases.json", path.join(dst, "releases.json")); // ds_site#230
   await writeFile(path.join(dst, "labels.json"), await readFile(path.join(src, "labels.json")));
 }
 
