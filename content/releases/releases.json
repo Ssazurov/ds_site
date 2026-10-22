@@ -9,6 +9,16 @@
       "sha256": "aec1ee230b5aa5747d0779e3469bf58db56aa9031bbf6c2bab1a5ffec11f4432",
       "apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.0/ds_app-0.23.0.apk",
       "build": 3
+    },
+    {
+      "version": "0.23.1",
+      "date": "2026-10-21",
+      "released_at": "2026-10-21T16:26:56Z",
+      "notes": "- Новые слова: 1 (сущ. 1)\n- Обновлены 65 картинок к словам\n",
+      "size_mb": 64.0,
+      "sha256": "7bd93235d68478a1f904ce77c8d8f6694d025eb254e9aa7fe2eea365dc1cff42",
+      "apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.1/ds_app-0.23.1.apk",
+      "build": 7
     }
   ]
 }
