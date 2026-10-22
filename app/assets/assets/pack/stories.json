@@ -1,0 +1,166 @@
+{
+ "schema_version": 1,
+ "id": "ds_stories",
+ "version": 1,
+ "default_lang": "ru",
+ "langs": [
+  "ru"
+ ],
+ "categories": [
+  {
+   "id": "routine",
+   "order": 6,
+   "title": {
+    "ru": "Режим дня"
+   }
+  }
+ ],
+ "stories": [
+  {
+   "id": "wash_hands3",
+   "category": "routine",
+   "order": 99,
+   "title": {
+    "ru": "Я мою руки"
+   },
+   "tags": [
+    "home"
+   ],
+   "level": 1,
+   "steps": [
+    {
+     "id": "s1",
+     "order": 1,
+     "text": {
+      "ru": "Я подхожу к ванной комнате и включаю свет."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s1.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s1_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s2",
+     "order": 2,
+     "text": {
+      "ru": "Вхожу в ванную."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s2.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s2_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s3",
+     "order": 3,
+     "text": {
+      "ru": "Включаю воду."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s3.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s3_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s4",
+     "order": 4,
+     "text": {
+      "ru": "Беру мыло и намыливаю им руки."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s4.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s4_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s5",
+     "order": 5,
+     "text": {
+      "ru": "Хорошо смываю мыло водой и закрываю кран."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s5.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s5_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s6",
+     "order": 6,
+     "text": {
+      "ru": "Вытираю руки полотенцем."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s6.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s6_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s7",
+     "order": 7,
+     "text": {
+      "ru": "Выхожу из ванной комнаты и выключаю свет."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/wash_hands3/s7.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/wash_hands3/s7_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    }
+   ],
+   "finale": {
+    "audio": {
+     "ru": "audio/ru/stories/wash_hands3/fin.mp3"
+    },
+    "sfx": "audio/ru/stories/wash_hands3/sfx.mp3"
+   }
+  }
+ ]
+}
