@@ -1,0 +1,50 @@
+name: PR Preview
+
+# Статическая сборка внешнего сайта на каждый PR (без GAR: контент пустой, проверяются вёрстка/роуты).
+# Результат — артефакт site-preview-<PR> (7 дней): распаковать, `npx serve out` и открыть /ds_site/.
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: Номер PR (для имени артефакта)
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:export
+      - name: Заглушка выгрузки (GAR недоступен в CI)
+        run: |
+          mkdir -p data/export
+          for n in articles news glossary links; do echo '{"generated_at":null,"items":[]}' > data/export/$n.json; done
+          echo '{}' > data/export/labels.json
+          node scripts/prepare-static.mjs
+      - name: Статическая сборка
+        env:
+          NEXT_PUBLIC_STATIC_EXPORT: "1"
+          NEXT_DIST_DIR: .next-static
+          NEXT_PUBLIC_BASE_PATH: /ds_site
+          NEXT_PUBLIC_ASSISTANT_ENABLED: "0"
+          NEXT_PUBLIC_GAR_DATASET_ID: static
+        run: npx next build
+      - name: Упаковать под /ds_site/
+        run: |
+          mkdir -p out/ds_site
+          cp -r .next-static/. out/ds_site/
+          touch out/ds_site/.nojekyll
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-preview-${{ github.event.pull_request.number || inputs.pr || github.run_id }}
+          path: out
+          retention-days: 7
