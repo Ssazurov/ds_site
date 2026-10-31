@@ -29,6 +29,17 @@
       "sha256": "af59e71cdc9d78bcc2a8a6590ae9e1248122f3bc64bddf14520bc9b21d7789cb",
       "apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.2/ds_app-0.23.2.apk",
       "build": 18
+    },
+    {
+      "version": "0.23.3",
+      "date": "2026-10-31",
+      "released_at": "2026-10-31T06:35:26Z",
+      "notes": "* новая игра \"Эмоции\" (выбор из 2 вариантов картинок)\n* новый вид кнопок главного экрана\n",
+      "size_mb": 75.5,
+      "sha256": "b02ba3f5269e1475998abefee1f7b435992b503cde2148bdd6ce8822588c4c6b",
+      "apk_url": "/download/ds_app-0.23.3.apk",
+      "build": 24,
+      "rustore": true
     }
   ]
 }
