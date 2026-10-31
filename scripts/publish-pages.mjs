@@ -64,8 +64,10 @@ function ensurePages(repo) {
 // Только релиз (ds_site#230): заменить data/releases.json в существующей gh-pages обычным коммитом.
 function releaseOnly() {
   const src = "content/releases/releases.json";
-  const body = readFileSync(src, "utf-8");
-  JSON.parse(body);
+  const rel = JSON.parse(readFileSync(src, "utf-8"));
+  // для GitHub Pages локальную ссылку на APK заменяет gh_apk_url (если APK ещё не загружен на GitHub — ссылки нет)
+  for (const r of rel.releases) if (r.gh_apk_url) { r.apk_url = r.gh_apk_url; delete r.gh_apk_url; } else if (r.apk_url?.startsWith("/")) delete r.apk_url;
+  const body = JSON.stringify(rel, null, 2) + "\n";
   assertNoSecrets(body, [envLocal().GAR_PUBLIC_API_KEY, envLocal().GAR_URL, envLocal().NEXT_PUBLIC_GAR_DATASET_ID]);
   const remote = out("git", ["remote", "get-url", "origin"]);
   const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
