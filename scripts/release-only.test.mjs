@@ -45,7 +45,7 @@ test("release-only: обновляет только data/releases.json обыч�
   assert.equal(r.status, 0, r.stdout + r.stderr);
   const chk = mkdtempSync(path.join(os.tmpdir(), "rel-chk-"));
   git(chk, "clone", "-q", "-b", "gh-pages", bare, "c");
-  assert.equal(readFileSync(path.join(chk, "c", "data", "releases.json"), "utf-8"), body);
+  assert.deepEqual(JSON.parse(readFileSync(path.join(chk, "c", "data", "releases.json"), "utf-8")), JSON.parse(body));
   assert.equal(readFileSync(path.join(chk, "c", "index.html"), "utf-8"), "old-site");
   assert.equal(git(path.join(chk, "c"), "rev-list", "--count", "HEAD"), "2"); // история не затёрта
 });

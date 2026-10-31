@@ -24,7 +24,10 @@ export async function prepare(src = "data/export", dst = "public/data") {
     }
     console.log(`${name}: ${list.length} в списке, ${ids.length} с полным текстом`);
   }
-  await copyFile("content/releases/releases.json", path.join(dst, "releases.json")); // ds_site#230
+  // ds_site#230; для GitHub Pages локальную ссылку на APK (/download/...) заменяет gh_apk_url
+  const rel = JSON.parse(await readFile("content/releases/releases.json", "utf-8"));
+  for (const r of rel.releases) if (r.gh_apk_url) { r.apk_url = r.gh_apk_url; delete r.gh_apk_url; } else if (r.apk_url?.startsWith("/")) delete r.apk_url;
+  await writeFile(path.join(dst, "releases.json"), JSON.stringify(rel, null, 2) + "\n");
   await writeFile(path.join(dst, "labels.json"), await readFile(path.join(src, "labels.json")));
 }
 
