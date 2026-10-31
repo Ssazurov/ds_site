@@ -1,0 +1,74 @@
+{
+ "sets": [
+  {
+   "title": "радостный - грустный",
+   "template": "Выбери {эмоция}",
+   "pair": [
+    {
+     "name": "веселый",
+     "img": "assets/pack/emotions/veselyy_grustnyy_0_d542f337.webp"
+    },
+    {
+     "name": "грустный",
+     "img": "assets/pack/emotions/veselyy_grustnyy_1_784544f9.webp"
+    }
+   ]
+  },
+  {
+   "title": "удивленный - испуганный",
+   "template": "Выбери {эмоция}",
+   "pair": [
+    {
+     "name": "удивленный",
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_0_8e9fff30.webp"
+    },
+    {
+     "name": "испуганный",
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_1_af360533.webp"
+    }
+   ]
+  },
+  {
+   "title": "веселый - сердитый",
+   "template": "Выбери {эмоция}",
+   "pair": [
+    {
+     "name": "веселый",
+     "img": "assets/pack/emotions/veselyy_serdityy_0_c0fd59f3.webp"
+    },
+    {
+     "name": "сердитый",
+     "img": "assets/pack/emotions/veselyy_serdityy_1_b01fff63.webp"
+    }
+   ]
+  },
+  {
+   "title": "грустный - сердитый",
+   "template": "Выбери {эмоция}",
+   "pair": [
+    {
+     "name": "грустный",
+     "img": "assets/pack/emotions/grustnyy_serdityy_0_784544f9.webp"
+    },
+    {
+     "name": "сердитый",
+     "img": "assets/pack/images/angry.webp"
+    }
+   ]
+  },
+  {
+   "title": "уставший - веселый",
+   "template": "Выбери {эмоция}",
+   "pair": [
+    {
+     "name": "уставший",
+     "img": "assets/pack/emotions/ustavshiy_veselyy_0_c86b938f.webp"
+    },
+    {
+     "name": "веселый",
+     "img": "assets/pack/emotions/ustavshiy_veselyy_1_9ea00d52.webp"
+    }
+   ]
+  }
+ ]
+}

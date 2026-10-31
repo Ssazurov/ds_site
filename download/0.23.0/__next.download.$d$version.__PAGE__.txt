@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[22016,["/ds_site/_next/static/chunks/1hbj7rf75n4-o.js","/ds_site/_next/static/chunks/2im7c515bo69p.js"],""]
+3:I[97367,["/ds_site/_next/static/chunks/1hbj7rf75n4-o.js","/ds_site/_next/static/chunks/2im7c515bo69p.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"rsc":["$","$1","c",{"children":[["$","main",null,{"className":"chat-shell","children":["$","section",null,{"className":"chat-panel about-text","aria-label":"Версия 0.23.0","children":[["$","p",null,{"children":["$","$L2",null,{"href":"/download","children":"← Скачать"}]}],["$","h1",null,{"children":["Версия ","0.23.0"]}],["$","p",null,{"children":"2026-10-20"}],[["$","ul","ul-0",{"children":["\n",["$","li","li-0",{"children":"Первая публичная версия APK со всеми функциями"}],"\n",["$","li","li-1",{"children":"Добавлена страница «Скачать» и версия APK (ds_site#225)"}],"\n"]}]]]}]}],null,["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"IzhcPnWRZbka1crtrEXff"}
+5:null

@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Farticles\u002F[id]","\u002Fdocs\u002F[slug]","\u002Fdownload\u002F[version]","\u002Fnews\u002F[id]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()

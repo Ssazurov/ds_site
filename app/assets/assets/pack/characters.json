@@ -1,0 +1,51 @@
+{
+ "schema_version": 1,
+ "characters": [
+  {
+   "id": "hero",
+   "kind": "hero",
+   "name": {
+    "ru": "Герой"
+   },
+   "outfits": [
+    {
+     "id": "sarafan_pink",
+     "title": {
+      "ru": "Сарафан розовый"
+     }
+    },
+    {
+     "id": "sarafan_check",
+     "title": {
+      "ru": "Сарафан в клетку"
+     }
+    },
+    {
+     "id": "home",
+     "title": {
+      "ru": "Дома"
+     }
+    },
+    {
+     "id": "outdoor",
+     "title": {
+      "ru": "На улице"
+     }
+    },
+    {
+     "id": "pajamas",
+     "title": {
+      "ru": "Пижама"
+     }
+    },
+    {
+     "id": "vk01",
+     "title": {
+      "ru": "Пост 01"
+     }
+    }
+   ],
+   "default_outfit": "home"
+  }
+ ]
+}
