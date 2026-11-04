@@ -12,7 +12,7 @@ import {
 } from "./export-lib.mjs";
 
 const COLLECTIONS = {
-  articles: ["article"],
+  articles: ["article", "digest"],
   news: ["news"],
   glossary: ["glossary_term", "glossary_abb"],
   links: ["link"],
