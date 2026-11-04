@@ -8,6 +8,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
+import { useSession } from "@/lib/cabinet-auth";
 import "@/lib/scroll-restore"; // ds_site#167: регистрирует popstate-флаг раньше монтирования списков
 
 const NAV_ITEMS = [
@@ -34,9 +35,11 @@ function isActiveHref(pathname: string | null, href: string) {
 export default function Header() {
   const pathname = usePathname();
   const assistantEnabled = useAssistantEnabled() === true;
+  const { user } = useSession();
+  const menuItems = [...MENU_ITEMS, user ? { href: "/cabinet", label: "Кабинет" } : { href: "/login", label: "Войти" }];
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const menuActive = MENU_ITEMS.some((item) => isActiveHref(pathname, item.href));
+  const menuActive = menuItems.some((item) => isActiveHref(pathname, item.href));
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
@@ -76,7 +79,7 @@ export default function Header() {
           </button>
           {menuOpen && (
             <div className="nav-library-menu nav-burger-menu" role="menu">
-              {MENU_ITEMS.map((item) => (
+              {menuItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
