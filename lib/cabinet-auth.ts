@@ -17,6 +17,8 @@ export const CABINET_MENU: Record<string, MenuItem[]> = {
   admin: [
     { href: "/cabinet/users", label: "Пользователи" },
     { href: "/cabinet/profiles", label: "Профили" },
+    { href: "/cabinet/links", label: "Связи" },
+    { href: "/cabinet/roles", label: "Роли" },
   ],
   specialist: [
     { href: "/cabinet/clients", label: "Подопечные" },
