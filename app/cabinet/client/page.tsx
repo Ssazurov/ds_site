@@ -64,6 +64,11 @@ function ClientView() {
           <p className="mb-6">
             Код профиля: <span className="font-mono">{client.code}</span>
           </p>
+          <nav aria-label="Разделы подопечного" className="mb-6 flex flex-wrap gap-4">
+            <Link href={`/cabinet/client/settings/?id=${id}`}>Настройки</Link>
+            <Link href={`/cabinet/client/assignments/?id=${id}`}>Задания</Link>
+            <Link href={`/cabinet/reports/?id=${id}`}>Результаты</Link>
+          </nav>
           <h2 className="mb-2 text-xl font-semibold">Заметки</h2>
           <label className="block">
             <span className="sr-only">Новая заметка</span>
