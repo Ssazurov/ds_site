@@ -18,7 +18,10 @@ export const CABINET_MENU: Record<string, MenuItem[]> = {
     { href: "/cabinet/users", label: "Пользователи" },
     { href: "/cabinet/profiles", label: "Профили" },
   ],
-  specialist: [{ href: "/cabinet/clients", label: "Подопечные" }],
+  specialist: [
+    { href: "/cabinet/clients", label: "Подопечные" },
+    { href: "/cabinet/reports", label: "Результаты" },
+  ],
 };
 
 export function getToken(): string | null {
