@@ -32,15 +32,14 @@
     },
     {
       "version": "0.23.3",
-      "date": "2026-11-04",
-      "released_at": "2026-11-04T07:46:03Z",
+      "date": "2026-11-07",
+      "released_at": "2026-11-07T05:53:55Z",
       "notes": "* можно задавать пол при создании профиле. Влияет на изображение пола героя на кнопках главного экрана\n* новый вид кнопок главного экрана - с девочкой\n",
-      "size_mb": 86.1,
-      "sha256": "e244673cf212e1f969073627c89c393c50d38c08512af28702d7645b99d6930a",
+      "size_mb": 87.6,
+      "sha256": "bb605aadefcab0cb52b39028296346c5d4d47a7dc1e6af4a44af980568d529cc",
       "apk_url": "/download/ds_app-0.23.3.apk",
-      "build": 25,
-      "rustore": true,
-      "gh_apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.3/ds_app-0.23.3.apk"
+      "build": 26,
+      "rustore": true
     }
   ]
 }
