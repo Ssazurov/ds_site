@@ -1,0 +1,155 @@
+{
+ "palette": [
+  {
+   "id": "red",
+   "ru": "красный",
+   "hex": "#FF1F1F"
+  },
+  {
+   "id": "orange",
+   "ru": "оранжевый",
+   "hex": "#FF8A00"
+  },
+  {
+   "id": "yellow",
+   "ru": "желтый",
+   "hex": "#FFE600"
+  },
+  {
+   "id": "green",
+   "ru": "зеленый",
+   "hex": "#00D13A"
+  },
+  {
+   "id": "lightblue",
+   "ru": "голубой",
+   "hex": "#00D0FF"
+  },
+  {
+   "id": "blue",
+   "ru": "синий",
+   "hex": "#0A5CFF"
+  },
+  {
+   "id": "purple",
+   "ru": "фиолетовый",
+   "hex": "#B000FF"
+  },
+  {
+   "id": "pink",
+   "ru": "розовый",
+   "hex": "#FF2EA6"
+  },
+  {
+   "id": "brown",
+   "ru": "коричневый",
+   "hex": "#8B5A2B"
+  },
+  {
+   "id": "black",
+   "ru": "черный",
+   "hex": "#1A1A1A"
+  },
+  {
+   "id": "white",
+   "ru": "белый",
+   "hex": "#FFFFFF"
+  },
+  {
+   "id": "gray",
+   "ru": "серый",
+   "hex": "#9A9A9A"
+  },
+  {
+   "id": "turquoise",
+   "ru": "бирюзовый",
+   "hex": "#00C9A7"
+  },
+  {
+   "id": "lime",
+   "ru": "салатовый",
+   "hex": "#A6E22E"
+  },
+  {
+   "id": "burgundy",
+   "ru": "бордовый",
+   "hex": "#7A1021"
+  },
+  {
+   "id": "beige",
+   "ru": "бежевый",
+   "hex": "#E8D5B0"
+  }
+ ],
+ "sets": {
+  "set_2_kartochki": {
+   "title": "2 карточки",
+   "cards": 2,
+   "palette": 7,
+   "template": "Нажми на {цвет}",
+   "audio": {
+    "red": "ct_95731b0dbf",
+    "orange": "ct_4a3d7840c9",
+    "yellow": "ct_d452054d49",
+    "green": "ct_e4ac4ccb6c",
+    "lightblue": "ct_bc247400bf",
+    "blue": "ct_3dfc1f7687",
+    "purple": "ct_92bd098981"
+   }
+  },
+  "set_4_kartochki": {
+   "title": "4 карточки",
+   "cards": 4,
+   "palette": 7,
+   "template": "Нажми на {цвет}",
+   "audio": {
+    "red": "ct_95731b0dbf",
+    "orange": "ct_4a3d7840c9",
+    "yellow": "ct_d452054d49",
+    "green": "ct_e4ac4ccb6c",
+    "lightblue": "ct_bc247400bf",
+    "blue": "ct_3dfc1f7687",
+    "purple": "ct_92bd098981"
+   }
+  },
+  "set_6_kartochek": {
+   "title": "6 карточек",
+   "cards": 6,
+   "palette": 7,
+   "template": "Нажми на {цвет}",
+   "audio": {
+    "red": "ct_95731b0dbf",
+    "orange": "ct_4a3d7840c9",
+    "yellow": "ct_d452054d49",
+    "green": "ct_e4ac4ccb6c",
+    "lightblue": "ct_bc247400bf",
+    "blue": "ct_3dfc1f7687",
+    "purple": "ct_92bd098981"
+   }
+  },
+  "set_8_kartochek": {
+   "title": "8 карточек",
+   "cards": 8,
+   "palette": 16,
+   "template": "Нажми на {цвет}",
+   "audio": {
+    "red": "ct_95731b0dbf",
+    "orange": "ct_4a3d7840c9",
+    "yellow": "ct_d452054d49",
+    "green": "ct_e4ac4ccb6c",
+    "lightblue": "ct_bc247400bf",
+    "blue": "ct_3dfc1f7687",
+    "purple": "ct_92bd098981",
+    "pink": "ct_4a3de79d8b",
+    "brown": "ct_64531e27c7",
+    "black": "ct_b5b99bd288",
+    "white": "ct_4429c28926",
+    "gray": "ct_ec730bcb8d",
+    "turquoise": "ct_4edae09662",
+    "lime": "ct_32f48c45d3",
+    "burgundy": "ct_900b28791e",
+    "beige": "ct_a968162d0b"
+   }
+  }
+ }
+}

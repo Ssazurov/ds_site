@@ -1,0 +1,10 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>VK callback</title>
+<p>Скопируйте значения и передайте скрипту:</p>
+<pre id="out"></pre>
+<script>
+  const p = new URLSearchParams(location.search);
+  document.getElementById("out").textContent =
+    `code: ${p.get("code")}\ndevice_id: ${p.get("device_id")}\nstate: ${p.get("state")}`;
+</script>
