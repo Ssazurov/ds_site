@@ -35,7 +35,11 @@ function setup(withBranch) {
   git(work, "remote", "add", "origin", bare);
   return { bare, work };
 }
-const run = (work) => spawnSync(process.execPath, [SCRIPT, "--release-only"], { cwd: work, encoding: "utf-8" });
+// Next-репо Pages подменяем на тот же bare-репозиторий; _ds_app_site в тесте нет
+const run = (work) => spawnSync(process.execPath, [SCRIPT, "--release-only"], {
+  cwd: work, encoding: "utf-8",
+  env: { ...process.env, NEXT_PAGES_REMOTE: path.join(path.dirname(work), "remote.git"), DS_APP_SITE_DIR: path.join(work, "no-app-site") },
+});
 
 test("release-only: обновляет только data/releases.json обычным коммитом", () => {
   const { bare, work } = setup(true);
