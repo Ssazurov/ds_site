@@ -12,7 +12,13 @@ import { assertNoSecrets } from "./export-lib.mjs";
 
 const args = new Set(process.argv.slice(2));
 const OUT = ".next-static"; // при NEXT_DIST_DIR экспорт Next кладёт HTML прямо в distDir
-const BASE_PATH = "/ds_site";
+// :3002 (_ds_app_site, статика) -> origin этого репо (https://ssazurov.github.io/ds_site/);
+// :3001 (Next, внешний режим) -> отдельный репо Pages (https://ssazurov.github.io/ds_site_next/).
+const NEXT_REPO = process.env.NEXT_PAGES_REPO || "Ssazurov/ds_site_next";
+const BASE_PATH = "/" + NEXT_REPO.split("/")[1];
+const NEXT_REMOTE = process.env.NEXT_PAGES_REMOTE || `https://github.com/${NEXT_REPO}.git`;
+const APP_SITE_DIR = path.resolve(process.env.DS_APP_SITE_DIR || path.join("..", "..", "_ds_app_site"));
+const APP_SITE_SKIP = new Set([".git", ".gitignore", "download", "_build", "_fix.sh"]); // APK и служебное — не в Pages
 const BRANCH = "gh-pages";
 
 function run(cmd, argv, opts = {}) {
@@ -62,14 +68,17 @@ function ensurePages(repo) {
 }
 
 // Только релиз (ds_site#230): заменить data/releases.json в существующей gh-pages обычным коммитом.
-function releaseOnly() {
+function nextReleaseBody() {
   const src = "content/releases/releases.json";
   const rel = JSON.parse(readFileSync(src, "utf-8"));
   // для GitHub Pages локальную ссылку на APK заменяет gh_apk_url (если APK ещё не загружен на GitHub — ссылки нет)
   for (const r of rel.releases) if (r.gh_apk_url) { r.apk_url = r.gh_apk_url; delete r.gh_apk_url; } else if (r.apk_url?.startsWith("/")) delete r.apk_url;
   const body = JSON.stringify(rel, null, 2) + "\n";
   assertNoSecrets(body, [envLocal().GAR_PUBLIC_API_KEY, envLocal().GAR_URL, envLocal().NEXT_PUBLIC_GAR_DATASET_ID]);
-  const remote = out("git", ["remote", "get-url", "origin"]);
+  return body;
+}
+
+function pushRelease(remote, dstRel, body) {
   const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
   const name = soft("user.name") || "ds-site-publisher";
   const email = soft("user.email") || "noreply@users.noreply.github.com";
@@ -78,10 +87,10 @@ function releaseOnly() {
     const c = spawnSync("git", ["clone", "-q", "--depth", "1", "-b", BRANCH, remote, tmp], { stdio: "inherit" });
     if (c.status !== 0) throw new Error("ветка gh-pages не найдена: сначала полная публикация (npm run publish:pages)");
     const git = (...a) => run("git", ["-C", tmp, ...a]);
-    const dst = path.join(tmp, "data", "releases.json");
+    const dst = path.join(tmp, dstRel);
     if (existsSync(dst) && readFileSync(dst, "utf-8") === body) return console.log("releases.json без изменений, публикация пропущена");
     writeFileSync(dst, body);
-    git("add", "data/releases.json");
+    git("add", dstRel);
     git("-c", `user.name=${name}`, "-c", `user.email=${email}`, "commit", "-q", "-m", `release ${new Date().toISOString()}`);
     for (let i = 0; ; i++) {
       const p = spawnSync("git", ["-C", tmp, "push", "origin", BRANCH], { stdio: "inherit" });
@@ -92,7 +101,51 @@ function releaseOnly() {
   } finally {
     rmSync(tmp, { recursive: true, force: true });
   }
+  console.log(`релиз опубликован: ${remote} (${dstRel})`);
+}
+
+function releaseOnly() {
+  pushRelease(NEXT_REMOTE, "data/releases.json", nextReleaseBody());
+  const appRel = path.join(APP_SITE_DIR, "releases.json"); // :3002 — releases.json лежит в корне сайта
+  if (existsSync(appRel)) pushRelease(out("git", ["remote", "get-url", "origin"]), "releases.json", readFileSync(appRel, "utf-8"));
   console.log("релиз опубликован (только releases.json)");
+}
+
+const pagesUrl = (repo) => `https://${repo.split("/")[0].toLowerCase()}.github.io/${repo.split("/")[1]}/`;
+
+function ensureRepo(repo) {
+  if (spawnSync("gh", ["repo", "view", repo], { encoding: "utf-8" }).status === 0) return;
+  run("gh", ["repo", "create", repo, "--public", "--description", "ds-site: статический экспорт Next.js (:3001)"]);
+  console.log(`репозиторий ${repo} создан`);
+}
+
+// что не попадает из _ds_app_site в Pages: APK, служебные файлы, Zone.Identifier, «копии»
+function appSiteFilter(src) {
+  const abs = path.resolve(src);
+  if (abs === APP_SITE_DIR) return true;
+  const top = path.relative(APP_SITE_DIR, abs).split(path.sep)[0];
+  const base = path.basename(abs);
+  return !APP_SITE_SKIP.has(top) && !base.endsWith(":Zone.Identifier") && !base.includes("копия");
+}
+
+// orphan-ветка gh-pages из каталога dir, force-push (история не копится)
+function forcePush(dir, remote, filter) {
+  // git config возвращает код 1, если ключ не задан (например в контейнере) — это не ошибка
+  const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
+  const name = soft("user.name") || "ds-site-publisher";
+  const email = soft("user.email") || "noreply@users.noreply.github.com";
+  const tmp = mkdtempSync(path.join(os.tmpdir(), "ds-pages-"));
+  try {
+    cpSync(dir, tmp, { recursive: true, ...(filter ? { filter } : {}) });
+    writeFileSync(path.join(tmp, ".nojekyll"), "");
+    const git = (...a) => run("git", ["-C", tmp, ...a]);
+    git("init", "-q", "-b", BRANCH);
+    git("add", "-A");
+    git("-c", `user.name=${name}`, "-c", `user.email=${email}`, "commit", "-q", "-m", `publish ${new Date().toISOString()}`);
+    git("push", "--force", remote, `${BRANCH}:${BRANCH}`);
+  } finally {
+    rmSync(tmp, { recursive: true, force: true });
+  }
 }
 
 function main() {
@@ -120,25 +173,19 @@ function main() {
 
   if (args.has("--dry-run")) return console.log(`dry-run: сборка в ${OUT}/, публикация пропущена`);
 
+  // 1) :3001 (Next) -> отдельный репо Pages
+  ensureRepo(NEXT_REPO);
+  forcePush(OUT, NEXT_REMOTE);
+  ensurePages(NEXT_REPO);
+  console.log(`опубликовано (Next, :3001): ${pagesUrl(NEXT_REPO)}`);
+
+  // 2) :3002 (_ds_app_site) -> origin (ds_site)
+  if (!existsSync(path.join(APP_SITE_DIR, "index.html"))) throw new Error(`Не найден _ds_app_site (${APP_SITE_DIR}); задайте DS_APP_SITE_DIR`);
   const remote = out("git", ["remote", "get-url", "origin"]);
   const repo = remote.replace(/^.*github\.com[:/]/, "").replace(/\.git$/, "");
-  // git config возвращает код 1, если ключ не задан (например в контейнере) — это не ошибка
-  const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
-  const name = soft("user.name") || "ds-site-publisher";
-  const email = soft("user.email") || "noreply@users.noreply.github.com";
-  const tmp = mkdtempSync(path.join(os.tmpdir(), "ds-pages-"));
-  try {
-    cpSync(OUT, tmp, { recursive: true });
-    const git = (...a) => run("git", ["-C", tmp, ...a]);
-    git("init", "-q", "-b", BRANCH);
-    git("add", "-A");
-    git("-c", `user.name=${name}`, "-c", `user.email=${email}`, "commit", "-q", "-m", `publish ${new Date().toISOString()}`);
-    git("push", "--force", remote, `${BRANCH}:${BRANCH}`);
-  } finally {
-    rmSync(tmp, { recursive: true, force: true });
-  }
+  forcePush(APP_SITE_DIR, remote, appSiteFilter);
   ensurePages(repo);
-  console.log(`опубликовано: https://${repo.split("/")[0].toLowerCase()}.github.io/${repo.split("/")[1]}/`);
+  console.log(`опубликовано: ${pagesUrl(repo)}`);
 }
 
 try { main(); } catch (e) { console.error(String(e.message ?? e)); process.exit(1); }
