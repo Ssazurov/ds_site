@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /app/
+Disallow: /download/
+
+Sitemap: https://ssazurov.github.io/ds_site/sitemap.xml
