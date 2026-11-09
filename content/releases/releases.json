@@ -39,7 +39,8 @@
       "sha256": "19b765301d92f844baa500ec7b37301388e607c069f3091fc5e2eee64bb3e531",
       "apk_url": "/download/ds_app-0.23.3.apk",
       "build": 33,
-      "rustore": true
+      "rustore": true,
+      "gh_apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.3/ds_app-0.23.3.apk"
     }
   ]
 }
