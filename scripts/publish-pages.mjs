@@ -129,7 +129,7 @@ function appSiteFilter(src) {
 }
 
 // orphan-ветка gh-pages из каталога dir, force-push (история не копится)
-function forcePush(dir, remote, filter) {
+function forcePush(dir, remote, filter, post) {
   // git config возвращает код 1, если ключ не задан (например в контейнере) — это не ошибка
   const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
   const name = soft("user.name") || "ds-site-publisher";
@@ -138,6 +138,7 @@ function forcePush(dir, remote, filter) {
   try {
     cpSync(dir, tmp, { recursive: true, ...(filter ? { filter } : {}) });
     writeFileSync(path.join(tmp, ".nojekyll"), "");
+    if (post) post(tmp);
     const git = (...a) => run("git", ["-C", tmp, ...a]);
     git("init", "-q", "-b", BRANCH);
     git("add", "-A");
@@ -170,6 +171,9 @@ function main() {
     writeFileSync(appIdx, readFileSync(appIdx, "utf-8").replace('<base href="/app/">', `<base href="${BASE_PATH}/app/">`));
   }
   writeFileSync(path.join(OUT, ".nojekyll"), ""); // иначе Pages (Jekyll) игнорирует _next/
+  // APK на внешние сайты — только через «Релиз → GitHub» (GitHub Release), в Pages не кладём
+  const dl = path.join(OUT, "download");
+  if (existsSync(dl)) for (const f of readdirSync(dl)) if (/\.apk$/i.test(f)) rmSync(path.join(dl, f), { force: true });
 
   if (args.has("--dry-run")) return console.log(`dry-run: сборка в ${OUT}/, публикация пропущена`);
 
@@ -183,7 +187,13 @@ function main() {
   if (!existsSync(path.join(APP_SITE_DIR, "index.html"))) throw new Error(`Не найден _ds_app_site (${APP_SITE_DIR}); задайте DS_APP_SITE_DIR`);
   const remote = out("git", ["remote", "get-url", "origin"]);
   const repo = remote.replace(/^.*github\.com[:/]/, "").replace(/\.git$/, "");
-  forcePush(APP_SITE_DIR, remote, appSiteFilter);
+  // web-приложение в _ds_app_site собрано под /app/; на Pages (ds_site) оно живёт в /<repo>/app/
+  const appBase = "/" + repo.split("/")[1];
+  const fixAppBase = (tmp) => {
+    const idx = path.join(tmp, "app", "index.html");
+    if (existsSync(idx)) writeFileSync(idx, readFileSync(idx, "utf-8").replace('<base href="/app/">', `<base href="${appBase}/app/">`));
+  };
+  forcePush(APP_SITE_DIR, remote, appSiteFilter, fixAppBase);
   ensurePages(repo);
   console.log(`опубликовано: ${pagesUrl(repo)}`);
 }
