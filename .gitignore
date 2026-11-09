@@ -54,3 +54,7 @@ tmp/
 # Flutter web build (ds_app/tools/publish_story.sh)
 /public/app
 /public/download/
+
+# локальный клон gh-pages для публикации (publish-pages.mjs)
+/.pages-cache/
+/.next-static/

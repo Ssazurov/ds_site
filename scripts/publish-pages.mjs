@@ -1,11 +1,12 @@
 // Публикация внешнего сайта на GitHub Pages (ds_site#95, ADR-0018), без GitHub Action:
 //   выгрузка из GAR -> раскладка данных -> next build (внешний режим) -> проверка на
-//   секреты -> force-push orphan-ветки gh-pages (история не копится; отзыв = перезапись).
-// Запуск ЛОКАЛЬНО: node scripts/publish-pages.mjs [--skip-export] [--dry-run]
+//   секреты -> gh-pages через постоянный локальный клон (.pages-cache): в сеть уходит только разница.
+// Запуск ЛОКАЛЬНО: node scripts/publish-pages.mjs [--skip-export] [--dry-run] [--site-only]
 //   --skip-export  не ходить в GAR, взять готовый data/export
 //   --dry-run      собрать и проверить, но не пушить
+//   --site-only    только ds_site (:3002); ds_site_next (Next-сборка и push) пропускается
 import { spawnSync } from "node:child_process";
-import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { assertNoSecrets } from "./export-lib.mjs";
@@ -128,29 +129,73 @@ function appSiteFilter(src) {
   return !APP_SITE_SKIP.has(top) && !base.endsWith(":Zone.Identifier") && !base.includes("копия");
 }
 
-// orphan-ветка gh-pages из каталога dir, force-push (история не копится)
-function forcePush(dir, remote, filter, post) {
+// gh-pages через ПОСТОЯННЫЙ локальный клон (.pages-cache): файлы синхронизируются в клон, коммитится только
+// разница, обычный push. В сеть уходят лишь изменённые файлы (раньше — весь сайт заново, orphan + force).
+// Первый запуск после перехода скачивает текущую gh-pages один раз. Каждые SQUASH_AFTER коммитов история
+// схлопывается в один (force; объекты на GitHub уже есть, повторно почти ничего не передаётся).
+const CACHE_DIR = path.resolve(process.env.DS_PAGES_CACHE || ".pages-cache");
+const SQUASH_AFTER = Number(process.env.DS_PAGES_SQUASH || 30);
+
+function syncPush(dir, remote, filter, post) {
   // git config возвращает код 1, если ключ не задан (например в контейнере) — это не ошибка
   const soft = (key) => spawnSync("git", ["config", key], { encoding: "utf-8" }).stdout?.trim() ?? "";
   const name = soft("user.name") || "ds-site-publisher";
   const email = soft("user.email") || "noreply@users.noreply.github.com";
-  const tmp = mkdtempSync(path.join(os.tmpdir(), "ds-pages-"));
+  const ident = ["-c", `user.name=${name}`, "-c", `user.email=${email}`];
+  const slug = remote.replace(/^.*github\.com[:/]/, "").replace(/\.git$/, "").replace("/", "__");
+  const clone = path.join(CACHE_DIR, slug);
+  const stage = mkdtempSync(path.join(os.tmpdir(), "ds-pages-"));
   try {
-    cpSync(dir, tmp, { recursive: true, ...(filter ? { filter } : {}) });
-    writeFileSync(path.join(tmp, ".nojekyll"), "");
-    if (post) post(tmp);
-    const git = (...a) => run("git", ["-C", tmp, ...a]);
-    git("init", "-q", "-b", BRANCH);
+    cpSync(dir, stage, { recursive: true, ...(filter ? { filter } : {}) });
+    writeFileSync(path.join(stage, ".nojekyll"), "");
+    if (post) post(stage);
+
+    const git = (...a) => run("git", ["-C", clone, ...a]);
+    mkdirSync(CACHE_DIR, { recursive: true });
+    if (!existsSync(path.join(clone, ".git"))) {
+      const ls = spawnSync("git", ["ls-remote", "--exit-code", "--heads", remote, BRANCH], { encoding: "utf-8" });
+      if (ls.status === 0) {
+        console.log(`первый запуск: клон ${slug} (скачивается один раз)`);
+        run("git", ["clone", "-q", "-b", BRANCH, remote, clone]);
+      } else if (ls.status === 2) {
+        mkdirSync(clone, { recursive: true });
+        run("git", ["-C", clone, "init", "-q", "-b", BRANCH]);
+        run("git", ["-C", clone, "remote", "add", "origin", remote]);
+      } else throw new Error(`git ls-remote ${remote}: ${ls.stderr}`);
+    } else {
+      const f = spawnSync("git", ["-C", clone, "fetch", "-q", "origin", BRANCH], { stdio: "inherit" });
+      if (f.status === 0) git("reset", "-q", "--hard", `origin/${BRANCH}`); // учесть то, что изменилось на GitHub (релизные коммиты)
+    }
+
+    for (const e of readdirSync(clone)) if (e !== ".git") rmSync(path.join(clone, e), { recursive: true, force: true });
+    cpSync(stage, clone, { recursive: true });
     git("add", "-A");
-    git("-c", `user.name=${name}`, "-c", `user.email=${email}`, "commit", "-q", "-m", `publish ${new Date().toISOString()}`);
-    git("push", "--force", remote, `${BRANCH}:${BRANCH}`);
+    if (!out("git", ["-C", clone, "status", "--porcelain"])) return console.log(`${slug}: без изменений, ничего не отправлено`);
+    git(...ident, "commit", "-q", "-m", `publish ${new Date().toISOString()}`);
+    console.log(out("git", ["-C", clone, "show", "--stat", "--format=", "HEAD"]).split("\n").slice(-1)[0]);
+
+    const count = Number(out("git", ["-C", clone, "rev-list", "--count", "HEAD"]));
+    if (count > SQUASH_AFTER) {
+      console.log(`история ${count} коммитов > ${SQUASH_AFTER}: схлопываю в один`);
+      git("checkout", "-q", "--orphan", "squash");
+      git("add", "-A");
+      git(...ident, "commit", "-q", "-m", `publish ${new Date().toISOString()} (squash)`);
+      git("branch", "-M", BRANCH);
+      git("push", "--force", "origin", BRANCH);
+      git("gc", "-q", "--prune=now");
+    } else {
+      const p = spawnSync("git", ["-C", clone, "push", "origin", BRANCH], { stdio: "inherit" });
+      if (p.status !== 0) {
+        console.log("push отклонён (ветка на GitHub разошлась) — повтор с force");
+        git("push", "--force", "origin", BRANCH);
+      }
+    }
   } finally {
-    rmSync(tmp, { recursive: true, force: true });
+    rmSync(stage, { recursive: true, force: true });
   }
 }
 
-function main() {
-  if (args.has("--release-only")) return releaseOnly();
+function buildNext() {
   if (!args.has("--skip-export")) run(process.execPath, ["scripts/export-content.mjs"]);
   run(process.execPath, ["scripts/prepare-static.mjs"]);
 
@@ -165,7 +210,7 @@ function main() {
   };
   run(process.execPath, ["node_modules/next/dist/bin/next", "build"], { env });
   scanForSecrets(OUT);
-  // web-приложение (public/app) собрано под локальный /app/; на Pages оно живёт в /ds_site/app/
+  // web-приложение (public/app) собрано под локальный /app/; на Pages оно живёт в /ds_site_next/app/
   const appIdx = path.join(OUT, "app", "index.html");
   if (existsSync(appIdx)) {
     writeFileSync(appIdx, readFileSync(appIdx, "utf-8").replace('<base href="/app/">', `<base href="${BASE_PATH}/app/">`));
@@ -174,14 +219,23 @@ function main() {
   // APK на внешние сайты — только через «Релиз → GitHub» (GitHub Release), в Pages не кладём
   const dl = path.join(OUT, "download");
   if (existsSync(dl)) for (const f of readdirSync(dl)) if (/\.apk$/i.test(f)) rmSync(path.join(dl, f), { force: true });
+}
 
-  if (args.has("--dry-run")) return console.log(`dry-run: сборка в ${OUT}/, публикация пропущена`);
+function main() {
+  if (args.has("--release-only")) return releaseOnly();
+  const siteOnly = args.has("--site-only");
+  if (!siteOnly) buildNext();
+  else console.log("--site-only: ds_site_next (сборка Next и push) пропущен");
+
+  if (args.has("--dry-run")) return console.log(`dry-run: сборка проверена, публикация пропущена`);
 
   // 1) :3001 (Next) -> отдельный репо Pages
-  ensureRepo(NEXT_REPO);
-  forcePush(OUT, NEXT_REMOTE);
-  ensurePages(NEXT_REPO);
-  console.log(`опубликовано (Next, :3001): ${pagesUrl(NEXT_REPO)}`);
+  if (!siteOnly) {
+    ensureRepo(NEXT_REPO);
+    syncPush(OUT, NEXT_REMOTE);
+    ensurePages(NEXT_REPO);
+    console.log(`опубликовано (Next, :3001): ${pagesUrl(NEXT_REPO)}`);
+  }
 
   // 2) :3002 (_ds_app_site) -> origin (ds_site)
   if (!existsSync(path.join(APP_SITE_DIR, "index.html"))) throw new Error(`Не найден _ds_app_site (${APP_SITE_DIR}); задайте DS_APP_SITE_DIR`);
@@ -193,7 +247,7 @@ function main() {
     const idx = path.join(tmp, "app", "index.html");
     if (existsSync(idx)) writeFileSync(idx, readFileSync(idx, "utf-8").replace('<base href="/app/">', `<base href="${appBase}/app/">`));
   };
-  forcePush(APP_SITE_DIR, remote, appSiteFilter, fixAppBase);
+  syncPush(APP_SITE_DIR, remote, appSiteFilter, fixAppBase);
   ensurePages(repo);
   console.log(`опубликовано: ${pagesUrl(repo)}`);
 }
