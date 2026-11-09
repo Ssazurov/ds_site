@@ -1,70 +1,9 @@
-// app/about/page.tsx
-// Страница "О проекте" (ds_site#55). Текст утверждён по issue, кроме
-// контакта для обратной связи — там placeholder до уточнения (см. issue).
+// app/about/page.tsx — редирект на главный сайт (ds_site#244).
+import RedirectPage from "@/components/RedirectPage";
+import { MAIN_SITE } from "@/lib/main-site";
 
-import AssistantAboutItem from "@/components/AssistantAboutItem";
+export const metadata = { title: "О проекте — Солнечный мир" };
 
 export default function AboutPage() {
-  return (
-    <main className="chat-shell">
-      <header className="chat-header about-header">
-        <h1>О проекте «Солнечный мир»</h1>
-      </header>
-
-      <section className="chat-panel about-text" aria-label="О проекте">
-        <section id="developer" aria-label="О разработчике">
-          <h2>О разработчике</h2>
-          <p>
-            Я — отец «солнечного» ребёнка. Более 20 лет я работаю в
-            IT и создаю программы, которые помогают людям с ограниченными
-            возможностями. Этот сайт — моя посильная помощь «солнечным»
-            семьям в поиске достоверной информации. Вопросы и предложения
-            присылайте любым удобным способом — контакты ниже.
-          </p>
-          <section id="contacts" aria-label="Контакты">
-            <h2>Контакты</h2>
-            <p><strong>Сазуров Сергей Владимирович</strong></p>
-            <ul className="contact-list">
-              <li>Почта: <a href="mailto:sazurov@mail.ru">sazurov@mail.ru</a></li>
-              <li>ВКонтакте: <a href="https://vk.ru/sazurovsv" target="_blank" rel="noopener noreferrer">vk.ru/sazurovsv</a></li>
-              <li>Telegram: <a href="https://t.me/Sazurov" target="_blank" rel="noopener noreferrer">@Sazurov</a></li>
-            </ul>
-          </section>
-        </section>
-
-        <p>
-          Мы собираем проверенную информацию о синдроме Дауна в одном месте —
-          чтобы родителям «солнечных» детей и всем причастным не пришлось
-          искать её по десяткам форумов и групп.
-        </p>
-
-        <h2>Цель проекта</h2>
-        <p>
-          Когда в семье появляется солнечный ребёнок, вопросов гораздо больше,
-          чем ответов. Мы делаем так, чтобы на частые вопросы — от первых дней
-          до школы — можно было получить быстрый и достоверный ответ с
-          указанием источника.
-        </p>
-
-        <h2>Карта сайта</h2>
-        <ul>
-          <li><strong>Статьи</strong> — материалы по направлениям; сайт полезен для всех возрастов и не только для родителей</li>
-          <li><strong>Новости</strong> — то, что происходит в солнечном сообществе прямо сейчас</li>
-          <AssistantAboutItem />
-          <li><strong>Обучение</strong> — веб-приложение для обучения людей с синдромом Дауна</li>
-          <li><strong>Глоссарий</strong> — термины и сокращения по теме «синдром Дауна»</li>
-          <li><strong>Ссылки</strong> — фонды и специалисты, законы, а также сообщества, где можно найти помощь и неформальную поддержку</li>
-        </ul>
-
-        <h2>Как мы отбираем материалы</h2>
-        <p>
-          Каждый ответ и каждая статья ссылаются на первоисточник — вы всегда
-          можете убедиться в достоверности информации.
-        </p>
-
-        <h2>Нашли неточность или знаете хороший материал?</h2>
-        <p>Напишите нам — контакты указаны в подразделе «Контакты» выше.</p>
-      </section>
-    </main>
-  );
+  return <RedirectPage to={`${MAIN_SITE}/about.html`} />;
 }
