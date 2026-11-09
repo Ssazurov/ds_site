@@ -183,7 +183,11 @@
 - Проверка: tsc чистый; PR #226 смержен.
 
 ## 2026-10-22 — Issue #230: релиз на Pages без пересборки
-- /download/ — клиентская оболочка (DownloadView.tsx), /download/[version] удалён → /download/?v=X.Y.Z; /api/releases для внутреннего режима; prepare-static кладёт eleases.json в public/data/.
+- /download/ — клиентская оболочка (DownloadView.tsx), /download/[version] удалён → /download/?v=X.Y.Z; /api/releases для внутреннего режима; prepare-static кладёт 
+eleases.json в public/data/.
 - scripts/publish-pages.mjs --release-only (
 pm run publish:release), тест scripts/release-only.test.mjs. ADR-0018 дополнен.
 - Проверка (docker node:22): tsc чисто, uild:static ок, тесты release-only 2/2.
+
+## 2026-11-09 — ds#100: роли сайтов
+- ADR-0030 (root `ds/docs/adr/0030-site-roles.md`): ds_site = «Библиотека» (github.io/ds_site_next, контент не пополняется), главный сайт — ds_app_site (github.io/ds_site). «Обучение» и «О нас» ведут на главный сайт (#244).
