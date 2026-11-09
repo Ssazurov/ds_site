@@ -15,7 +15,7 @@ fetch('releases.json',{cache:'no-cache'}).then(function(x){return x.json();}).th
 var rs=(d.releases||[]).slice().sort(cmp);
 if(!rs.length){el.innerHTML='<p>Версий пока нет.</p>';return;}
 var r=rs[0];
-el.innerHTML='<h2>Версия '+esc(r.version)+' <small>от '+fmt(r.date)+'</small></h2>'+apk(r)+notes(r.notes)+
-(rs.length>1?'<details id="versions" class="rel-old"><summary><strong>Прежние версии ('+(rs.length-1)+')</strong></summary>'+rs.slice(1).map(function(o){return'<section class="rel-sec"><h3>'+esc(o.version)+' <small>от '+fmt(o.date)+'</small></h3>'+notes(o.notes)+'</section>';}).join('')+'</details>':'');
+el.innerHTML='<h2>Версия '+esc(r.version)+(r.build?' ('+esc(r.build)+')':'')+' <small>от '+fmt(r.date)+'</small></h2>'+apk(r)+notes(r.notes)+
+(rs.length>1?'<details id="versions" class="rel-old"><summary><strong>Прежние версии ('+(rs.length-1)+')</strong></summary>'+rs.slice(1).map(function(o){return'<section class="rel-sec"><h3>'+esc(o.version)+(o.build?' ('+esc(o.build)+')':'')+' <small>от '+fmt(o.date)+'</small></h3>'+notes(o.notes)+'</section>';}).join('')+'</details>':'');
 }).catch(function(){el.innerHTML='<p>Не удалось загрузить список версий. Откройте <a href="https://www.rustore.ru/catalog/app/ru.ds.ds_app">RuStore</a>.</p>';});
 })();
