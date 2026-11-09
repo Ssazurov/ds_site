@@ -1,5 +1,5 @@
 // components/Header.tsx
-// Навигация: Статьи / Новости / Помощник (= "/") / Обучение (/learning)
+// Навигация: Статьи / Новости / Помощник (= "/") / Обучение (-> главный сайт)
 // + меню "три черты" справа: Глоссарий, Слова, Ссылки, Избранное, О нас.
 
 "use client";
@@ -10,12 +10,18 @@ import { useEffect, useRef, useState } from "react";
 import { useAssistantEnabled } from "@/lib/assistant-flag";
 import { useSession } from "@/lib/cabinet-auth";
 import "@/lib/scroll-restore"; // ds_site#167: регистрирует popstate-флаг раньше монтирования списков
+import { MAIN_SITE } from "@/lib/main-site";
+
+// Внешняя ссылка (главный сайт) – обычный <a>, внутренняя – next/link.
+function NavLink({ href, ...rest }: React.ComponentProps<typeof Link>) {
+  return String(href).startsWith("http") ? <a href={String(href)} {...(rest as object)} /> : <Link href={href} {...rest} />;
+}
 
 const NAV_ITEMS = [
   { href: "/articles", label: "Статьи" },
   { href: "/news", label: "Новости" },
   { href: "/", label: "Помощник" },
-  { href: "/learning", label: "Обучение" },
+  { href: `${MAIN_SITE}/`, label: "Обучение" },
 ];
 
 const MENU_ITEMS = [
@@ -25,7 +31,7 @@ const MENU_ITEMS = [
   { href: "/favorites", label: "Избранное" },
   { href: "/docs", label: "Документация" },
   { href: "/download", label: "Скачать" },
-  { href: "/about", label: "О нас" },
+  { href: `${MAIN_SITE}/about.html`, label: "О нас" },
 ];
 
 function isActiveHref(pathname: string | null, href: string) {
@@ -55,13 +61,13 @@ export default function Header() {
     <header className="site-nav">
       <nav aria-label="Основная навигация">
         {NAV_ITEMS.filter((item) => item.href !== "/" || assistantEnabled).map((item) => (
-          <Link
+          <NavLink
             key={item.href}
             href={item.href}
             aria-current={isActiveHref(pathname, item.href) ? "page" : undefined}
           >
             {item.label}
-          </Link>
+          </NavLink>
         ))}
         <div className="nav-burger" ref={menuRef}>
           <button
@@ -80,7 +86,7 @@ export default function Header() {
           {menuOpen && (
             <div className="nav-library-menu nav-burger-menu" role="menu">
               {menuItems.map((item) => (
-                <Link
+                <NavLink
                   key={item.href}
                   href={item.href}
                   role="menuitem"
@@ -88,7 +94,7 @@ export default function Header() {
                   onClick={() => setMenuOpen(false)}
                 >
                   {item.label}
-                </Link>
+                </NavLink>
               ))}
             </div>
           )}
