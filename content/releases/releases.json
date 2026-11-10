@@ -41,6 +41,17 @@
       "build": 35,
       "rustore": true,
       "gh_apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.3/ds_app-0.23.3.apk"
+    },
+    {
+      "version": "0.23.4",
+      "date": "2026-11-10",
+      "released_at": "2026-11-10T05:36:03Z",
+      "notes": "Доработана озвучка в игре «Эмоции»\n",
+      "size_mb": 87.5,
+      "sha256": "eda8f46e0f19bae4e5d062bb725fe3ac628fe9de67fef3fd41f2eeac8c6dd89b",
+      "apk_url": "/download/ds_app-0.23.4.apk",
+      "build": 36,
+      "rustore": true
     }
   ]
 }
