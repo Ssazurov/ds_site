@@ -1,22 +1,26 @@
 {
  "sets": [
   {
-   "title": "радостный - грустный",
-   "template": "Выбери {эмоция}",
+   "title": "Радостный – Грустный",
+   "template": "Выбери «{эмоция}»",
    "pair": [
     {
-     "name": "веселый",
+     "name": "радостный",
      "img": "assets/pack/emotions/veselyy_grustnyy_0_d542f337.webp"
     },
     {
      "name": "грустный",
      "img": "assets/pack/emotions/veselyy_grustnyy_1_784544f9.webp"
     }
-   ]
+   ],
+   "audio": {
+    "0": "et_f92c9605f7",
+    "1": "et_88b30094db"
+   }
   },
   {
-   "title": "удивленный - испуганный",
-   "template": "Выбери {эмоция}",
+   "title": "Удивленный – Испуганный",
+   "template": "Выбери «{эмоция}»",
    "pair": [
     {
      "name": "удивленный",
@@ -26,11 +30,15 @@
      "name": "испуганный",
      "img": "assets/pack/emotions/udivlennyy_ispugannyy_1_af360533.webp"
     }
-   ]
+   ],
+   "audio": {
+    "0": "et_a43ee78fb7",
+    "1": "et_855265289b"
+   }
   },
   {
-   "title": "веселый - сердитый",
-   "template": "Выбери {эмоция}",
+   "title": "Веселый – Сердитый",
+   "template": "Выбери «{эмоция}»",
    "pair": [
     {
      "name": "веселый",
@@ -40,11 +48,15 @@
      "name": "сердитый",
      "img": "assets/pack/emotions/veselyy_serdityy_1_b01fff63.webp"
     }
-   ]
+   ],
+   "audio": {
+    "0": "et_d9a5b6cb2c",
+    "1": "et_68fcb6b744"
+   }
   },
   {
-   "title": "грустный - сердитый",
-   "template": "Выбери {эмоция}",
+   "title": "Грустный – Сердитый",
+   "template": "Выбери «{эмоция}»",
    "pair": [
     {
      "name": "грустный",
@@ -54,11 +66,15 @@
      "name": "сердитый",
      "img": "assets/pack/images/angry.webp"
     }
-   ]
+   ],
+   "audio": {
+    "0": "et_88b30094db",
+    "1": "et_68fcb6b744"
+   }
   },
   {
-   "title": "уставший - веселый",
-   "template": "Выбери {эмоция}",
+   "title": "Уставший – Веселый",
+   "template": "Выбери «{эмоция}»",
    "pair": [
     {
      "name": "уставший",
@@ -68,7 +84,11 @@
      "name": "веселый",
      "img": "assets/pack/emotions/ustavshiy_veselyy_1_9ea00d52.webp"
     }
-   ]
+   ],
+   "audio": {
+    "0": "et_8b61bb443c",
+    "1": "et_d9a5b6cb2c"
+   }
   }
  ]
 }
