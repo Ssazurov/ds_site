@@ -17,6 +17,150 @@
  ],
  "stories": [
   {
+   "id": "tooths",
+   "category": "routine",
+   "order": 99,
+   "title": {
+    "ru": "Я чищу зубы"
+   },
+   "tags": [],
+   "level": 1,
+   "steps": [
+    {
+     "id": "s3",
+     "order": 1,
+     "text": {
+      "ru": "Я включаю свет и вхожу в ванную."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s3.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s3_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s5",
+     "order": 2,
+     "text": {
+      "ru": "Беру щетку и зубную пасту."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s5.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s5_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s6",
+     "order": 3,
+     "text": {
+      "ru": "Намазываю пасту на щётку."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s6.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s6_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s7",
+     "order": 4,
+     "text": {
+      "ru": "Чищу щёткой с пастой зубы."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s7.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s7_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s8",
+     "order": 5,
+     "text": {
+      "ru": "Промываю рот водой из стакана."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s8.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s8_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s9",
+     "order": 6,
+     "text": {
+      "ru": "Вытираю рот полотенцем."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s9.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s9_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s10",
+     "order": 7,
+     "text": {
+      "ru": "Выхожу из ванной комнаты и выключаю свет."
+     },
+     "audio": {
+      "ru": "audio/ru/stories/tooths/s10.mp3"
+     },
+     "image_by_hero": {
+      "girl": "images/stories/tooths/s10_girl.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    }
+   ],
+   "finale": {
+    "audio": {
+     "ru": "audio/ru/stories/tooths/fin.mp3"
+    },
+    "sfx": "audio/ru/stories/tooths/sfx.mp3"
+   }
+  },
+  {
    "id": "wash_hands3",
    "category": "routine",
    "order": 99,
