@@ -1,0 +1,87 @@
+{
+ "stories": [
+  {
+   "id": "seasons",
+   "title": "Времена года",
+   "pictograms": [
+    {
+     "name": "Солнце",
+     "img": "assets/pack/rasskazy/seasons_p0_55e372b4.webp"
+    },
+    {
+     "name": "Дерево",
+     "img": "assets/pack/rasskazy/seasons_p1_857874c9.webp"
+    },
+    {
+     "name": "Облака",
+     "img": "assets/pack/rasskazy/seasons_p2_43877663.webp"
+    },
+    {
+     "name": "Птицы",
+     "img": "assets/pack/rasskazy/seasons_p3_8c3c791d.webp"
+    },
+    {
+     "name": "Земля",
+     "img": "assets/pack/rasskazy/seasons_p4_14e500c6.webp"
+    },
+    {
+     "name": "Животные",
+     "img": "assets/pack/rasskazy/seasons_p5_e1c27d4a.webp"
+    },
+    {
+     "name": "Одежда",
+     "img": "assets/pack/rasskazy/seasons_p6_3a3af011.webp"
+    },
+    {
+     "name": "Занятия на улице",
+     "img": "assets/pack/rasskazy/seasons_p7_18ee35d9.webp"
+    }
+   ],
+   "order_pictograms": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+   ],
+   "pictures": [
+    {
+     "name": "Солнце",
+     "img": "assets/pack/rasskazy/seasons_c0_fbe88553.webp"
+    },
+    {
+     "name": "Дерево",
+     "img": "assets/pack/rasskazy/seasons_c1_dd6c7d4d.webp"
+    },
+    {
+     "name": "Облака",
+     "img": "assets/pack/rasskazy/seasons_c2_0ef8d7fd.webp"
+    },
+    {
+     "name": "Птицы",
+     "img": "assets/pack/rasskazy/seasons_c3_e1d390fd.webp"
+    },
+    {
+     "name": "Земля",
+     "img": "assets/pack/rasskazy/seasons_c4_eca8571f.webp"
+    },
+    {
+     "name": "Животные",
+     "img": "assets/pack/rasskazy/seasons_c5_cbf1888f.webp"
+    },
+    {
+     "name": "Одежда",
+     "img": "assets/pack/rasskazy/seasons_c6_69f14363.webp"
+    },
+    {
+     "name": "Занятия на улице",
+     "img": "assets/pack/rasskazy/seasons_c7_4f717540.webp"
+    }
+   ],
+   "order_pictures": []
+  }
+ ]
+}
