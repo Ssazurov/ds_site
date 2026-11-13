@@ -53,6 +53,17 @@
       "build": 48,
       "rustore": true,
       "gh_apk_url": "https://github.com/Ssazurov/ds_app_site/releases/download/v0.23.4/ds_app-0.23.4.apk"
+    },
+    {
+      "version": "0.23.5",
+      "date": "2026-11-13",
+      "released_at": "2026-11-13T08:31:31Z",
+      "notes": "В блоке «Школа» создано занятие «Рассказы > Фразовая речь > Времена года». Занятие предназначено для формирования умения составлять устный рассказ на основе набора пиктограмм и цветных картинок.\n",
+      "size_mb": 90.8,
+      "sha256": "7beadf99f3955f02e45f60abd35cb8bde2442bacded2d6b454869a8bee087f39",
+      "apk_url": "/download/ds_app-0.23.5.apk",
+      "build": 50,
+      "rustore": true
     }
   ]
 }
