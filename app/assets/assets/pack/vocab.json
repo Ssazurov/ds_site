@@ -1,0 +1,311 @@
+{
+ "sets": [
+  {
+   "id": "domashnie_zhivotnye",
+   "title": "Домашние животные",
+   "kind": "show",
+   "items": [
+    {
+     "name": "кошка",
+     "img": "assets/pack/vocab/cat.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "собака",
+     "img": "assets/pack/vocab/dog.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "корова",
+     "img": "assets/pack/vocab/cow.webp",
+     "wild": false,
+     "tags": [
+      "рога",
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "лошадь",
+     "img": "assets/pack/vocab/horse.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "коза",
+     "img": "assets/pack/vocab/goat.webp",
+     "wild": false,
+     "tags": [
+      "рога",
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "овца",
+     "img": "assets/pack/vocab/sheep.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "свинья",
+     "img": "assets/pack/vocab/pig.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "кролик",
+     "img": "assets/pack/vocab/rabbit.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "пьёт"
+     ]
+    }
+   ],
+   "template": "Покажи, где {слово}",
+   "questions": [],
+   "audio": {}
+  },
+  {
+   "id": "kto_lishniy_zhivotnye",
+   "title": "Кто лишний? Животные",
+   "kind": "odd",
+   "items": [
+    {
+     "name": "кошка",
+     "img": "assets/pack/vocab/cat.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "собака",
+     "img": "assets/pack/vocab/dog.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "корова",
+     "img": "assets/pack/vocab/cow.webp",
+     "wild": false,
+     "tags": [
+      "рога",
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "лошадь",
+     "img": "assets/pack/vocab/horse.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "коза",
+     "img": "assets/pack/vocab/goat.webp",
+     "wild": false,
+     "tags": [
+      "рога",
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "овца",
+     "img": "assets/pack/vocab/sheep.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "свинья",
+     "img": "assets/pack/vocab/pig.webp",
+     "wild": false,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "кролик",
+     "img": "assets/pack/vocab/rabbit.webp",
+     "wild": false,
+     "tags": [
+      "лапы",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "волк",
+     "img": "assets/pack/vocab/wolf.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "лиса",
+     "img": "assets/pack/vocab/fox.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "медведь",
+     "img": "assets/pack/vocab/bear.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "олень",
+     "img": "assets/pack/vocab/deer.webp",
+     "wild": true,
+     "tags": [
+      "рога",
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "ёж",
+     "img": "assets/pack/vocab/hedgehog.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "белка",
+     "img": "assets/pack/vocab/squirrel.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "тигр",
+     "img": "assets/pack/vocab/tiger.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "лев",
+     "img": "assets/pack/vocab/lion.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "лакает"
+     ]
+    },
+    {
+     "name": "слон",
+     "img": "assets/pack/vocab/elephant.webp",
+     "wild": true,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "жираф",
+     "img": "assets/pack/vocab/giraffe.webp",
+     "wild": true,
+     "tags": [
+      "ноги",
+      "пьёт"
+     ]
+    },
+    {
+     "name": "обезьяна",
+     "img": "assets/pack/vocab/monkey.webp",
+     "wild": true,
+     "tags": [
+      "лапы",
+      "пьёт"
+     ]
+    }
+   ],
+   "template": "",
+   "questions": [
+    {
+     "text": "Кто здесь лишний?",
+     "odd": true
+    },
+    {
+     "text": "Кто с рогами?",
+     "tag": "рога",
+     "has": true
+    },
+    {
+     "text": "Кто без рогов?",
+     "tag": "рога",
+     "has": false
+    },
+    {
+     "text": "У кого ноги?",
+     "tag": "ноги",
+     "has": true
+    },
+    {
+     "text": "У кого лапы?",
+     "tag": "лапы",
+     "has": true
+    },
+    {
+     "text": "Кто лакает?",
+     "tag": "лакает",
+     "has": true
+    },
+    {
+     "text": "Кто пьёт?",
+     "tag": "пьёт",
+     "has": true
+    }
+   ],
+   "audio": {}
+  }
+ ],
+ "feedback": {
+  "ok": "et_df1376c5e8",
+  "retry": "et_51c0f7b46e"
+ }
+}
