@@ -6,35 +6,35 @@
    "pictograms": [
     {
      "name": "Солнце",
-     "img": "assets/pack/rasskazy/seasons_p0_55e372b4.webp"
+     "img": "assets/pack/rasskazy/seasons_p0_fbc43535.webp"
     },
     {
      "name": "Дерево",
-     "img": "assets/pack/rasskazy/seasons_p1_857874c9.webp"
+     "img": "assets/pack/rasskazy/seasons_p1_5f2156cb.webp"
     },
     {
      "name": "Облака",
-     "img": "assets/pack/rasskazy/seasons_p2_43877663.webp"
+     "img": "assets/pack/rasskazy/seasons_p2_0043d1c6.webp"
     },
     {
      "name": "Птицы",
-     "img": "assets/pack/rasskazy/seasons_p3_8c3c791d.webp"
+     "img": "assets/pack/rasskazy/seasons_p3_4c989922.webp"
     },
     {
      "name": "Земля",
-     "img": "assets/pack/rasskazy/seasons_p4_14e500c6.webp"
+     "img": "assets/pack/rasskazy/seasons_p4_1f8990c2.webp"
     },
     {
      "name": "Животные",
-     "img": "assets/pack/rasskazy/seasons_p5_e1c27d4a.webp"
+     "img": "assets/pack/rasskazy/seasons_p5_542e04ae.webp"
     },
     {
      "name": "Одежда",
-     "img": "assets/pack/rasskazy/seasons_p6_3a3af011.webp"
+     "img": "assets/pack/rasskazy/seasons_p6_ad4a7435.webp"
     },
     {
      "name": "Занятия на улице",
-     "img": "assets/pack/rasskazy/seasons_p7_18ee35d9.webp"
+     "img": "assets/pack/rasskazy/seasons_p7_a14b254a.webp"
     }
    ],
    "order_pictograms": [
