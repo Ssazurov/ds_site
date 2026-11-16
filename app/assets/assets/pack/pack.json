@@ -12,8 +12,8 @@
    "title": {
     "ru": "Еда"
    },
-   "age_min": 12,
-   "age_max": 72,
+   "age_min": 24,
+   "age_max": 108,
    "order": 1
   },
   {
@@ -22,7 +22,7 @@
     "ru": "Действия"
    },
    "age_min": 12,
-   "age_max": 72,
+   "age_max": 144,
    "order": 2
   },
   {
@@ -30,8 +30,8 @@
    "title": {
     "ru": "Животные"
    },
-   "age_min": 12,
-   "age_max": 72,
+   "age_min": 24,
+   "age_max": 120,
    "order": 3
   },
   {
@@ -40,7 +40,7 @@
     "ru": "Признаки"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 180,
    "order": 4
   },
   {
@@ -48,8 +48,8 @@
    "title": {
     "ru": "Одежда"
    },
-   "age_min": 24,
-   "age_max": 72,
+   "age_min": 36,
+   "age_max": 168,
    "order": 5
   },
   {
@@ -58,7 +58,7 @@
     "ru": "Дом"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 108,
    "order": 6
   },
   {
@@ -66,8 +66,8 @@
    "title": {
     "ru": "Тело"
    },
-   "age_min": 12,
-   "age_max": 72,
+   "age_min": 24,
+   "age_max": 96,
    "order": 7
   },
   {
@@ -75,8 +75,8 @@
    "title": {
     "ru": "Игрушки и игры"
    },
-   "age_min": 12,
-   "age_max": 72,
+   "age_min": 24,
+   "age_max": 180,
    "order": 8
   },
   {
@@ -85,7 +85,7 @@
     "ru": "Блюда"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 96,
    "order": 9
   },
   {
@@ -93,7 +93,7 @@
    "title": {
     "ru": "Чувства"
    },
-   "age_min": 24,
+   "age_min": 12,
    "age_max": 72,
    "order": 10
   },
@@ -103,7 +103,7 @@
     "ru": "Транспорт"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 108,
    "order": 11
   },
   {
@@ -112,7 +112,7 @@
     "ru": "Мебель"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 84,
    "order": 12
   },
   {
@@ -121,7 +121,7 @@
     "ru": "Цвета"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 120,
    "order": 13
   },
   {
@@ -130,7 +130,7 @@
     "ru": "Места"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 108,
    "order": 14
   },
   {
@@ -138,8 +138,8 @@
    "title": {
     "ru": "Семья"
    },
-   "age_min": 12,
-   "age_max": 48,
+   "age_min": 24,
+   "age_max": 84,
    "order": 15
   },
   {
@@ -147,7 +147,7 @@
    "title": {
     "ru": "Главные глаголы"
    },
-   "age_min": 12,
+   "age_min": 24,
    "age_max": 60,
    "order": 16
   },
@@ -157,7 +157,7 @@
     "ru": "Местоимения и вопросы"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 84,
    "order": 17
   },
   {
@@ -166,7 +166,7 @@
     "ru": "Числа и формы"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 96,
    "order": 18
   },
   {
@@ -184,7 +184,7 @@
     "ru": "Время"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 84,
    "order": 20
   },
   {
@@ -193,7 +193,7 @@
     "ru": "Режим дня"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 48,
    "order": 21
   },
   {
@@ -202,7 +202,7 @@
     "ru": "На улице"
    },
    "age_min": 24,
-   "age_max": 72,
+   "age_max": 156,
    "order": 22
   },
   {
@@ -211,7 +211,7 @@
     "ru": "Люди"
    },
    "age_min": 24,
-   "age_max": 84,
+   "age_max": 144,
    "order": 23
   },
   {
@@ -219,8 +219,8 @@
    "title": {
     "ru": "Здоровье"
    },
-   "age_min": 36,
-   "age_max": 96,
+   "age_min": 48,
+   "age_max": 108,
    "order": 24
   },
   {
@@ -228,8 +228,8 @@
    "title": {
     "ru": "Спорт"
    },
-   "age_min": 48,
-   "age_max": 120,
+   "age_min": 96,
+   "age_max": 168,
    "order": 25
   },
   {
@@ -238,7 +238,7 @@
     "ru": "Школа"
    },
    "age_min": 36,
-   "age_max": 96,
+   "age_max": 72,
    "order": 26
   },
   {
@@ -246,7 +246,7 @@
    "title": {
     "ru": "Общение"
    },
-   "age_min": 24,
+   "age_min": 36,
    "age_max": 72,
    "order": 27
   }
@@ -1630,7 +1630,7 @@
    "order": 3,
    "image": "images/aeroplane.webp",
    "text": {
-    "ru": "самолет"
+    "ru": "самолёт"
    },
    "audio": {
     "ru": "audio/ru/aeroplane.mp3"
@@ -1896,7 +1896,7 @@
    "order": 17,
    "image": "images/beetroot.webp",
    "text": {
-    "ru": "свекла"
+    "ru": "свёкла"
    },
    "audio": {
     "ru": "audio/ru/beetroot.mp3"
@@ -2890,7 +2890,7 @@
    "order": 15,
    "image": "images/donkey.webp",
    "text": {
-    "ru": "осел"
+    "ru": "осёл"
    },
    "audio": {
     "ru": "audio/ru/donkey.mp3"
@@ -3254,7 +3254,7 @@
    "order": 2,
    "image": "images/forwards.webp",
    "text": {
-    "ru": "вперед"
+    "ru": "вперёд"
    },
    "audio": {
     "ru": "audio/ru/forwards.mp3"
@@ -4220,7 +4220,7 @@
    "order": 30,
    "image": "images/moth.webp",
    "text": {
-    "ru": "мотылек"
+    "ru": "мотылёк"
    },
    "audio": {
     "ru": "audio/ru/moth.mp3"
@@ -4794,7 +4794,7 @@
    "order": 21,
    "image": "images/purse.webp",
    "text": {
-    "ru": "кошелек"
+    "ru": "кошелёк"
    },
    "audio": {
     "ru": "audio/ru/purse.mp3"
@@ -5032,7 +5032,7 @@
    "order": 75,
    "image": "images/salty.webp",
    "text": {
-    "ru": "соленый"
+    "ru": "солёный"
    },
    "audio": {
     "ru": "audio/ru/salty.mp3"
@@ -6763,6 +6763,20 @@
    "prio": 2
   },
   {
+   "id": "unitaz",
+   "section": "household",
+   "order": 26,
+   "image": "images/unitaz.webp",
+   "text": {
+    "ru": "Унитаз"
+   },
+   "audio": {
+    "ru": "audio/ru/unitaz.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "uranus",
    "section": "outside",
    "order": 11,
@@ -6779,7 +6793,7 @@
   {
    "id": "varnish",
    "section": "household",
-   "order": 26,
+   "order": 27,
    "image": "images/varnish.webp",
    "text": {
     "ru": "лак"
@@ -6838,7 +6852,7 @@
    "order": 28,
    "image": "images/visor.webp",
    "text": {
-    "ru": "козырек"
+    "ru": "козырёк"
    },
    "audio": {
     "ru": "audio/ru/visor.mp3"
