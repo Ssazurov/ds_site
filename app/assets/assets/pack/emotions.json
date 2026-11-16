@@ -6,11 +6,11 @@
    "pair": [
     {
      "name": "радостный",
-     "img": "assets/pack/emotions/veselyy_grustnyy_0_d542f337.webp"
+     "img": "assets/pack/emotions/veselyy_grustnyy_0_e1dbbae4.webp"
     },
     {
      "name": "грустный",
-     "img": "assets/pack/emotions/veselyy_grustnyy_1_784544f9.webp"
+     "img": "assets/pack/emotions/veselyy_grustnyy_1_316da062.webp"
     }
    ],
    "audio": {
@@ -24,11 +24,11 @@
    "pair": [
     {
      "name": "удивленный",
-     "img": "assets/pack/emotions/udivlennyy_ispugannyy_0_8e9fff30.webp"
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_0_3d0dbc8e.webp"
     },
     {
      "name": "испуганный",
-     "img": "assets/pack/emotions/udivlennyy_ispugannyy_1_af360533.webp"
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_1_c67bae22.webp"
     }
    ],
    "audio": {
@@ -42,11 +42,11 @@
    "pair": [
     {
      "name": "веселый",
-     "img": "assets/pack/emotions/veselyy_serdityy_0_c0fd59f3.webp"
+     "img": "assets/pack/emotions/veselyy_serdityy_0_32a8a1ac.webp"
     },
     {
      "name": "сердитый",
-     "img": "assets/pack/emotions/veselyy_serdityy_1_b01fff63.webp"
+     "img": "assets/pack/emotions/veselyy_serdityy_1_c785d8de.webp"
     }
    ],
    "audio": {
@@ -60,11 +60,11 @@
    "pair": [
     {
      "name": "грустный",
-     "img": "assets/pack/emotions/grustnyy_serdityy_0_784544f9.webp"
+     "img": "assets/pack/emotions/grustnyy_serdityy_0_316da062.webp"
     },
     {
      "name": "сердитый",
-     "img": "assets/pack/images/angry.webp"
+     "img": "assets/pack/emotions/grustnyy_serdityy_1_c785d8de.webp"
     }
    ],
    "audio": {
@@ -78,11 +78,11 @@
    "pair": [
     {
      "name": "уставший",
-     "img": "assets/pack/emotions/ustavshiy_veselyy_0_c86b938f.webp"
+     "img": "assets/pack/emotions/ustavshiy_veselyy_0_235e8716.webp"
     },
     {
      "name": "веселый",
-     "img": "assets/pack/emotions/ustavshiy_veselyy_1_9ea00d52.webp"
+     "img": "assets/pack/emotions/ustavshiy_veselyy_1_32a8a1ac.webp"
     }
    ],
    "audio": {
