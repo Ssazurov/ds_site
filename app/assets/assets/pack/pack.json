@@ -44,21 +44,21 @@
    "order": 4
   },
   {
-   "id": "clothes",
-   "title": {
-    "ru": "Одежда"
-   },
-   "age_min": 36,
-   "age_max": 168,
-   "order": 5
-  },
-  {
    "id": "household",
    "title": {
     "ru": "Дом"
    },
    "age_min": 24,
    "age_max": 108,
+   "order": 5
+  },
+  {
+   "id": "clothes",
+   "title": {
+    "ru": "Одежда"
+   },
+   "age_min": 36,
+   "age_max": 168,
    "order": 6
   },
   {
@@ -1625,6 +1625,20 @@
    "prio": 1
   },
   {
+   "id": "acorn",
+   "section": "outside",
+   "order": 1,
+   "image": "images/acorn.webp",
+   "text": {
+    "ru": "жёлудь"
+   },
+   "audio": {
+    "ru": "audio/ru/acorn.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "aeroplane",
    "section": "transport",
    "order": 3,
@@ -1695,6 +1709,20 @@
    "prio": 2
   },
   {
+   "id": "apricot",
+   "section": "food",
+   "order": 11,
+   "image": "images/apricot.webp",
+   "text": {
+    "ru": "абрикос"
+   },
+   "audio": {
+    "ru": "audio/ru/apricot.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "apron",
    "section": "household",
    "order": 10,
@@ -1725,7 +1753,7 @@
   {
    "id": "asparagus",
    "section": "food",
-   "order": 11,
+   "order": 12,
    "image": "images/asparagus.webp",
    "text": {
     "ru": "спаржа"
@@ -1739,7 +1767,7 @@
   {
    "id": "aubergine",
    "section": "food",
-   "order": 12,
+   "order": 13,
    "image": "images/aubergine.webp",
    "text": {
     "ru": "баклажан"
@@ -1767,7 +1795,7 @@
   {
    "id": "avocado",
    "section": "food",
-   "order": 13,
+   "order": 14,
    "image": "images/avocado.webp",
    "text": {
     "ru": "авокадо"
@@ -1781,7 +1809,7 @@
   {
    "id": "bacon",
    "section": "food",
-   "order": 14,
+   "order": 15,
    "image": "images/bacon.webp",
    "text": {
     "ru": "бекон"
@@ -1809,7 +1837,7 @@
   {
    "id": "bagel",
    "section": "food",
-   "order": 15,
+   "order": 16,
    "image": "images/bagel.webp",
    "text": {
     "ru": "бублик"
@@ -1865,7 +1893,7 @@
   {
    "id": "beef",
    "section": "food",
-   "order": 16,
+   "order": 17,
    "image": "images/beef.webp",
    "text": {
     "ru": "говядина"
@@ -1893,7 +1921,7 @@
   {
    "id": "beetroot",
    "section": "food",
-   "order": 17,
+   "order": 18,
    "image": "images/beetroot.webp",
    "text": {
     "ru": "свёкла"
@@ -2075,7 +2103,7 @@
   {
    "id": "brie_cheese",
    "section": "food",
-   "order": 18,
+   "order": 19,
    "image": "images/brie_cheese.webp",
    "text": {
     "ru": "сыр бри"
@@ -2103,7 +2131,7 @@
   {
    "id": "bush",
    "section": "outside",
-   "order": 1,
+   "order": 2,
    "image": "images/bush.webp",
    "text": {
     "ru": "куст"
@@ -2131,7 +2159,7 @@
   {
    "id": "cabbage",
    "section": "food",
-   "order": 19,
+   "order": 20,
    "image": "images/cabbage.webp",
    "text": {
     "ru": "капуста"
@@ -2145,7 +2173,7 @@
   {
    "id": "cactus",
    "section": "outside",
-   "order": 2,
+   "order": 3,
    "image": "images/cactus.webp",
    "text": {
     "ru": "кактус"
@@ -2159,7 +2187,7 @@
   {
    "id": "cake_slice",
    "section": "food",
-   "order": 20,
+   "order": 21,
    "image": "images/cake_slice.webp",
    "text": {
     "ru": "кусочек торта"
@@ -2201,7 +2229,7 @@
   {
    "id": "candy_cane",
    "section": "food",
-   "order": 21,
+   "order": 22,
    "image": "images/candy_cane.webp",
    "text": {
     "ru": "леденец"
@@ -2213,9 +2241,37 @@
    "prio": 2
   },
   {
+   "id": "canoe",
+   "section": "transport",
+   "order": 4,
+   "image": "images/canoe.webp",
+   "text": {
+    "ru": "каноэ"
+   },
+   "audio": {
+    "ru": "audio/ru/canoe.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "carrot",
+   "section": "food",
+   "order": 23,
+   "image": "images/carrot.webp",
+   "text": {
+    "ru": "морковь"
+   },
+   "audio": {
+    "ru": "audio/ru/carrot.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "carrot_soup",
    "section": "food",
-   "order": 22,
+   "order": 24,
    "image": "images/carrot_soup.webp",
    "text": {
     "ru": "морковный суп"
@@ -2229,7 +2285,7 @@
   {
    "id": "cashew",
    "section": "food",
-   "order": 23,
+   "order": 25,
    "image": "images/cashew.webp",
    "text": {
     "ru": "кешью"
@@ -2271,7 +2327,7 @@
   {
    "id": "cheese",
    "section": "food",
-   "order": 24,
+   "order": 26,
    "image": "images/cheese.webp",
    "text": {
     "ru": "сыр"
@@ -2299,7 +2355,7 @@
   {
    "id": "cherry",
    "section": "food",
-   "order": 25,
+   "order": 27,
    "image": "images/cherry.webp",
    "text": {
     "ru": "вишня"
@@ -2313,7 +2369,7 @@
   {
    "id": "chicken_soup",
    "section": "food",
-   "order": 26,
+   "order": 28,
    "image": "images/chicken_soup.webp",
    "text": {
     "ru": "куриный суп"
@@ -2325,9 +2381,23 @@
    "prio": 2
   },
   {
+   "id": "chips",
+   "section": "food",
+   "order": 29,
+   "image": "images/chips.webp",
+   "text": {
+    "ru": "чипсы"
+   },
+   "audio": {
+    "ru": "audio/ru/chips.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "chocolate",
    "section": "food",
-   "order": 27,
+   "order": 30,
    "image": "images/chocolate.webp",
    "text": {
     "ru": "шоколад"
@@ -2341,7 +2411,7 @@
   {
    "id": "chocolate_chip_biscuit",
    "section": "food",
-   "order": 28,
+   "order": 31,
    "image": "images/chocolate_chip_biscuit.webp",
    "text": {
     "ru": "шоколадное печенье"
@@ -2411,7 +2481,7 @@
   {
    "id": "cloudy",
    "section": "outside",
-   "order": 3,
+   "order": 4,
    "image": "images/cloudy.webp",
    "text": {
     "ru": "облачно"
@@ -2425,7 +2495,7 @@
   {
    "id": "coffee",
    "section": "food",
-   "order": 29,
+   "order": 32,
    "image": "images/coffee.webp",
    "text": {
     "ru": "кофе"
@@ -2523,7 +2593,7 @@
   {
    "id": "cranberry_juice",
    "section": "food",
-   "order": 30,
+   "order": 33,
    "image": "images/cranberry_juice.webp",
    "text": {
     "ru": "клюквенный сок"
@@ -2551,7 +2621,7 @@
   {
    "id": "cream",
    "section": "food",
-   "order": 31,
+   "order": 34,
    "image": "images/cream.webp",
    "text": {
     "ru": "крем"
@@ -2579,7 +2649,7 @@
   {
    "id": "creme_fraiche",
    "section": "food",
-   "order": 32,
+   "order": 35,
    "image": "images/creme_fraiche.webp",
    "text": {
     "ru": "сметана"
@@ -2607,7 +2677,7 @@
   {
    "id": "croissant",
    "section": "food",
-   "order": 33,
+   "order": 36,
    "image": "images/croissant.webp",
    "text": {
     "ru": "круассан"
@@ -2635,7 +2705,7 @@
   {
    "id": "cucumber",
    "section": "food",
-   "order": 34,
+   "order": 37,
    "image": "images/cucumber.webp",
    "text": {
     "ru": "огурец"
@@ -2663,7 +2733,7 @@
   {
    "id": "curry",
    "section": "food",
-   "order": 35,
+   "order": 38,
    "image": "images/curry.webp",
    "text": {
     "ru": "карри"
@@ -2789,7 +2859,7 @@
   {
    "id": "dessert",
    "section": "food",
-   "order": 36,
+   "order": 39,
    "image": "images/dessert.webp",
    "text": {
     "ru": "десерт"
@@ -2913,9 +2983,23 @@
    "prio": 2
   },
   {
-   "id": "dresser",
+   "id": "draining_board",
    "section": "furniture",
    "order": 9,
+   "image": "images/draining_board.webp",
+   "text": {
+    "ru": "мойка"
+   },
+   "audio": {
+    "ru": "audio/ru/draining_board.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "dresser",
+   "section": "furniture",
+   "order": 10,
    "image": "images/dresser.webp",
    "text": {
     "ru": "комод"
@@ -3153,7 +3237,7 @@
   {
    "id": "ferry",
    "section": "transport",
-   "order": 4,
+   "order": 5,
    "image": "images/ferry.webp",
    "text": {
     "ru": "паром"
@@ -3237,7 +3321,7 @@
   {
    "id": "food",
    "section": "food",
-   "order": 37,
+   "order": 40,
    "image": "images/food.webp",
    "text": {
     "ru": "еда"
@@ -3293,7 +3377,7 @@
   {
    "id": "furniture",
    "section": "furniture",
-   "order": 10,
+   "order": 11,
    "image": "images/furniture.webp",
    "text": {
     "ru": "мебель"
@@ -3391,7 +3475,7 @@
   {
    "id": "grapes",
    "section": "food",
-   "order": 38,
+   "order": 41,
    "image": "images/grapes.webp",
    "text": {
     "ru": "виноград"
@@ -3461,7 +3545,7 @@
   {
    "id": "hamburger",
    "section": "food",
-   "order": 39,
+   "order": 42,
    "image": "images/hamburger.webp",
    "text": {
     "ru": "гамбургер"
@@ -3489,7 +3573,7 @@
   {
    "id": "handle_bars",
    "section": "transport",
-   "order": 5,
+   "order": 6,
    "image": "images/handle_bars.webp",
    "text": {
     "ru": "руль"
@@ -3503,7 +3587,7 @@
   {
    "id": "hangar",
    "section": "transport",
-   "order": 6,
+   "order": 7,
    "image": "images/hangar.webp",
    "text": {
     "ru": "ангар"
@@ -3641,9 +3725,23 @@
    "prio": 2
   },
   {
+   "id": "hose",
+   "section": "outside",
+   "order": 5,
+   "image": "images/hose.webp",
+   "text": {
+    "ru": "шланг"
+   },
+   "audio": {
+    "ru": "audio/ru/hose.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "hot_air_balloon",
    "section": "transport",
-   "order": 7,
+   "order": 8,
    "image": "images/hot_air_balloon.webp",
    "text": {
     "ru": "воздушный шар"
@@ -3657,7 +3755,7 @@
   {
    "id": "hot_dog",
    "section": "food",
-   "order": 40,
+   "order": 43,
    "image": "images/hot_dog.webp",
    "text": {
     "ru": "хотдог"
@@ -3680,6 +3778,20 @@
     "ru": "audio/ru/how_many.mp3"
    },
    "pos": "adv",
+   "prio": 2
+  },
+  {
+   "id": "ice_cream",
+   "section": "food",
+   "order": 44,
+   "image": "images/ice_cream.webp",
+   "text": {
+    "ru": "мороженое"
+   },
+   "audio": {
+    "ru": "audio/ru/ice_cream.mp3"
+   },
+   "pos": "n",
    "prio": 2
   },
   {
@@ -3713,7 +3825,7 @@
   {
    "id": "jeep",
    "section": "transport",
-   "order": 8,
+   "order": 9,
    "image": "images/jeep.webp",
    "text": {
     "ru": "джип"
@@ -3727,7 +3839,7 @@
   {
    "id": "jelly",
    "section": "food",
-   "order": 41,
+   "order": 45,
    "image": "images/jelly.webp",
    "text": {
     "ru": "желе"
@@ -3741,7 +3853,7 @@
   {
    "id": "jelly_beans",
    "section": "food",
-   "order": 42,
+   "order": 46,
    "image": "images/jelly_beans.webp",
    "text": {
     "ru": "мармеладки"
@@ -3811,7 +3923,7 @@
   {
    "id": "kebab",
    "section": "food",
-   "order": 43,
+   "order": 47,
    "image": "images/kebab.webp",
    "text": {
     "ru": "кебаб"
@@ -3823,9 +3935,23 @@
    "prio": 2
   },
   {
+   "id": "kite",
+   "section": "toys_games",
+   "order": 14,
+   "image": "images/kite.webp",
+   "text": {
+    "ru": "воздушный змей"
+   },
+   "audio": {
+    "ru": "audio/ru/kite.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "kiwi",
    "section": "food",
-   "order": 44,
+   "order": 48,
    "image": "images/kiwi.webp",
    "text": {
     "ru": "киви"
@@ -3881,7 +4007,7 @@
   {
    "id": "lemonade",
    "section": "food",
-   "order": 45,
+   "order": 49,
    "image": "images/lemonade.webp",
    "text": {
     "ru": "лимонад"
@@ -3895,7 +4021,7 @@
   {
    "id": "lettuce",
    "section": "food",
-   "order": 46,
+   "order": 50,
    "image": "images/lettuce.webp",
    "text": {
     "ru": "салат"
@@ -3979,7 +4105,7 @@
   {
    "id": "mango",
    "section": "food",
-   "order": 47,
+   "order": 51,
    "image": "images/mango.webp",
    "text": {
     "ru": "манго"
@@ -3993,7 +4119,7 @@
   {
    "id": "mars",
    "section": "outside",
-   "order": 4,
+   "order": 6,
    "image": "images/mars.webp",
    "text": {
     "ru": "марс"
@@ -4007,7 +4133,7 @@
   {
    "id": "mash_potato",
    "section": "food",
-   "order": 48,
+   "order": 52,
    "image": "images/mash_potato.webp",
    "text": {
     "ru": "картофельное пюре"
@@ -4035,7 +4161,7 @@
   {
    "id": "mayonnaise",
    "section": "food",
-   "order": 49,
+   "order": 53,
    "image": "images/mayonnaise.webp",
    "text": {
     "ru": "майонез"
@@ -4049,7 +4175,7 @@
   {
    "id": "meat",
    "section": "food",
-   "order": 50,
+   "order": 54,
    "image": "images/meat.webp",
    "text": {
     "ru": "мясо"
@@ -4063,7 +4189,7 @@
   {
    "id": "melon",
    "section": "food",
-   "order": 51,
+   "order": 55,
    "image": "images/melon.webp",
    "text": {
     "ru": "дыня"
@@ -4091,7 +4217,7 @@
   {
    "id": "menu",
    "section": "food",
-   "order": 52,
+   "order": 56,
    "image": "images/menu.webp",
    "text": {
     "ru": "меню"
@@ -4105,7 +4231,7 @@
   {
    "id": "meringues",
    "section": "food",
-   "order": 53,
+   "order": 57,
    "image": "images/meringues.webp",
    "text": {
     "ru": "безе"
@@ -4119,7 +4245,7 @@
   {
    "id": "merry_go_round",
    "section": "outside",
-   "order": 5,
+   "order": 7,
    "image": "images/merry_go_round.webp",
    "text": {
     "ru": "карусель"
@@ -4133,7 +4259,7 @@
   {
    "id": "minced_meat",
    "section": "food",
-   "order": 54,
+   "order": 58,
    "image": "images/minced_meat.webp",
    "text": {
     "ru": "фарш"
@@ -4147,7 +4273,7 @@
   {
    "id": "mini_bus",
    "section": "transport",
-   "order": 9,
+   "order": 10,
    "image": "images/mini_bus.webp",
    "text": {
     "ru": "микроавтобус"
@@ -4189,7 +4315,7 @@
   {
    "id": "monster",
    "section": "toys_games",
-   "order": 14,
+   "order": 15,
    "image": "images/monster.webp",
    "text": {
     "ru": "монстр"
@@ -4245,7 +4371,7 @@
   {
    "id": "mushroom_soup",
    "section": "food",
-   "order": 55,
+   "order": 59,
    "image": "images/mushroom_soup.webp",
    "text": {
     "ru": "грибной суп"
@@ -4315,7 +4441,7 @@
   {
    "id": "nuts",
    "section": "food",
-   "order": 56,
+   "order": 60,
    "image": "images/nuts.webp",
    "text": {
     "ru": "орехи"
@@ -4357,7 +4483,7 @@
   {
    "id": "onion",
    "section": "food",
-   "order": 57,
+   "order": 61,
    "image": "images/onion.webp",
    "text": {
     "ru": "лук"
@@ -4371,7 +4497,7 @@
   {
    "id": "onion_soup",
    "section": "food",
-   "order": 58,
+   "order": 62,
    "image": "images/onion_soup.webp",
    "text": {
     "ru": "луковый суп"
@@ -4399,7 +4525,7 @@
   {
    "id": "orange",
    "section": "food",
-   "order": 59,
+   "order": 63,
    "image": "images/orange.webp",
    "text": {
     "ru": "апельсин"
@@ -4455,7 +4581,7 @@
   {
    "id": "pancakes",
    "section": "food",
-   "order": 60,
+   "order": 64,
    "image": "images/pancakes.webp",
    "text": {
     "ru": "блины"
@@ -4497,7 +4623,7 @@
   {
    "id": "parachute",
    "section": "transport",
-   "order": 10,
+   "order": 11,
    "image": "images/parachute.webp",
    "text": {
     "ru": "парашют"
@@ -4511,7 +4637,7 @@
   {
    "id": "pasta",
    "section": "food",
-   "order": 61,
+   "order": 65,
    "image": "images/pasta.webp",
    "text": {
     "ru": "макароны"
@@ -4525,7 +4651,7 @@
   {
    "id": "pea_soup",
    "section": "food",
-   "order": 62,
+   "order": 66,
    "image": "images/pea_soup.webp",
    "text": {
     "ru": "гороховый суп"
@@ -4553,7 +4679,7 @@
   {
    "id": "peanut",
    "section": "food",
-   "order": 63,
+   "order": 67,
    "image": "images/peanut.webp",
    "text": {
     "ru": "арахис"
@@ -4567,13 +4693,27 @@
   {
    "id": "pear",
    "section": "food",
-   "order": 64,
+   "order": 68,
    "image": "images/pear.webp",
    "text": {
     "ru": "груша"
    },
    "audio": {
     "ru": "audio/ru/pear.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "pencil_sharpener",
+   "section": "school",
+   "order": 3,
+   "image": "images/pencil_sharpener.webp",
+   "text": {
+    "ru": "точилка"
+   },
+   "audio": {
+    "ru": "audio/ru/pencil_sharpener.mp3"
    },
    "pos": "n",
    "prio": 2
@@ -4595,7 +4735,7 @@
   {
    "id": "pepper",
    "section": "food",
-   "order": 65,
+   "order": 69,
    "image": "images/pepper.webp",
    "text": {
     "ru": "перец"
@@ -4623,7 +4763,7 @@
   {
    "id": "piano",
    "section": "toys_games",
-   "order": 15,
+   "order": 16,
    "image": "images/piano.webp",
    "text": {
     "ru": "пианино"
@@ -4637,7 +4777,7 @@
   {
    "id": "pie",
    "section": "food",
-   "order": 66,
+   "order": 70,
    "image": "images/pie.webp",
    "text": {
     "ru": "пирог"
@@ -4663,9 +4803,23 @@
    "prio": 2
   },
   {
+   "id": "pine_cone",
+   "section": "outside",
+   "order": 8,
+   "image": "images/pine_cone.webp",
+   "text": {
+    "ru": "шишка"
+   },
+   "audio": {
+    "ru": "audio/ru/pine_cone.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "pineapple",
    "section": "food",
-   "order": 67,
+   "order": 71,
    "image": "images/pineapple.webp",
    "text": {
     "ru": "ананас"
@@ -4679,7 +4833,7 @@
   {
    "id": "pineapple_juice",
    "section": "food",
-   "order": 68,
+   "order": 72,
    "image": "images/pineapple_juice.webp",
    "text": {
     "ru": "ананасовый сок"
@@ -4693,7 +4847,7 @@
   {
    "id": "pizza",
    "section": "food",
-   "order": 69,
+   "order": 73,
    "image": "images/pizza.webp",
    "text": {
     "ru": "пицца"
@@ -4707,7 +4861,7 @@
   {
    "id": "police_car",
    "section": "transport",
-   "order": 11,
+   "order": 12,
    "image": "images/police_car.webp",
    "text": {
     "ru": "полицейская машина"
@@ -4735,7 +4889,7 @@
   {
    "id": "potato",
    "section": "food",
-   "order": 70,
+   "order": 74,
    "image": "images/potato.webp",
    "text": {
     "ru": "картошка"
@@ -4763,7 +4917,7 @@
   {
    "id": "pretzel",
    "section": "food",
-   "order": 71,
+   "order": 75,
    "image": "images/pretzel.webp",
    "text": {
     "ru": "крендель"
@@ -4775,9 +4929,23 @@
    "prio": 2
   },
   {
+   "id": "pumpkin",
+   "section": "food",
+   "order": 76,
+   "image": "images/pumpkin.webp",
+   "text": {
+    "ru": "тыква"
+   },
+   "audio": {
+    "ru": "audio/ru/pumpkin.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "puppet",
    "section": "toys_games",
-   "order": 16,
+   "order": 17,
    "image": "images/puppet.webp",
    "text": {
     "ru": "марионетка"
@@ -4833,7 +5001,7 @@
   {
    "id": "radish",
    "section": "food",
-   "order": 72,
+   "order": 77,
    "image": "images/radish.webp",
    "text": {
     "ru": "редис"
@@ -4847,13 +5015,27 @@
   {
    "id": "rainbow",
    "section": "outside",
-   "order": 6,
+   "order": 9,
    "image": "images/rainbow.webp",
    "text": {
     "ru": "радуга"
    },
    "audio": {
     "ru": "audio/ru/rainbow.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "raisin",
+   "section": "food",
+   "order": 78,
+   "image": "images/raisin.webp",
+   "text": {
+    "ru": "изюм"
+   },
+   "audio": {
+    "ru": "audio/ru/raisin.mp3"
    },
    "pos": "n",
    "prio": 2
@@ -4931,7 +5113,7 @@
   {
    "id": "rice",
    "section": "food",
-   "order": 73,
+   "order": 79,
    "image": "images/rice.webp",
    "text": {
     "ru": "рис"
@@ -4945,7 +5127,7 @@
   {
    "id": "rocking_chair",
    "section": "furniture",
-   "order": 11,
+   "order": 12,
    "image": "images/rocking_chair.webp",
    "text": {
     "ru": "кресло-качалка"
@@ -4971,9 +5153,23 @@
    "prio": 2
   },
   {
+   "id": "roman_blind",
+   "section": "household",
+   "order": 24,
+   "image": "images/roman_blind.webp",
+   "text": {
+    "ru": "жалюзи"
+   },
+   "audio": {
+    "ru": "audio/ru/roman_blind.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "roots",
    "section": "outside",
-   "order": 7,
+   "order": 10,
    "image": "images/roots.webp",
    "text": {
     "ru": "корни"
@@ -4987,7 +5183,7 @@
   {
    "id": "rose",
    "section": "outside",
-   "order": 8,
+   "order": 11,
    "image": "images/rose.webp",
    "text": {
     "ru": "роза"
@@ -5001,7 +5197,7 @@
   {
    "id": "sack",
    "section": "toys_games",
-   "order": 17,
+   "order": 18,
    "image": "images/sack.webp",
    "text": {
     "ru": "мешок"
@@ -5015,7 +5211,7 @@
   {
    "id": "salt",
    "section": "food",
-   "order": 74,
+   "order": 80,
    "image": "images/salt.webp",
    "text": {
     "ru": "соль"
@@ -5029,7 +5225,7 @@
   {
    "id": "salty",
    "section": "food",
-   "order": 75,
+   "order": 81,
    "image": "images/salty.webp",
    "text": {
     "ru": "солёный"
@@ -5043,7 +5239,7 @@
   {
    "id": "sandwich",
    "section": "food",
-   "order": 76,
+   "order": 82,
    "image": "images/sandwich.webp",
    "text": {
     "ru": "сэндвич"
@@ -5071,7 +5267,7 @@
   {
    "id": "sausage",
    "section": "food",
-   "order": 77,
+   "order": 83,
    "image": "images/sausage.webp",
    "text": {
     "ru": "колбаса"
@@ -5125,6 +5321,34 @@
    "prio": 2
   },
   {
+   "id": "screw",
+   "section": "household",
+   "order": 25,
+   "image": "images/screw.webp",
+   "text": {
+    "ru": "винт"
+   },
+   "audio": {
+    "ru": "audio/ru/screw.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "scrubbing_brush",
+   "section": "household",
+   "order": 26,
+   "image": "images/scrubbing_brush.webp",
+   "text": {
+    "ru": "щётка"
+   },
+   "audio": {
+    "ru": "audio/ru/scrubbing_brush.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "seagull",
    "section": "animals",
    "order": 39,
@@ -5167,6 +5391,20 @@
    "prio": 2
   },
   {
+   "id": "shampoo",
+   "section": "household",
+   "order": 27,
+   "image": "images/shampoo.webp",
+   "text": {
+    "ru": "шампунь"
+   },
+   "audio": {
+    "ru": "audio/ru/shampoo.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "shiny",
    "section": "descriptors",
    "order": 28,
@@ -5183,7 +5421,7 @@
   {
    "id": "shrimp",
    "section": "food",
-   "order": 78,
+   "order": 84,
    "image": "images/shrimp.webp",
    "text": {
     "ru": "креветка"
@@ -5239,7 +5477,7 @@
   {
    "id": "single_bed",
    "section": "furniture",
-   "order": 12,
+   "order": 13,
    "image": "images/single_bed.webp",
    "text": {
     "ru": "односпальная кровать"
@@ -5251,9 +5489,23 @@
    "prio": 2
   },
   {
+   "id": "sink",
+   "section": "household",
+   "order": 28,
+   "image": "images/sink.webp",
+   "text": {
+    "ru": "раковина"
+   },
+   "audio": {
+    "ru": "audio/ru/sink.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "skate_park",
    "section": "outside",
-   "order": 9,
+   "order": 12,
    "image": "images/skate_park.webp",
    "text": {
     "ru": "скейт-парк"
@@ -5267,7 +5519,7 @@
   {
    "id": "skateboard",
    "section": "transport",
-   "order": 12,
+   "order": 13,
    "image": "images/skateboard.webp",
    "text": {
     "ru": "скейтборд"
@@ -5295,7 +5547,7 @@
   {
    "id": "sleigh",
    "section": "transport",
-   "order": 13,
+   "order": 14,
    "image": "images/sleigh.webp",
    "text": {
     "ru": "санки"
@@ -5337,7 +5589,7 @@
   {
    "id": "sour",
    "section": "food",
-   "order": 79,
+   "order": 85,
    "image": "images/sour.webp",
    "text": {
     "ru": "кислый"
@@ -5351,7 +5603,7 @@
   {
    "id": "spaghetti_bolognaise",
    "section": "food",
-   "order": 80,
+   "order": 86,
    "image": "images/spaghetti_bolognaise.webp",
    "text": {
     "ru": "спагетти болоньезе"
@@ -5365,7 +5617,7 @@
   {
    "id": "spicy",
    "section": "food",
-   "order": 81,
+   "order": 87,
    "image": "images/spicy.webp",
    "text": {
     "ru": "острый"
@@ -5379,7 +5631,7 @@
   {
    "id": "spinach",
    "section": "food",
-   "order": 82,
+   "order": 88,
    "image": "images/spinach.webp",
    "text": {
     "ru": "шпинат"
@@ -5407,7 +5659,7 @@
   {
    "id": "steak",
    "section": "food",
-   "order": 83,
+   "order": 89,
    "image": "images/steak.webp",
    "text": {
     "ru": "стейк"
@@ -5421,7 +5673,7 @@
   {
    "id": "steam_train",
    "section": "transport",
-   "order": 14,
+   "order": 15,
    "image": "images/steam_train.webp",
    "text": {
     "ru": "паровоз"
@@ -5449,7 +5701,7 @@
   {
    "id": "stick",
    "section": "outside",
-   "order": 10,
+   "order": 13,
    "image": "images/stick.webp",
    "text": {
     "ru": "палка"
@@ -5463,7 +5715,7 @@
   {
    "id": "stickers",
    "section": "toys_games",
-   "order": 18,
+   "order": 19,
    "image": "images/stickers.webp",
    "text": {
     "ru": "наклейки"
@@ -5519,7 +5771,7 @@
   {
    "id": "strawberry",
    "section": "food",
-   "order": 84,
+   "order": 90,
    "image": "images/strawberry.webp",
    "text": {
     "ru": "клубника"
@@ -5603,7 +5855,7 @@
   {
    "id": "swiss_roll",
    "section": "food",
-   "order": 85,
+   "order": 91,
    "image": "images/swiss_roll.webp",
    "text": {
     "ru": "рулет"
@@ -5615,9 +5867,23 @@
    "prio": 2
   },
   {
+   "id": "syringe",
+   "section": "health",
+   "order": 5,
+   "image": "images/syringe.webp",
+   "text": {
+    "ru": "шприц"
+   },
+   "audio": {
+    "ru": "audio/ru/syringe.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "tablecloth",
    "section": "food",
-   "order": 86,
+   "order": 92,
    "image": "images/tablecloth.webp",
    "text": {
     "ru": "скатерть"
@@ -5631,7 +5897,7 @@
   {
    "id": "tablets",
    "section": "health",
-   "order": 5,
+   "order": 6,
    "image": "images/tablets.webp",
    "text": {
     "ru": "таблетки"
@@ -5645,7 +5911,7 @@
   {
    "id": "tap",
    "section": "household",
-   "order": 24,
+   "order": 29,
    "image": "images/tap.webp",
    "text": {
     "ru": "кран"
@@ -5673,7 +5939,7 @@
   {
    "id": "tea",
    "section": "food",
-   "order": 87,
+   "order": 93,
    "image": "images/tea.webp",
    "text": {
     "ru": "чай"
@@ -5687,7 +5953,7 @@
   {
    "id": "technology",
    "section": "household",
-   "order": 25,
+   "order": 30,
    "image": "images/technology.webp",
    "text": {
     "ru": "технологии"
@@ -5827,7 +6093,7 @@
   {
    "id": "to_armwrestle",
    "section": "toys_games",
-   "order": 19,
+   "order": 20,
    "image": "images/to_armwrestle.webp",
    "text": {
     "ru": "армреслинг"
@@ -5869,7 +6135,7 @@
   {
    "id": "to_bite",
    "section": "food",
-   "order": 88,
+   "order": 94,
    "image": "images/to_bite.webp",
    "text": {
     "ru": "кусать"
@@ -5953,7 +6219,7 @@
   {
    "id": "to_chew",
    "section": "food",
-   "order": 89,
+   "order": 95,
    "image": "images/to_chew.webp",
    "text": {
     "ru": "жевать"
@@ -6555,7 +6821,7 @@
   {
    "id": "to_vomit",
    "section": "health",
-   "order": 6,
+   "order": 7,
    "image": "images/to_vomit.webp",
    "text": {
     "ru": "рвать"
@@ -6681,7 +6947,7 @@
   {
    "id": "tomato",
    "section": "food",
-   "order": 90,
+   "order": 96,
    "image": "images/tomato.webp",
    "text": {
     "ru": "помидор"
@@ -6695,7 +6961,7 @@
   {
    "id": "tomato_juice",
    "section": "food",
-   "order": 91,
+   "order": 97,
    "image": "images/tomato_juice.webp",
    "text": {
     "ru": "томатный сок"
@@ -6709,7 +6975,7 @@
   {
    "id": "tomato_soup",
    "section": "food",
-   "order": 92,
+   "order": 98,
    "image": "images/tomato_soup.webp",
    "text": {
     "ru": "томатный суп"
@@ -6723,7 +6989,7 @@
   {
    "id": "toy_car",
    "section": "toys_games",
-   "order": 20,
+   "order": 21,
    "image": "images/toy_car.webp",
    "text": {
     "ru": "игрушечная машина"
@@ -6765,7 +7031,7 @@
   {
    "id": "unitaz",
    "section": "household",
-   "order": 26,
+   "order": 31,
    "image": "images/unitaz.webp",
    "text": {
     "ru": "Унитаз"
@@ -6779,7 +7045,7 @@
   {
    "id": "uranus",
    "section": "outside",
-   "order": 11,
+   "order": 14,
    "image": "images/uranus.webp",
    "text": {
     "ru": "уран"
@@ -6793,7 +7059,7 @@
   {
    "id": "varnish",
    "section": "household",
-   "order": 27,
+   "order": 32,
    "image": "images/varnish.webp",
    "text": {
     "ru": "лак"
@@ -6805,9 +7071,23 @@
    "prio": 2
   },
   {
+   "id": "vase",
+   "section": "household",
+   "order": 33,
+   "image": "images/vase.webp",
+   "text": {
+    "ru": "ваза"
+   },
+   "audio": {
+    "ru": "audio/ru/vase.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "vegetable_soup",
    "section": "food",
-   "order": 93,
+   "order": 99,
    "image": "images/vegetable_soup.webp",
    "text": {
     "ru": "овощной суп"
@@ -6863,7 +7143,7 @@
   {
    "id": "wafer",
    "section": "food",
-   "order": 94,
+   "order": 100,
    "image": "images/wafer.webp",
    "text": {
     "ru": "вафля"
@@ -6917,9 +7197,23 @@
    "prio": 2
   },
   {
+   "id": "watering_can",
+   "section": "outside",
+   "order": 15,
+   "image": "images/watering_can.webp",
+   "text": {
+    "ru": "лейка"
+   },
+   "audio": {
+    "ru": "audio/ru/watering_can.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "watermelon",
    "section": "food",
-   "order": 95,
+   "order": 101,
    "image": "images/watermelon.webp",
    "text": {
     "ru": "арбуз"
@@ -6945,9 +7239,23 @@
    "prio": 2
   },
   {
+   "id": "wheelbarrow",
+   "section": "outside",
+   "order": 16,
+   "image": "images/wheelbarrow.webp",
+   "text": {
+    "ru": "тачка"
+   },
+   "audio": {
+    "ru": "audio/ru/wheelbarrow.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "witch",
    "section": "toys_games",
-   "order": 21,
+   "order": 22,
    "image": "images/witch.webp",
    "text": {
     "ru": "ведьма"
@@ -6973,9 +7281,23 @@
    "prio": 2
   },
   {
+   "id": "wool",
+   "section": "household",
+   "order": 34,
+   "image": "images/wool.webp",
+   "text": {
+    "ru": "шерсть"
+   },
+   "audio": {
+    "ru": "audio/ru/wool.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "xylophone",
    "section": "toys_games",
-   "order": 22,
+   "order": 23,
    "image": "images/xylophone.webp",
    "text": {
     "ru": "ксилофон"
@@ -6989,7 +7311,7 @@
   {
    "id": "yummy",
    "section": "food",
-   "order": 96,
+   "order": 102,
    "image": "images/yummy.webp",
    "text": {
     "ru": "вкусно"
