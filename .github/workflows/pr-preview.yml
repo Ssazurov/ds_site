@@ -47,4 +47,4 @@ jobs:
         with:
           name: site-preview-${{ github.event.pull_request.number || inputs.pr || github.run_id }}
           path: out
-          retention-days: 7
+          retention-days: 3
