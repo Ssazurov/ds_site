@@ -9,84 +9,67 @@
      "name": "кошка",
      "img": "assets/pack/vocab/cat.webp",
      "wild": false,
-     "tags": [
-      "лапы",
-      "лакает"
-     ]
+     "tags": []
     },
     {
      "name": "собака",
      "img": "assets/pack/vocab/dog.webp",
      "wild": false,
-     "tags": [
-      "лапы",
-      "лакает"
-     ]
+     "tags": []
     },
     {
      "name": "корова",
      "img": "assets/pack/vocab/cow.webp",
      "wild": false,
-     "tags": [
-      "рога",
-      "ноги",
-      "пьёт"
-     ]
+     "tags": []
     },
     {
      "name": "лошадь",
      "img": "assets/pack/vocab/horse.webp",
      "wild": false,
-     "tags": [
-      "ноги",
-      "пьёт"
-     ]
+     "tags": []
     },
     {
      "name": "коза",
      "img": "assets/pack/vocab/goat.webp",
      "wild": false,
-     "tags": [
-      "рога",
-      "ноги",
-      "пьёт"
-     ]
+     "tags": []
     },
     {
      "name": "овца",
      "img": "assets/pack/vocab/sheep.webp",
      "wild": false,
-     "tags": [
-      "ноги",
-      "пьёт"
-     ]
+     "tags": []
     },
     {
      "name": "свинья",
      "img": "assets/pack/vocab/pig.webp",
      "wild": false,
-     "tags": [
-      "ноги",
-      "пьёт"
-     ]
+     "tags": []
     },
     {
      "name": "кролик",
      "img": "assets/pack/vocab/rabbit.webp",
      "wild": false,
-     "tags": [
-      "лапы",
-      "пьёт"
-     ]
+     "tags": []
     }
    ],
    "template": "Покажи, где {слово}",
    "questions": [],
-   "audio": {}
+   "audio": {
+    "Покажи, где кошка": "et_f5fe18ad52",
+    "Покажи, где собака": "et_50956f34fc",
+    "Покажи, где корова": "et_42dafc2500",
+    "Покажи, где лошадь": "et_aed0f794c1",
+    "Покажи, где коза": "et_62e939f946",
+    "Покажи, где овца": "et_ec65f24bcf",
+    "Покажи, где свинья": "et_5fdb038f65",
+    "Покажи, где кролик": "et_11cc39d808"
+   }
   },
   {
    "id": "kto_lishniy_zhivotnye",
-   "title": "Кто лишний? Животные",
+   "title": "Кто здесь лишний? Почему?",
    "kind": "odd",
    "items": [
     {
@@ -239,7 +222,7 @@
     {
      "name": "слон",
      "img": "assets/pack/vocab/elephant.webp",
-     "wild": true,
+     "wild": false,
      "tags": [
       "ноги",
       "пьёт"
@@ -301,7 +284,15 @@
      "has": true
     }
    ],
-   "audio": {}
+   "audio": {
+    "Кто здесь лишний?": "et_7fdf8e7a5b",
+    "Кто с рогами?": "et_ce8a5a8adb",
+    "Кто без рогов?": "et_0a813f463e",
+    "У кого ноги?": "et_71c9b33a1f",
+    "У кого лапы?": "et_57857400c4",
+    "Кто лакает?": "et_8b271a2f91",
+    "Кто пьёт?": "et_55ace6aebe"
+   }
   }
  ],
  "feedback": {

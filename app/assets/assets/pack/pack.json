@@ -3641,6 +3641,20 @@
    "prio": 2
   },
   {
+   "id": "hedgehog",
+   "section": "animals",
+   "order": 24,
+   "image": "images/hedgehog.webp",
+   "text": {
+    "ru": "ёжик"
+   },
+   "audio": {
+    "ru": "audio/ru/hedgehog.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
    "id": "heel_of_shoe",
    "section": "clothes",
    "order": 15,
@@ -3699,7 +3713,7 @@
   {
    "id": "hippopotamus",
    "section": "animals",
-   "order": 24,
+   "order": 25,
    "image": "images/hippopotamus.webp",
    "text": {
     "ru": "бегемот"
@@ -3713,7 +3727,7 @@
   {
    "id": "horse",
    "section": "animals",
-   "order": 25,
+   "order": 26,
    "image": "images/horse.webp",
    "text": {
     "ru": "лошадь"
@@ -3909,7 +3923,7 @@
   {
    "id": "kangaroo",
    "section": "animals",
-   "order": 26,
+   "order": 27,
    "image": "images/kangaroo.webp",
    "text": {
     "ru": "кенгуру"
@@ -3965,7 +3979,7 @@
   {
    "id": "koala",
    "section": "animals",
-   "order": 27,
+   "order": 28,
    "image": "images/koala.webp",
    "text": {
     "ru": "коала"
@@ -4063,7 +4077,7 @@
   {
    "id": "lion",
    "section": "animals",
-   "order": 28,
+   "order": 29,
    "image": "images/lion.webp",
    "text": {
     "ru": "лев"
@@ -4301,7 +4315,7 @@
   {
    "id": "monkey",
    "section": "animals",
-   "order": 29,
+   "order": 30,
    "image": "images/monkey.webp",
    "text": {
     "ru": "обезьяна"
@@ -4343,7 +4357,7 @@
   {
    "id": "moth",
    "section": "animals",
-   "order": 30,
+   "order": 31,
    "image": "images/moth.webp",
    "text": {
     "ru": "мотылёк"
@@ -4539,7 +4553,7 @@
   {
    "id": "ostrich",
    "section": "animals",
-   "order": 31,
+   "order": 32,
    "image": "images/ostrich.webp",
    "text": {
     "ru": "страус"
@@ -4553,7 +4567,7 @@
   {
    "id": "owl",
    "section": "animals",
-   "order": 32,
+   "order": 33,
    "image": "images/owl.webp",
    "text": {
     "ru": "сова"
@@ -4595,7 +4609,7 @@
   {
    "id": "panda",
    "section": "animals",
-   "order": 33,
+   "order": 34,
    "image": "images/panda.webp",
    "text": {
     "ru": "панда"
@@ -4665,7 +4679,7 @@
   {
    "id": "peacock",
    "section": "animals",
-   "order": 34,
+   "order": 35,
    "image": "images/peacock.webp",
    "text": {
     "ru": "павлин"
@@ -4791,7 +4805,7 @@
   {
    "id": "pig",
    "section": "animals",
-   "order": 35,
+   "order": 36,
    "image": "images/pig.webp",
    "text": {
     "ru": "свинья"
@@ -4973,7 +4987,7 @@
   {
    "id": "rabbit",
    "section": "animals",
-   "order": 36,
+   "order": 37,
    "image": "images/rabbit.webp",
    "text": {
     "ru": "заяц"
@@ -5071,7 +5085,7 @@
   {
    "id": "rat",
    "section": "animals",
-   "order": 37,
+   "order": 38,
    "image": "images/rat.webp",
    "text": {
     "ru": "крыса"
@@ -5099,7 +5113,7 @@
   {
    "id": "rhinoceros",
    "section": "animals",
-   "order": 38,
+   "order": 39,
    "image": "images/rhinoceros.webp",
    "text": {
     "ru": "носорог"
@@ -5351,7 +5365,7 @@
   {
    "id": "seagull",
    "section": "animals",
-   "order": 39,
+   "order": 40,
    "image": "images/seagull.webp",
    "text": {
     "ru": "чайка"
@@ -5365,7 +5379,7 @@
   {
    "id": "seal",
    "section": "animals",
-   "order": 40,
+   "order": 41,
    "image": "images/seal.webp",
    "text": {
     "ru": "тюлень"
@@ -5400,6 +5414,20 @@
    },
    "audio": {
     "ru": "audio/ru/shampoo.mp3"
+   },
+   "pos": "n",
+   "prio": 2
+  },
+  {
+   "id": "sheep",
+   "section": "animals",
+   "order": 42,
+   "image": "images/sheep.webp",
+   "text": {
+    "ru": "овца"
+   },
+   "audio": {
+    "ru": "audio/ru/sheep.mp3"
    },
    "pos": "n",
    "prio": 2
@@ -5561,7 +5589,7 @@
   {
    "id": "snake",
    "section": "animals",
-   "order": 41,
+   "order": 43,
    "image": "images/snake.webp",
    "text": {
     "ru": "змея"
@@ -5645,7 +5673,7 @@
   {
    "id": "squirrel",
    "section": "animals",
-   "order": 42,
+   "order": 44,
    "image": "images/squirrel.webp",
    "text": {
     "ru": "белка"
@@ -5827,7 +5855,7 @@
   {
    "id": "swan",
    "section": "animals",
-   "order": 43,
+   "order": 45,
    "image": "images/swan.webp",
    "text": {
     "ru": "лебедь"
@@ -6051,7 +6079,7 @@
   {
    "id": "tiger",
    "section": "animals",
-   "order": 44,
+   "order": 46,
    "image": "images/tiger.webp",
    "text": {
     "ru": "тигр"
@@ -6905,7 +6933,7 @@
   {
    "id": "toad",
    "section": "animals",
-   "order": 45,
+   "order": 47,
    "image": "images/toad.webp",
    "text": {
     "ru": "жаба"
@@ -7171,7 +7199,7 @@
   {
    "id": "walrus",
    "section": "animals",
-   "order": 46,
+   "order": 48,
    "image": "images/walrus.webp",
    "text": {
     "ru": "морж"
@@ -7185,7 +7213,7 @@
   {
    "id": "wasp",
    "section": "animals",
-   "order": 47,
+   "order": 49,
    "image": "images/wasp.webp",
    "text": {
     "ru": "оса"
@@ -7269,7 +7297,7 @@
   {
    "id": "wolf",
    "section": "animals",
-   "order": 48,
+   "order": 50,
    "image": "images/wolf.webp",
    "text": {
     "ru": "волк"
@@ -7325,7 +7353,7 @@
   {
    "id": "zebra",
    "section": "animals",
-   "order": 49,
+   "order": 51,
    "image": "images/zebra.webp",
    "text": {
     "ru": "зебра"

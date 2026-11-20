@@ -3,6 +3,7 @@
   {
    "id": "seasons",
    "title": "Зима",
+   "task": "Расскажи о зиме",
    "blocks": [
     {
      "tray": "lower_pictograms",
@@ -13,19 +14,9 @@
        "audio": "audio/ru/rs_fe329b1763.mp3"
       },
       {
-       "name": "Деревья",
-       "img": "assets/pack/rasskazy/seasons_p1_ac93e1bd.webp",
-       "audio": "audio/ru/rs_a941926bd7.mp3"
-      },
-      {
        "name": "Небо",
        "img": "assets/pack/rasskazy/seasons_p2_0043d1c6.webp",
        "audio": "audio/ru/rs_32bc24c9ee.mp3"
-      },
-      {
-       "name": "Птицы",
-       "img": "assets/pack/rasskazy/seasons_p3_ef7039fc.webp",
-       "audio": "audio/ru/rs_db7ed59935.mp3"
       },
       {
        "name": "Земля",
@@ -33,9 +24,9 @@
        "audio": "audio/ru/rs_e77b9e7f20.mp3"
       },
       {
-       "name": "Животные",
-       "img": "assets/pack/rasskazy/seasons_p5_aa1e90c7.webp",
-       "audio": "audio/ru/rs_c611dc7479.mp3"
+       "name": "Деревья",
+       "img": "assets/pack/rasskazy/seasons_p1_ac93e1bd.webp",
+       "audio": "audio/ru/rs_a941926bd7.mp3"
       },
       {
        "name": "Одежда",
@@ -50,13 +41,11 @@
      ],
      "order": [
       1,
+      4,
       2,
       3,
-      4,
       5,
-      6,
-      7,
-      8
+      6
      ]
     },
     {
@@ -64,42 +53,32 @@
      "items": [
       {
        "name": "Солнце",
-       "img": "assets/pack/rasskazy/seasons_c0_d08d750f.webp",
+       "img": "assets/pack/rasskazy/seasons_b10_8fed2817.webp",
        "audio": "audio/ru/rs_fe329b1763.mp3"
       },
       {
-       "name": "Деревья",
-       "img": "assets/pack/rasskazy/seasons_c1_78f64f08.webp",
-       "audio": "audio/ru/rs_a941926bd7.mp3"
-      },
-      {
        "name": "Небо",
-       "img": "assets/pack/rasskazy/seasons_c2_e813a5f6.webp",
+       "img": "assets/pack/rasskazy/seasons_b11_82306223.webp",
        "audio": "audio/ru/rs_1459922718.mp3"
       },
       {
-       "name": "Птицы",
-       "img": "assets/pack/rasskazy/seasons_c3_84a37f3e.webp",
-       "audio": "audio/ru/rs_db7ed59935.mp3"
-      },
-      {
        "name": "Земля",
-       "img": "assets/pack/rasskazy/seasons_c4_eca8571f.webp",
+       "img": "assets/pack/rasskazy/seasons_b12_972493bf.webp",
        "audio": "audio/ru/rs_e77b9e7f20.mp3"
       },
       {
-       "name": "Животные",
-       "img": "assets/pack/rasskazy/seasons_c5_20e0d9f9.webp",
-       "audio": "audio/ru/rs_c611dc7479.mp3"
+       "name": "Деревья",
+       "img": "assets/pack/rasskazy/seasons_b13_0434e2c1.webp",
+       "audio": "audio/ru/rs_a941926bd7.mp3"
       },
       {
        "name": "Одежда",
-       "img": "assets/pack/rasskazy/seasons_c6_fd0ff84e.webp",
+       "img": "assets/pack/rasskazy/seasons_b14_7f1d8454.webp",
        "audio": "audio/ru/rs_7b928207f5.mp3"
       },
       {
        "name": "Занятия на улице",
-       "img": "assets/pack/rasskazy/seasons_c7_d4b9b324.webp",
+       "img": "assets/pack/rasskazy/seasons_b15_310a8b38.webp",
        "audio": "audio/ru/rs_16f5d45495.mp3"
       }
      ]
@@ -109,6 +88,7 @@
   {
    "id": "kto_chto_delaet",
    "title": "Кто? Что делает?",
+   "task": "Кто? Что делает?",
    "blocks": [
     {
      "tray": "upper_pictograms",
@@ -181,6 +161,10 @@
       {
        "name": "моет",
        "img": "assets/pack/rasskazy/kto_chto_delaet_b19_6b0bb1b3.webp"
+      },
+      {
+       "name": "играет",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b110_214f0e73.webp"
       }
      ]
     }

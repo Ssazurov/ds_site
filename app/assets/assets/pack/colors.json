@@ -101,54 +101,54 @@
    "title": "4 карточки",
    "cards": 4,
    "palette": 7,
-   "template": "Нажми на {цвет}",
+   "template": "Где {цвет}?",
    "audio": {
-    "red": "ct_95731b0dbf",
-    "orange": "ct_4a3d7840c9",
-    "yellow": "ct_d452054d49",
-    "green": "ct_e4ac4ccb6c",
-    "lightblue": "ct_bc247400bf",
-    "blue": "ct_3dfc1f7687",
-    "purple": "ct_92bd098981"
+    "red": "ct_2e938fa176",
+    "orange": "ct_35fae476e0",
+    "yellow": "ct_329f83bab8",
+    "green": "ct_d7bc1a193c",
+    "lightblue": "ct_b6fdcdbfe0",
+    "blue": "ct_b7ea618708",
+    "purple": "ct_466b2b494f"
    }
   },
   "set_6_kartochek": {
    "title": "6 карточек",
    "cards": 6,
    "palette": 7,
-   "template": "Нажми на {цвет}",
+   "template": "Где {цвет}?",
    "audio": {
-    "red": "ct_95731b0dbf",
-    "orange": "ct_4a3d7840c9",
-    "yellow": "ct_d452054d49",
-    "green": "ct_e4ac4ccb6c",
-    "lightblue": "ct_bc247400bf",
-    "blue": "ct_3dfc1f7687",
-    "purple": "ct_92bd098981"
+    "red": "ct_2e938fa176",
+    "orange": "ct_35fae476e0",
+    "yellow": "ct_329f83bab8",
+    "green": "ct_d7bc1a193c",
+    "lightblue": "ct_b6fdcdbfe0",
+    "blue": "ct_b7ea618708",
+    "purple": "ct_466b2b494f"
    }
   },
   "set_8_kartochek": {
    "title": "8 карточек",
    "cards": 8,
    "palette": 16,
-   "template": "Нажми на {цвет}",
+   "template": "Где {цвет}?",
    "audio": {
-    "red": "ct_95731b0dbf",
-    "orange": "ct_4a3d7840c9",
-    "yellow": "ct_d452054d49",
-    "green": "ct_e4ac4ccb6c",
-    "lightblue": "ct_bc247400bf",
-    "blue": "ct_3dfc1f7687",
-    "purple": "ct_92bd098981",
-    "pink": "ct_4a3de79d8b",
-    "brown": "ct_64531e27c7",
-    "black": "ct_b5b99bd288",
-    "white": "ct_4429c28926",
-    "gray": "ct_ec730bcb8d",
-    "turquoise": "ct_4edae09662",
-    "lime": "ct_32f48c45d3",
-    "burgundy": "ct_900b28791e",
-    "beige": "ct_a968162d0b"
+    "red": "ct_2e938fa176",
+    "orange": "ct_35fae476e0",
+    "yellow": "ct_329f83bab8",
+    "green": "ct_d7bc1a193c",
+    "lightblue": "ct_b6fdcdbfe0",
+    "blue": "ct_b7ea618708",
+    "purple": "ct_466b2b494f",
+    "pink": "ct_357b639e99",
+    "brown": "ct_5de467e7f5",
+    "black": "ct_7820345bfc",
+    "white": "ct_5f7f5d7073",
+    "gray": "ct_996a319e6a",
+    "turquoise": "ct_6edc9243cc",
+    "lime": "ct_27fb183950",
+    "burgundy": "ct_b2d31a4750",
+    "beige": "ct_2d0acc8e5e"
    }
   }
  }
