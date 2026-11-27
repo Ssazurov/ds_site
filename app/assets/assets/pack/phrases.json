@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "id": "phrases_ru",
+  "version": "0.1.0",
+  "default_lang": "ru",
+  "langs": ["ru"],
+  "sections": [
+    {"id": "daily", "order": 1, "title": {"ru": "Каждый день"}},
+    {"id": "movement", "order": 2, "title": {"ru": "Движение"}}
+  ],
+  "cards": [
+    {"id": "phrase_toilet_go", "section": "daily", "order": 1, "image": "phrase_media/toilet_go.webp", "text": {"ru": "хочу в туалет"}, "audio": {"ru": "phrase_media/toilet_go.mp3"}},
+    {"id": "phrase_thirsty", "section": "daily", "order": 2, "image": "phrase_media/thirsty.webp", "text": {"ru": "хочу пить"}, "audio": {"ru": "phrase_media/thirsty.mp3"}},
+    {"id": "phrase_wash_hands", "section": "daily", "order": 3, "image": "phrase_media/wash_hands.webp", "text": {"ru": "мыть руки"}, "audio": {"ru": "phrase_media/wash_hands.mp3"}},
+    {"id": "phrase_come", "section": "movement", "order": 1, "image": "phrase_media/come.webp", "text": {"ru": "идти сюда"}, "audio": {"ru": "phrase_media/come.mp3"}},
+    {"id": "phrase_go", "section": "movement", "order": 2, "image": "phrase_media/go.webp", "text": {"ru": "идти туда"}, "audio": {"ru": "phrase_media/go.mp3"}}
+  ]
+}

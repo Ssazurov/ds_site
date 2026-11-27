@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/ds_site/app/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Карточки и социальные истории для детей">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Солнечный мир">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Солнечный мир</title>
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+  <!--
+    You can customize the "flutter_bootstrap.js" script.
+    This is useful to provide a custom configuration to the Flutter loader
+    or to give the user feedback during the initialization process.
+
+    For more details:
+    * https://docs.flutter.dev/platform-integration/web/initialization
+  -->
+  <script>
+    // Одноразовая очистка старого service worker и его кэша (ADR 0013):
+    // Ctrl+F5 не снимает зарегистрированный SW — убираем автоматически.
+    (function () {
+      try {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            if (!regs.length) return;
+            Promise.all(regs.map(function (r) { return r.unregister(); })).then(function () {
+              if (!sessionStorage.getItem('sw_cleaned')) {
+                sessionStorage.setItem('sw_cleaned', '1');
+                location.reload();
+              }
+            });
+          }).catch(function () {});
+        }
+        if (window.caches && caches.keys) {
+          caches.keys().then(function (keys) {
+            keys.forEach(function (k) {
+              if (/flutter|ds_app|ds-site/i.test(k)) caches.delete(k);
+            });
+          }).catch(function () {});
+        }
+      } catch (_) {}
+    })();
+  </script>
+  <script>
+    // Автообновление сборки (ADR 0013): пользователь не чистит кэш.
+    // При загрузке, фокусе и раз в 60 с проверяем .last_build_id; при изменении — reload.
+    (function () {
+      var current = null, pending = false, busy = false;
+      function apply(id) {
+        if (!id) return;
+        if (current === null) { current = id; return; }
+        if (id === current) return;
+        if (document.hidden) { pending = true; return; }
+        location.reload();
+      }
+      function check() {
+        if (busy) return;
+        busy = true;
+        fetch('.last_build_id', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.text() : ''; })
+          .then(function (t) {
+            t = (t || '').trim();
+            if (t) { apply(t); return; }
+            return fetch('version.json', { cache: 'no-store' })
+              .then(function (r) { return r.ok ? r.json() : null; })
+              .then(function (v) { if (v) apply(v.version + '+' + v.build_number); });
+          })
+          .catch(function () {})
+          .finally(function () { busy = false; });
+      }
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) {
+          if (pending) { pending = false; location.reload(); } else { check(); }
+        }
+      });
+      window.addEventListener('focus', check);
+      setInterval(check, 60000);
+      check();
+    })();
+  </script>
+  <script src="gaze/gaze_bridge.js"></script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

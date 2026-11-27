@@ -1,0 +1,622 @@
+{
+ "stories": [
+  {
+   "id": "seasons",
+   "title": "Зима",
+   "set": "describe",
+   "folder": "Времена года",
+   "task": "Расскажи о зиме",
+   "blocks": [
+    {
+     "tray": "lower_pictograms",
+     "items": [
+      {
+       "name": "Солнце",
+       "img": "assets/pack/rasskazy/seasons_p0_75805158.webp",
+       "audio": "audio/ru/rs_fe329b1763.mp3"
+      },
+      {
+       "name": "Небо",
+       "img": "assets/pack/rasskazy/seasons_p2_0043d1c6.webp",
+       "audio": "audio/ru/rs_32bc24c9ee.mp3"
+      },
+      {
+       "name": "Земля",
+       "img": "assets/pack/rasskazy/seasons_p4_b3383bc2.webp",
+       "audio": "audio/ru/rs_e77b9e7f20.mp3"
+      },
+      {
+       "name": "Деревья",
+       "img": "assets/pack/rasskazy/seasons_p1_ac93e1bd.webp",
+       "audio": "audio/ru/rs_a941926bd7.mp3"
+      },
+      {
+       "name": "Одежда",
+       "img": "assets/pack/rasskazy/seasons_p6_a2533ab7.webp",
+       "audio": "audio/ru/rs_7b928207f5.mp3"
+      },
+      {
+       "name": "Занятия на улице",
+       "img": "assets/pack/rasskazy/seasons_p7_1bef5606.webp",
+       "audio": "audio/ru/rs_16f5d45495.mp3"
+      }
+     ],
+     "order": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    },
+    {
+     "tray": "lower_pictures",
+     "items": [
+      {
+       "name": "Солнце",
+       "img": "assets/pack/rasskazy/seasons_b10_8fed2817.webp",
+       "audio": "audio/ru/rs_fe329b1763.mp3"
+      },
+      {
+       "name": "Небо",
+       "img": "assets/pack/rasskazy/seasons_b11_82306223.webp",
+       "audio": "audio/ru/rs_1459922718.mp3"
+      },
+      {
+       "name": "Земля",
+       "img": "assets/pack/rasskazy/seasons_b12_972493bf.webp",
+       "audio": "audio/ru/rs_e77b9e7f20.mp3"
+      },
+      {
+       "name": "Деревья",
+       "img": "assets/pack/rasskazy/seasons_b13_0434e2c1.webp",
+       "audio": "audio/ru/rs_a941926bd7.mp3"
+      },
+      {
+       "name": "Одежда",
+       "img": "assets/pack/rasskazy/seasons_b14_7f1d8454.webp",
+       "audio": "audio/ru/rs_7b928207f5.mp3"
+      },
+      {
+       "name": "Занятия на улице",
+       "img": "assets/pack/rasskazy/seasons_b15_310a8b38.webp",
+       "audio": "audio/ru/rs_16f5d45495.mp3"
+      }
+     ],
+     "order": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+     ]
+    }
+   ]
+  },
+  {
+   "id": "kto_chto_delaet",
+   "title": "Кто? Что делает?",
+   "set": "sentences",
+   "task": "Кто? Что делает?",
+   "order_control": true,
+   "blocks": [
+    {
+     "tray": "upper_pictograms",
+     "items": [
+      {
+       "name": "Мальчик",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b00_931bf2f1.webp"
+      },
+      {
+       "name": "Девочка",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b01_82e062ee.webp"
+      },
+      {
+       "name": "Дядя",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b02_d950ccfd.webp"
+      },
+      {
+       "name": "Тётя",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b03_1e7ffb7a.webp"
+      },
+      {
+       "name": "Дедушка",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b04_49133d97.webp"
+      },
+      {
+       "name": "Бабушка",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b05_5d3b8a7b.webp"
+      }
+     ]
+    },
+    {
+     "tray": "lower_pictograms",
+     "items": [
+      {
+       "name": "ест",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b10_0af9e2fa.webp"
+      },
+      {
+       "name": "пьёт",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b11_f06bfd6c.webp"
+      },
+      {
+       "name": "идёт",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b12_0d59e14f.webp"
+      },
+      {
+       "name": "бежит",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b13_43a2ff54.webp"
+      },
+      {
+       "name": "летит",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b14_4afa7b95.webp"
+      },
+      {
+       "name": "сидит",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b15_74ada28a.webp"
+      },
+      {
+       "name": "спит",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b16_04d00fa5.webp"
+      },
+      {
+       "name": "едет",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b17_1fb7fa46.webp"
+      },
+      {
+       "name": "поёт",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b18_323898e6.webp"
+      },
+      {
+       "name": "моет",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b19_6b0bb1b3.webp"
+      },
+      {
+       "name": "играет",
+       "img": "assets/pack/rasskazy/kto_chto_delaet_b110_446ba271.webp"
+      }
+     ]
+    }
+   ],
+   "bonus": [
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 0
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_f7123265636a4884.mp4",
+     "isVideo": true
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 1
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_6e104907f1697230.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 2
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_7b723dcfdbd19400.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 3
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_60536db56bc7ee86.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 4
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_a7fccf7d28fca6ef.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 5
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_c0a220edee82dd03.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 7
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_fac11f92406af984.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 8
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_76638209ab58293a.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 0
+      },
+      {
+       "block": 1,
+       "index": 9
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_95cac71f8de85d82.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 0
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_4bdfc0398e47bfce.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 1
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_022795347d202eea.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 2
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_199dc4031db7f9dd.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 3
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_f34edb09bf01b9d2.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 4
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_306169e5b11f2873.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 5
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_cbcc629acafb9202.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 7
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_7e7b068f2efaa38e.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 8
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_1b079d900d08aae5.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 1
+      },
+      {
+       "block": 1,
+       "index": 9
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_412388a56b497f79.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 2
+      },
+      {
+       "block": 1,
+       "index": 0
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_3c1e3f8c5bc9c889.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 2
+      },
+      {
+       "block": 1,
+       "index": 1
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_fb1395b8cd273a6c.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 2
+      },
+      {
+       "block": 1,
+       "index": 8
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_0fb1953ce6b08869.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 2
+      },
+      {
+       "block": 1,
+       "index": 9
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_7c8935b015573d0f.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 0
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_f260fa68328f4b15.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 1
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_5d3da04ec7b1fea2.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 2
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_a44c379eb0d73c48.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 3
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_737850f521dfc367.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 4
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_a3dcd00e173dc3d1.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 5
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_3cebb01492997bd3.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 7
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_712e590920912bac.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 8
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_41627de14ad6b272.webp",
+     "isVideo": false
+    },
+    {
+     "key": [
+      {
+       "block": 0,
+       "index": 3
+      },
+      {
+       "block": 1,
+       "index": 9
+      }
+     ],
+     "media": "assets/pack/rasskazy/bonus_e2d80460aafcbcdd.webp",
+     "isVideo": false
+    }
+   ]
+  }
+ ]
+}

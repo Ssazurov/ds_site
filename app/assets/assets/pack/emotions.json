@@ -1,0 +1,98 @@
+{
+ "sets": [
+  {
+   "title": "Радостный – Грустный",
+   "template": "Выбери, где «{эмоция}» человек",
+   "pair": [
+    {
+     "name": "радостный",
+     "img": "assets/pack/emotions/veselyy_grustnyy_0_e1dbbae4.webp"
+    },
+    {
+     "name": "грустный",
+     "img": "assets/pack/emotions/veselyy_grustnyy_1_316da062.webp"
+    }
+   ],
+   "audio": {
+    "0": "et_0bd2bd2a8d",
+    "1": "et_a7a9b07e43"
+   }
+  },
+  {
+   "title": "Удивленный – Испуганный",
+   "template": "Выбери, где «{эмоция}» человек",
+   "pair": [
+    {
+     "name": "удивленный",
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_0_3d0dbc8e.webp"
+    },
+    {
+     "name": "испуганный",
+     "img": "assets/pack/emotions/udivlennyy_ispugannyy_1_c67bae22.webp"
+    }
+   ],
+   "audio": {
+    "0": "et_a9d21e33d5",
+    "1": "et_4b8873c4fe"
+   }
+  },
+  {
+   "title": "Веселый – Сердитый",
+   "template": "Выбери, где «{эмоция}» человек",
+   "pair": [
+    {
+     "name": "веселый",
+     "img": "assets/pack/emotions/veselyy_serdityy_0_32a8a1ac.webp"
+    },
+    {
+     "name": "сердитый",
+     "img": "assets/pack/emotions/veselyy_serdityy_1_c785d8de.webp"
+    }
+   ],
+   "audio": {
+    "0": "et_1962e506dc",
+    "1": "et_2a41043b8c"
+   }
+  },
+  {
+   "title": "Грустный – Сердитый",
+   "template": "Выбери, где «{эмоция}» человек",
+   "pair": [
+    {
+     "name": "грустный",
+     "img": "assets/pack/emotions/grustnyy_serdityy_0_316da062.webp"
+    },
+    {
+     "name": "сердитый",
+     "img": "assets/pack/emotions/grustnyy_serdityy_1_c785d8de.webp"
+    }
+   ],
+   "audio": {
+    "0": "et_a7a9b07e43",
+    "1": "et_2a41043b8c"
+   }
+  },
+  {
+   "title": "Уставший – Веселый",
+   "template": "Выбери, где «{эмоция}» человек",
+   "pair": [
+    {
+     "name": "уставший",
+     "img": "assets/pack/emotions/ustavshiy_veselyy_0_235e8716.webp"
+    },
+    {
+     "name": "веселый",
+     "img": "assets/pack/emotions/ustavshiy_veselyy_1_32a8a1ac.webp"
+    }
+   ],
+   "audio": {
+    "0": "et_2b255e92fa",
+    "1": "et_1962e506dc"
+   }
+  }
+ ],
+ "feedback": {
+  "ok": "et_df1376c5e8",
+  "retry": "et_51c0f7b46e"
+ }
+}

@@ -1,0 +1,310 @@
+{
+ "schema_version": 1,
+ "id": "ds_stories",
+ "version": 1,
+ "default_lang": "ru",
+ "langs": [
+  "ru"
+ ],
+ "categories": [
+  {
+   "id": "routine",
+   "order": 6,
+   "title": {
+    "ru": "Режим дня"
+   }
+  }
+ ],
+ "stories": [
+  {
+   "id": "tooths",
+   "category": "routine",
+   "order": 99,
+   "title": {
+    "ru": "Я чищу зубы"
+   },
+   "tags": [],
+   "level": 1,
+   "steps": [
+    {
+     "id": "s3",
+     "order": 1,
+     "text": {
+      "ru": "Я включаю свет и вхожу в ванную."
+     },
+     "audio": {
+      "ru": "story_media/ead8162adfce07122c03f3c6fd9953299e6d18b6cb097e4be3fee2f5b1fd85c3.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/6baa9259c408a935e582a91da1c11731a118bad5cdac7a2f274ccaee22bbef4e.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s5",
+     "order": 2,
+     "text": {
+      "ru": "Беру щетку и зубную пасту."
+     },
+     "audio": {
+      "ru": "story_media/dd033b028c2ae8f3c00981348bc8061978be13b600214c7dae2ea202d3d3370f.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/a3bd8669a667004908297a613136e247912e2985d2ab24725424ff5bcbb9f568.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s6",
+     "order": 3,
+     "text": {
+      "ru": "Намазываю пасту на щётку."
+     },
+     "audio": {
+      "ru": "story_media/c4406f322a16e012fb51475b7727acec3d3a1a9b5ad34b7a59a6b03452104293.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/ab025ac076f4dc5ed705643b438733813e0de7c87bbc478fcbec8e2e5b359d6e.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s7",
+     "order": 4,
+     "text": {
+      "ru": "Чищу щёткой с пастой зубы."
+     },
+     "audio": {
+      "ru": "story_media/68141de2f211e28f2e7a188f8606bb8d963475d806bad06eff2cb5e34b493daf.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/2269a5a54fb657f76acb1b5acf833785997e89068f7c7b2c0ae28d3d624a13b2.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s8",
+     "order": 5,
+     "text": {
+      "ru": "Промываю рот водой из стакана."
+     },
+     "audio": {
+      "ru": "story_media/226b80c249d49baeb27e7fa439387d7c39f2af96612a0de5d8098d9648c761a7.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/2639315aea3a19564cf6bca869455ee6118517b1031fac3f39d4bb7a4f507795.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s9",
+     "order": 6,
+     "text": {
+      "ru": "Вытираю рот полотенцем."
+     },
+     "audio": {
+      "ru": "story_media/f5e9644e76ca7dcf6029da2efdc83f06cbb1c9e3714f61e6df3232a35fe04f62.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/9e9944b5db0403e3d41167691cebcf3af2a478e8b67c886dbd8d8d0e83f19ce9.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway_closed"
+    },
+    {
+     "id": "s10",
+     "order": 7,
+     "text": {
+      "ru": "Выхожу из ванной комнаты и выключаю свет."
+     },
+     "audio": {
+      "ru": "story_media/bbde84bdcbf2d57c32430f10ce5d83f27405cb8f854770f22a78fc26dab22009.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/eb989f8e4df40124356d5c79c1248988d98eecc07ef393d13a5b77090f13504b.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    }
+   ],
+   "finale": {
+    "audio": {
+     "ru": "story_media/d2a7ca85eced006f4d310e0538004e7b04a16ef7febb7b7a102794d8fdaa588a.mp3"
+    },
+    "sfx": "story_media/4e73941ad448ee417204f1b34561be5faa09dbd407763b180e038d9ad3b482f7.mp3"
+   }
+  },
+  {
+   "id": "wash_hands3",
+   "category": "routine",
+   "order": 99,
+   "title": {
+    "ru": "Я мою руки"
+   },
+   "tags": [
+    "home"
+   ],
+   "level": 1,
+   "steps": [
+    {
+     "id": "s1",
+     "order": 1,
+     "text": {
+      "ru": "Я подхожу к ванной комнате и включаю свет."
+     },
+     "audio": {
+      "ru": "story_media/6d064c7c2e6aac146058b97795261d16e519ffce4eb41120537b73b4fbf7c91f.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/2c500ce5d46dd452bc2e04a1734edcb9530c5ac770c8b7ac951a1df09ee07cfc.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s2",
+     "order": 2,
+     "text": {
+      "ru": "Вхожу в ванную."
+     },
+     "audio": {
+      "ru": "story_media/452ef21f8f4d1659454ab67a52887ab49dc96b4193a18ba44baa114da9d02298.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/7c3f5feaa0d71e1eee70bc499f2dc008141ab45b035207dc49bd3bd8f0b9a7ee.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "hallway"
+    },
+    {
+     "id": "s3",
+     "order": 3,
+     "text": {
+      "ru": "Включаю воду."
+     },
+     "audio": {
+      "ru": "story_media/12eda7d9916764d0feb80065936288568e3d82674994be53b031eb7a0905eea6.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/f668f839a0ba3cf701addf5601ee9b0f8715c8d7c7fd16ef3f7fae93f767ba36.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s4",
+     "order": 4,
+     "text": {
+      "ru": "Беру мыло и намыливаю им руки."
+     },
+     "audio": {
+      "ru": "story_media/610534c7ed4c6da848c3e9b7976cf6f47b66817bfaaec842c0887a9a02e134de.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/eaf5eb33aad81a9e84ad0064d9acc21447da673d7f9160205eb6ccc5ef3b06f6.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s5",
+     "order": 5,
+     "text": {
+      "ru": "Хорошо смываю мыло водой и закрываю кран."
+     },
+     "audio": {
+      "ru": "story_media/85d1682c60b3f8506f0a2ef6737b0a5a5a0d25cf468397f6d33f6f024880b411.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/9c9332c16e98beae004365702746470c6707eab440ca27203a0c3fa2388fb622.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s6",
+     "order": 6,
+     "text": {
+      "ru": "Вытираю руки полотенцем."
+     },
+     "audio": {
+      "ru": "story_media/acbb9bb1413feed5a42bbbd79737a7d9ce7d7630e04dfa5cb2aa8a0976aa123d.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/ce4ab3e676d9e195523781acb2933f2ac95fe0e1ee6e14ed41078c1de976a308.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    },
+    {
+     "id": "s7",
+     "order": 7,
+     "text": {
+      "ru": "Выхожу из ванной комнаты и выключаю свет."
+     },
+     "audio": {
+      "ru": "story_media/db00e08e7ec094a0d827fd7260442dc7376baad4aeea4f5dc1df312ee67e5c9e.mp3"
+     },
+     "image_by_hero": {
+      "girl": "story_media/d577abe3ac9e590b8997c1f35ffbafdcc9c0ae58e8201c885c551615c88e680a.webp"
+     },
+     "characters": [
+      "hero"
+     ],
+     "outfit": "home",
+     "location": "bathroom"
+    }
+   ],
+   "finale": {
+    "audio": {
+     "ru": "story_media/b5756e7704f3f7804252ef9405c7771199f4cd739a82c66ed400d82bb9bb23d0.mp3"
+    },
+    "sfx": "story_media/88301342af53cd28f38c14e8941b2ef4bdc807749499b808a902e91ce7d78b14.mp3"
+   }
+  }
+ ]
+}
